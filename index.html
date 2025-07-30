@@ -167,12 +167,12 @@
                     </a>
                     <a href="https://www.instagram.com/erablue_id/?hl=en" target="_blank" rel="noopener noreferrer" class="hover:opacity-75 transition-opacity">
                         <div class="bg-white p-2 rounded-lg flex items-center justify-center h-24">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm2tMnkJkyzLKUQjg8P-D_Pv3oTT9KVrIauQ&s" alt="Erablue Logo" class="max-h-16 w-auto object-contain">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm2tMnkJkyzLKUQjg8P-D_Pv3oTT9KVrIauQ&s" alt="Erablue Logo" class="h-16 w-auto object-contain">
                         </div>
                     </a>
                     <a href="https://www.instagram.com/myhartono/?hl=en" target="_blank" rel="noopener noreferrer" class="hover:opacity-75 transition-opacity">
                         <div class="bg-white p-2 rounded-lg flex items-center justify-center h-24">
-                            <img src="https://play-lh.googleusercontent.com/5KQiw_kTn2a6paZu5vbG2iAucJaAn3pXqc74bHtCcznypzSvd_XnFlhRdXm1toM2fg" alt="Hartono Logo" class="max-h-16 w-auto object-contain">
+                            <img src="https://play-lh.googleusercontent.com/5KQiw_kTn2a6paZu5vbG2iAucJaAn3pXqc74bHtCcznypzSvd_XnFlhRdXm1toM2fg" alt="Hartono Logo" class="h-16 w-auto object-contain">
                         </div>
                     </a>
                 </div>
@@ -206,21 +206,21 @@
 
         
         <section class="mb-16 bg-gray-900 text-white py-12 px-8 rounded-xl shadow-2xl">
-            <h2 class="text-3xl font-bold text-center mb-2">The Engagement Paradox</h2>
+            <h2 class="text-3xl font-bold text-center mb-2">Yamada's Hidden Strength: A Highly Engaged Audience</h2>
             <p class="text-lg text-center text-gray-300 max-w-3xl mx-auto mb-8">
-                Despite low overall interaction, the existing audience is highly receptive. This is the key untapped opportunity.
+                While total interaction is low, the data reveals a crucial strength: Yamada BEST Indonesia has the highest engagement rate per follower in the market. This proves the content resonates deeply with the current audience.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div>
-                    <h3 class="text-xl font-bold mb-4 text-center">Total Engagement: Last in the Market</h3>
+                    <h3 class="text-xl font-bold mb-4 text-center">Engagement Rate: #1 in the Market</h3>
                     <div class="chart-container h-64 md:h-80">
-                        <canvas id="engagementChart"></canvas>
+                        <canvas id="engagementRateChart"></canvas>
                     </div>
                 </div>
                 <div class="kpi-card bg-white text-gray-900">
-                    <div class="kpi-value" style="color: #FC913A;">#1</div>
-                    <p class="kpi-label">Rank for Engagement Rate by Follower</p>
-                    <p class="mt-4 text-gray-600">This proves the content resonates. The problem isn't the message, it's the volume. The audience is starved for more content.</p>
+                    <div class="kpi-value" style="color: #FC913A;">3.5x</div>
+                    <p class="kpi-label">Higher Engagement Rate than Competitor Average</p>
+                    <p class="mt-4 text-gray-600">The problem isn't the quality of the message, it's the quantity. The audience is highly receptive and starved for more content.</p>
                 </div>
             </div>
         </section>
@@ -461,24 +461,24 @@
         });
 
         
-        const engagementData = {
-            labels: [processLabel('Yamada BEST Indonesia'), processLabel('Electronic City'), processLabel('Erablue Electronics'), processLabel('Hartono')],
+        const engagementRateData = {
+            labels: [processLabel('Yamada BEST Indonesia'), processLabel('Erablue Electronics'), processLabel('Hartono'), processLabel('Electronic City')],
             datasets: [{
-                label: 'Total Engagement in July',
-                data: [439, 1698, 3283, 11322],
-                backgroundColor: [PALETTE.main, PALETTE.secondary, PALETTE.tertiary, PALETTE.accent],
-                borderColor: [PALETTE.main, PALETTE.secondary, PALETTE.tertiary, PALETTE.accent],
+                label: 'Avg. Engagement Rate by Follower (July)',
+                data: [0.20, 0.09, 0.05, 0.02],
+                backgroundColor: [PALETTE.main, PALETTE.tertiary, PALETTE.accent, PALETTE.secondary],
+                borderColor: [PALETTE.main, PALETTE.tertiary, PALETTE.accent, PALETTE.secondary],
                 borderWidth: 1
             }]
         };
-        new Chart(document.getElementById('engagementChart'), {
+        new Chart(document.getElementById('engagementRateChart'), {
             type: 'bar',
-            data: engagementData,
+            data: engagementRateData,
             options: {
                 ...CHART_DEFAULTS,
                 plugins: { ...CHART_DEFAULTS.plugins, legend: { display: false, labels: {color: '#FFFFFF'} } },
                 scales: {
-                    y: { ...CHART_DEFAULTS.scales.y, grid: { color: 'rgba(255, 255, 255, 0.2)' }, ticks: { color: '#FFFFFF' } },
+                    y: { ...CHART_DEFAULTS.scales.y, grid: { color: 'rgba(255, 255, 255, 0.2)' }, ticks: { color: '#FFFFFF', callback: function(value) { return value + '%' } } },
                     x: { ...CHART_DEFAULTS.scales.x, ticks: { color: '#FFFFFF' } }
                 }
             }
