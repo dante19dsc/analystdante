@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Performance Analysis: Yamada BEST Indonesia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+                max-height: 500px;
+            }
+        }
+        .kpi-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .kpi-value {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+        .kpi-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4B5563;
+            margin-top: 0.5rem;
+        }
+        .flowchart-step {
+            position: relative;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        .flowchart-step:not(:last-child)::after {
+            content: '▼';
+            position: absolute;
+            bottom: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: #FC913A;
+        }
+         @media (min-width: 1024px) {
+            .flowchart-step:not(:last-child)::after {
+                content: '►';
+                position: absolute;
+                top: 50%;
+                right: -2rem;
+                left: auto;
+                bottom: auto;
+                transform: translateY(-50%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    
+    <div class="container mx-auto p-4 md:p-8">
+
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-2">From Laggard to Leader</h1>
+            <p class="text-xl md:text-2xl font-semibold" style="color: #FF4E50;">A Strategic Blueprint for Instagram Growth</p>
+            <p class="max-w-3xl mx-auto mt-4 text-gray-600">
+                An analysis of the Indonesian electronics retail market on Instagram for July 2025, revealing a critical opportunity for 'Yamada BEST Indonesia' (`bestyamadaid`) to transform its social media presence.
+            </p>
+        </header>
+
+        
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">The Competitive Landscape</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4 text-center">Follower Count: A Story of Stagnation</h3>
+                    <p class="text-gray-600 mb-4 text-center">
+                        With only 14k followers, `bestyamadaid` is critically underdeveloped, reaching a fraction of the market compared to competitors. Hartono's audience is nearly 29 times larger.
+                    </p>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="followersChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4 text-center">Monthly Post Volume: A Critical Deficit</h3>
+                     <p class="text-gray-600 mb-4 text-center">
+                        Posting only 15 times in July, `bestyamadaid` has an 84% content deficit compared to the market average, making the brand nearly invisible.
+                    </p>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="postsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="mb-16 bg-gray-900 text-white py-12 px-8 rounded-xl shadow-2xl">
+            <h2 class="text-3xl font-bold text-center mb-2">The Engagement Paradox</h2>
+            <p class="text-lg text-center text-gray-300 max-w-3xl mx-auto mb-8">
+                Despite low overall interaction, the existing audience is highly receptive. This is the key untapped opportunity.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-center">Total Engagement: Last in the Market</h3>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="engagementChart"></canvas>
+                    </div>
+                </div>
+                <div class="kpi-card bg-white text-gray-900">
+                    <div class="kpi-value" style="color: #FC913A;">#1</div>
+                    <p class="kpi-label">Rank for Engagement Rate by Follower</p>
+                    <p class="mt-4 text-gray-600">This proves the content resonates. The problem isn't the message, it's the volume. The audience is starved for more content.</p>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Deconstructing Competitor Success</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#FF4E50]">
+                    <h3 class="text-2xl font-bold mb-3">The Hartono Playbook: Retailtainment</h3>
+                    <p class="text-gray-600 mb-4">A high-budget strategy creating massive online/offline events that generate hype and drive sales.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-start"><span class="text-xl mr-3" style="color: #FF4E50;">⭐</span><div><strong class="font-semibold">A-List Influencers:</strong> Leverage major names like Boy William to act as a megaphone, amplifying reach exponentially.</div></li>
+                        <li class="flex items-start"><span class="text-xl mr-3" style="color: #FF4E50;">🎉</span><div><strong class="font-semibold">In-Store Events:</strong> Transform sales into must-attend events with interactive elements like karaoke and huge prizes.</div></li>
+                        <li class="flex items-start"><span class="text-xl mr-3" style="color: #FF4E50;">📈</span><div><strong class="font-semibold">Campaign Hashtags:</strong> Create unique, event-specific tags like `#StarHunter` that achieve over 10x the average engagement.</div></li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#FC913A]">
+                    <h3 class="text-2xl font-bold mb-3">The Erablue Playbook: Community Building</h3>
+                    <p class="text-gray-600 mb-4">A grassroots, cost-effective strategy focused on creating direct, interactive relationships with the audience.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-start"><span class="text-xl mr-3" style="color: #FC913A;">💬</span><div><strong class="font-semibold">Interactive Quizzes:</strong> Drive massive comment volume with simple `#Quiz` and `#Giveaway` posts, signaling high value to the algorithm.</div></li>
+                        <li class="flex items-start"><span class="text-xl mr-3" style="color: #FC913A;">📅</span><div><strong class="font-semibold">Tactical Relevancy:</strong> Align campaigns with seasonal moments, like the `#BackToSchool` campaign which performed 35x better than average.</div></li>
+                        <li class="flex items-start"><span class="text-xl mr-3" style="color: #FC913A;">🤝</span><div><strong class="font-semibold">Micro-Influencer Seeding:</strong> Use smaller, relatable influencers for authentic endorsements that are more cost-effective and build credibility.</div></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">The Power of Language: Hashtag Intelligence</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-green-50 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4 text-center flex items-center justify-center">DO ✅ <span class="ml-2 text-2xl">👍</span></h3>
+                    <p class="text-center text-gray-600 mb-4">Use campaign-specific and high-intent tags to create urgency and capture motivated buyers.</p>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center bg-white p-3 rounded-md">
+                            <span class="font-semibold">#daftarsekolah</span>
+                            <span class="font-bold text-green-600 text-lg">+34.9x Lift</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-md">
+                            <span class="font-semibold">#AnniversarySale</span>
+                            <span class="font-bold text-green-600 text-lg">+10.4x Lift</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-md">
+                            <span class="font-semibold">#Giveaway</span>
+                            <span class="font-bold text-green-600 text-lg">+9.2x Lift</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-red-50 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4 text-center flex items-center justify-center">DON'T ❌ <span class="ml-2 text-2xl">👎</span></h3>
+                    <p class="text-center text-gray-600 mb-4">Avoid overly broad, generic tags that are too saturated and actually harm engagement.</p>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center bg-white p-3 rounded-md">
+                            <span class="font-semibold">#FlashSale</span>
+                            <span class="font-bold text-red-600 text-lg">-1.5x Lift</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-3 rounded-md">
+                            <span class="font-semibold">#PromoLaptop</span>
+                            <span class="font-bold text-red-600 text-lg">-2.7x Lift</span>
+                        </li>
+                         <li class="flex justify-between items-center bg-white p-3 rounded-md">
+                            <span class="font-semibold">#BelanjaOnline</span>
+                            <span class="font-bold text-red-600 text-lg">-5.7x Lift</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">The 90-Day Follower Growth Flywheel</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16">
+                <div class="flowchart-step bg-white shadow-md border-t-4 border-[#FF4E50]">
+                    <h3 class="text-xl font-bold mb-2">Phase 1: Consistency (Days 1-30)</h3>
+                    <p class="text-gray-600">Close the activity gap by posting **1x per day**. Focus on a mix of Reels, Carousels, and Photos to establish a consistent presence and train the algorithm.</p>
+                </div>
+                <div class="flowchart-step bg-white shadow-md border-t-4 border-[#FC913A]">
+                    <h3 class="text-xl font-bold mb-2">Phase 2: Community (Days 30-60)</h3>
+                    <p class="text-gray-600">Launch bi-weekly interactive series like `#YamadaQuiz`. Partner with **3-5 micro-influencers** to build authenticity and drive conversations.</p>
+                </div>
+                <div class="flowchart-step bg-white shadow-md border-t-4 border-[#F9D423]">
+                    <h3 class="text-xl font-bold mb-2">Phase 3: Campaigns (Days 60-90)</h3>
+                    <p class="text-gray-600">Create monthly "mini-campaigns" with unique hashtags. Transform annual events into a consistent rhythm of promotions to build anticipation and urgency.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const FONT_COLOR = '#1F2937';
+        const GRID_COLOR = '#E5E7EB';
+        
+        const PALETTE = {
+            main: '#FF4E50',
+            secondary: '#FC913A',
+            tertiary: '#F9D423',
+            accent: '#EDE574',
+        };
+
+        function processLabel(label) {
+            const maxLength = 16;
+            if (label.length <= maxLength) {
+                return label;
+            }
+            const words = label.split(' ');
+            let lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + ' ' + word).trim().length > maxLength) {
+                    lines.push(currentLine.trim());
+                    currentLine = word;
+                } else {
+                    currentLine = (currentLine + ' ' + word).trim();
+                }
+            }
+            if (currentLine) {
+                lines.push(currentLine.trim());
+            }
+            return lines;
+        }
+        
+        const TOOLTIP_CONFIG = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const CHART_DEFAULTS = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: FONT_COLOR,
+                        font: {
+                            weight: '600'
+                        }
+                    }
+                },
+                ...TOOLTIP_CONFIG.plugins
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: GRID_COLOR,
+                    },
+                    ticks: {
+                        color: FONT_COLOR,
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        color: FONT_COLOR,
+                    }
+                }
+            }
+        };
+
+        
+        const followersData = {
+            labels: [processLabel('Yamada BEST Indonesia'), processLabel('Electronic City'), processLabel('Erablue Electronics'), processLabel('Hartono')],
+            datasets: [{
+                label: 'Followers',
+                data: [14324, 97456, 99769, 414615],
+                backgroundColor: [PALETTE.main, PALETTE.secondary, PALETTE.tertiary, PALETTE.accent],
+                borderColor: [PALETTE.main, PALETTE.secondary, PALETTE.tertiary, PALETTE.accent],
+                borderWidth: 1
+            }]
+        };
+        new Chart(document.getElementById('followersChart'), {
+            type: 'bar',
+            data: followersData,
+            options: { ...CHART_DEFAULTS, plugins: { ...CHART_DEFAULTS.plugins, legend: { display: false } } }
+        });
+
+        
+        const postsData = {
+            labels: [processLabel('Yamada BEST Indonesia'), processLabel('Erablue Electronics'), processLabel('Hartono'), processLabel('Electronic City')],
+            datasets: [{
+                label: 'Posts in July',
+                data: [15, 38, 57, 87],
+                backgroundColor: [PALETTE.main, PALETTE.tertiary, PALETTE.accent, PALETTE.secondary],
+                borderColor: [PALETTE.main, PALETTE.tertiary, PALETTE.accent, PALETTE.secondary],
+                borderWidth: 1
+            }]
+        };
+        new Chart(document.getElementById('postsChart'), {
+            type: 'bar',
+            data: postsData,
+            options: { ...CHART_DEFAULTS, plugins: { ...CHART_DEFAULTS.plugins, legend: { display: false } } }
+        });
+
+        
+        const engagementData = {
+            labels: [processLabel('Yamada BEST Indonesia'), processLabel('Electronic City'), processLabel('Erablue Electronics'), processLabel('Hartono')],
+            datasets: [{
+                label: 'Total Engagement in July',
+                data: [439, 1698, 3283, 11322],
+                backgroundColor: [PALETTE.main, PALETTE.secondary, PALETTE.tertiary, PALETTE.accent],
+                borderColor: [PALETTE.main, PALETTE.secondary, PALETTE.tertiary, PALETTE.accent],
+                borderWidth: 1
+            }]
+        };
+        new Chart(document.getElementById('engagementChart'), {
+            type: 'bar',
+            data: engagementData,
+            options: {
+                ...CHART_DEFAULTS,
+                plugins: { ...CHART_DEFAULTS.plugins, legend: { display: false, labels: {color: '#FFFFFF'} } },
+                scales: {
+                    y: { ...CHART_DEFAULTS.scales.y, grid: { color: 'rgba(255, 255, 255, 0.2)' }, ticks: { color: '#FFFFFF' } },
+                    x: { ...CHART_DEFAULTS.scales.x, ticks: { color: '#FFFFFF' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
