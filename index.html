@@ -51,30 +51,88 @@
             color: #4B5563;
             margin-top: 0.5rem;
         }
-        .flowchart-step {
+        
+        .flywheel-container {
             position: relative;
+            width: 100%;
+            max-width: 350px;
+            margin: 2rem auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .flywheel-phase {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
             padding: 1.5rem;
-            border-radius: 0.5rem;
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
-        .flowchart-step:not(:last-child)::after {
-            content: '▼';
-            position: absolute;
-            bottom: -1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.5rem;
-            color: #FC913A;
-        }
-         @media (min-width: 1024px) {
-            .flowchart-step:not(:last-child)::after {
-                content: '►';
+        
+        @media (min-width: 1024px) {
+            .flywheel-container {
+                height: 550px;
+                max-width: 800px;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+            .flywheel-path {
+                position: absolute;
+                width: 400px;
+                height: 400px;
+                border: 15px solid #E5E7EB;
+                border-radius: 9999px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .flywheel-path::before {
+                content: '';
+                position: absolute;
+                width: 15px;
+                height: 15px;
+                background-color: #FC913A;
+                border-radius: 9999px;
+                top: 50%;
+                left: 50%;
+                margin-left: -7.5px;
+                margin-top: -7.5px;
+                animation: flywheel-orbit 8s linear infinite;
+            }
+            @keyframes flywheel-orbit {
+                from { transform: rotate(-90deg) translateX(200px) rotate(90deg); }
+                to { transform: rotate(270deg) translateX(200px) rotate(-270deg); }
+            }
+
+            .flywheel-phase {
+                position: absolute;
+                width: 250px;
+            }
+            #phase-1 { top: 0; left: 50%; transform: translateX(-50%); }
+            #phase-2 { bottom: 0; right: 0; }
+            #phase-3 { bottom: 0; left: 0; }
+
+            .flywheel-center {
+                width: 200px;
+                height: 200px;
+                background-color: #111827;
+                border-radius: 9999px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                text-align: center;
+                font-weight: 700;
                 position: absolute;
                 top: 50%;
-                right: -2rem;
-                left: auto;
-                bottom: auto;
-                transform: translateY(-50%);
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 5;
             }
         }
     </style>
@@ -86,12 +144,40 @@
 
         
         <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-2">From Laggard to Leader</h1>
-            <p class="text-xl md:text-2xl font-semibold" style="color: #FF4E50;">A Strategic Blueprint for Instagram Growth</p>
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 mb-2">July Electronic Retail Instagram Analysis</h1>
+            <p class="text-xl md:text-2xl font-semibold" style="color: #FF4E50;">A Competitive Analysis</p>
             <p class="max-w-3xl mx-auto mt-4 text-gray-600">
                 An analysis of the Indonesian electronics retail market on Instagram for July 2025, revealing a critical opportunity for 'Yamada BEST Indonesia' (`bestyamadaid`) to transform its social media presence.
             </p>
         </header>
+
+        <section class="mb-16">
+            <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+                <p class="text-center text-gray-600 mb-6">This report is an analysis based on Instagram data for the period of **July 1st to July 29th, 2025**, for the following key players in the Indonesian electronics retail market:</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
+                    <a href="https://www.instagram.com/bestyamadaid/?hl=en" target="_blank" rel="noopener noreferrer" class="hover:opacity-75 transition-opacity">
+                        <div class="bg-white p-2 rounded-lg flex items-center justify-center h-24">
+                            <img src="data:image/png;base64,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" alt="Yamada BEST Logo" class="h-20 w-full object-contain">
+                        </div>
+                    </a>
+                    <a href="https://www.instagram.com/electroniccityid/?hl=en" target="_blank" rel="noopener noreferrer" class="hover:opacity-75 transition-opacity">
+                        <div class="bg-white p-2 rounded-lg flex items-center justify-center h-24">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/8/88/Logo_Electronic_City.png" alt="Electronic City Logo" class="h-16 w-full object-contain">
+                        </div>
+                    </a>
+                    <a href="https://www.instagram.com/erablue_id/?hl=en" target="_blank" rel="noopener noreferrer" class="hover:opacity-75 transition-opacity">
+                        <div class="bg-white p-2 rounded-lg flex items-center justify-center h-24">
+                            <img src="https://static.wikia.nocookie.net/logopedia/images/4/4f/Erablue_electronics_logo.png/revision/latest" alt="Erablue Logo" class="h-20 w-full object-contain">
+                        </div>
+                    </a>
+                    <a href="https://www.instagram.com/myhartono/?hl=en" target="_blank" rel="noopener noreferrer" class="hover:opacity-75 transition-opacity">
+                        <div class="bg-white p-2 rounded-lg flex items-center justify-center h-24">
+                            <img src="https://play-lh.googleusercontent.com/5KQiw_kTn2a6paZu5vbG2iAucJaAn3pXqc74bHtCcznypzSvd_XnFlhRdXm1toM2fg" alt="Hartono Logo" class="h-20 w-full object-contain">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
 
         
         <section class="mb-16">
@@ -206,22 +292,47 @@
                 </div>
             </div>
         </section>
+
+        <section class="mb-16">
+            <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                <h3 class="text-2xl font-bold mb-3">What is 'Engagement Rate Lift'?</h3>
+                <p class="text-gray-600 mb-4">"Lift" is a score that shows how much better (or worse) a hashtag performs compared to your account's average engagement rate. It's a performance score for your hashtags.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-green-100 p-4 rounded-lg">
+                        <p class="font-bold text-green-800 text-lg">+10.4x Lift</p>
+                        <p class="text-green-700">Means posts with this tag performed **10.4 times better** than average. This is an excellent, high-impact hashtag.</p>
+                    </div>
+                    <div class="bg-red-100 p-4 rounded-lg">
+                        <p class="font-bold text-red-800 text-lg">-5.7x Lift</p>
+                        <p class="text-red-700">Means posts with this tag performed **worse** than average. This hashtag is likely hurting your post's reach.</p>
+                    </div>
+                </div>
+                 <p class="text-gray-600 mt-4">Use Lift to find your winning tags and drop the ones that don't work.</p>
+            </div>
+        </section>
         
         
         <section class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8">The 90-Day Follower Growth Flywheel</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16">
-                <div class="flowchart-step bg-white shadow-md border-t-4 border-[#FF4E50]">
-                    <h3 class="text-xl font-bold mb-2">Phase 1: Consistency (Days 1-30)</h3>
-                    <p class="text-gray-600">Close the activity gap by posting **1x per day**. Focus on a mix of Reels, Carousels, and Photos to establish a consistent presence and train the algorithm.</p>
+            <h2 class="text-3xl font-bold text-center mb-12">The 90-Day Follower Growth Flywheel</h2>
+            <div class="flywheel-container">
+                <div class="flywheel-path hidden lg:block"></div>
+                <div class="flywheel-center hidden lg:flex">
+                    <h3 class="text-2xl font-bold">Growth<br>Engine</h3>
                 </div>
-                <div class="flowchart-step bg-white shadow-md border-t-4 border-[#FC913A]">
-                    <h3 class="text-xl font-bold mb-2">Phase 2: Community (Days 30-60)</h3>
-                    <p class="text-gray-600">Launch bi-weekly interactive series like `#YamadaQuiz`. Partner with **3-5 micro-influencers** to build authenticity and drive conversations.</p>
+
+                <div class="flywheel-phase lg:h-48 flex flex-col justify-center" id="phase-1">
+                    <h3 class="text-xl font-bold mb-2" style="color: #FF4E50;">Phase 1: Consistency</h3>
+                    <p class="text-gray-600 text-sm">Close the activity gap by posting **1x per day**. Focus on a mix of Reels, Carousels, and Photos to establish a consistent presence and train the algorithm.</p>
                 </div>
-                <div class="flowchart-step bg-white shadow-md border-t-4 border-[#F9D423]">
-                    <h3 class="text-xl font-bold mb-2">Phase 3: Campaigns (Days 60-90)</h3>
-                    <p class="text-gray-600">Create monthly "mini-campaigns" with unique hashtags. Transform annual events into a consistent rhythm of promotions to build anticipation and urgency.</p>
+
+                <div class="flywheel-phase lg:h-48 flex flex-col justify-center" id="phase-2">
+                    <h3 class="text-xl font-bold mb-2" style="color: #FC913A;">Phase 2: Community</h3>
+                    <p class="text-gray-600 text-sm">Launch bi-weekly interactive series like `#YamadaQuiz`. Partner with **3-5 micro-influencers** to build authenticity and drive conversations.</p>
+                </div>
+
+                <div class="flywheel-phase lg:h-48 flex flex-col justify-center" id="phase-3">
+                    <h3 class="text-xl font-bold mb-2" style="color: #F9D423;">Phase 3: Campaigns</h3>
+                    <p class="text-gray-600 text-sm">Create monthly "mini-campaigns" with unique hashtags.<br>Transform annual events into a consistent rhythm of promotions to build anticipation and urgency.</p>
                 </div>
             </div>
         </section>
