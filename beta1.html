@@ -45,6 +45,7 @@
         .timeline-header, .timeline-row {
             display: grid;
             grid-template-columns: 200px repeat(31, 30px);
+            grid-auto-columns: 30px; /* Explicitly set width for auto-generated columns */
             width: max-content; /* Ensures content takes full width, enabling scroll */
             min-height: 40px;
         }
