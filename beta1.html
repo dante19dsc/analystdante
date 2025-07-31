@@ -20,22 +20,13 @@
             border-radius: 0.75rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
         }
-        .font-scribble {
-            font-family: 'Yuji Boku', serif;
-        }
+        .font-scribble { font-family: 'Yuji Boku', serif; }
         .notification {
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 50;
+            position: fixed; top: 1rem; right: 1rem; z-index: 50;
         }
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        /* --- Timeline Styles --- */
+        .notification.show { transform: translateX(0); }
         .timeline-container {
             overflow-x: auto;
             background: white;
@@ -46,27 +37,17 @@
         .timeline-header {
             display: grid;
             grid-template-columns: 200px repeat(31, 30px);
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            position: sticky; top: 0; z-index: 10;
         }
         .timeline-header-cell {
-            background-color: #6366f1;
-            color: white;
-            padding: 8px 4px;
-            text-align: center;
-            font-size: 11px;
-            font-weight: 600;
+            background-color: #6366f1; color: white;
+            padding: 8px 4px; text-align: center;
+            font-size: 11px; font-weight: 600;
             border-right: 1px solid #7c7ee8;
         }
-        .timeline-header-cell:first-child {
-            position: sticky;
-            left: 0;
-            z-index: 11;
-        }
+        .timeline-header-cell:first-child { position: sticky; left: 0; z-index: 11; }
         .timeline-header-cell.today { background-color: #ef4444; }
         .timeline-header-cell.independence-day { background-color: #dc2626; }
-        
         .timeline-row {
             display: grid;
             grid-template-columns: 200px repeat(31, 30px);
@@ -74,52 +55,89 @@
             border-bottom: 1px solid #f3f4f6;
         }
         .timeline-label {
-            padding: 8px 12px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #374151;
-            border-right: 1px solid #e5e7eb;
-            background-color: #f9fafb;
-            position: sticky;
-            left: 0;
-            z-index: 5;
-            display: flex;
-            align-items: center;
+            padding: 8px 12px; font-size: 13px; font-weight: 500;
+            color: #374151; border-right: 1px solid #e5e7eb;
+            background-color: #f9fafb; position: sticky; left: 0;
+            z-index: 5; display: flex; align-items: center;
         }
-        .timeline-label.competitor-header {
-            font-weight: 700;
-            font-size: 14px;
-            background-color: #eef2ff;
-        }
-        .timeline-cell {
-            border-right: 1px solid #f3f4f6;
-            position: relative;
-        }
+        .timeline-label.competitor-header { font-weight: 700; font-size: 14px; background-color: #eef2ff; }
+        .timeline-cell { border-right: 1px solid #f3f4f6; position: relative; }
         .timeline-bar {
-            position: absolute;
-            height: 28px;
-            top: 6px; left: 2px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            z-index: 6;
-            padding: 0 8px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            position: absolute; height: 28px; top: 6px; left: 2px;
+            border-radius: 4px; display: flex; align-items: center;
+            font-size: 11px; font-weight: 600; color: white;
+            cursor: pointer; transition: all 0.2s ease; z-index: 6;
+            padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
         }
-        .timeline-bar:hover {
-            transform: scaleY(1.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+        .timeline-bar:hover { transform: scaleY(1.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
         .timeline-bar.hartono { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
         .timeline-bar.electronic-city { background: linear-gradient(135deg, #60A5FA, #2563EB); }
         .timeline-bar.erablue { background: linear-gradient(135deg, #2DD4BF, #0D9488); }
+
+        /* Styles for the new promotion cards */
+        .promo-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .promo-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            overflow: hidden;
+        }
+        .promo-card-header {
+            padding: 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #374151;
+            background-color: #f3f4f6;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .promo-card-content {
+            padding: 1rem;
+        }
+        .promo-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+        .promo-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .promo-item-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 0.5rem;
+            object-fit: cover;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        .promo-item-details {
+            flex-grow: 1;
+        }
+        .promo-item-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        .promo-item-category {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: #eef2ff;
+            border-radius: 0.25rem;
+            display: inline-block;
+        }
+        .promo-item-description {
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -156,139 +174,301 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">August 2025 - Detailed Promotions by Competitor</h3>
                 <div class="timeline-container">
                     <div id="timeline-grid">
-                        <!-- The entire timeline grid will be built by JS here -->
+                        <!-- JS will build the timeline here -->
                     </div>
+                </div>
+            </div>
+
+            <!-- New Section: Competitor Promotion Cards -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Current Promotions Overview</h2>
+                <div id="promo-cards-container" class="promo-card-grid">
+                    <!-- Promotion cards will be rendered here by JS -->
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- Custom Modal for Promotion Details -->
+    <div id="promoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
+            <h4 class="text-lg font-bold mb-4">Promotion Details</h4>
+            <p id="modal-content" class="text-gray-700 whitespace-pre-wrap"></p>
+            <button class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 float-right" onclick="document.getElementById('promoModal').classList.add('hidden')">Close</button>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- UPDATED & REALISTIC PROMOTION DATA (DATES MODIFIED FOR AUG 2025) ---
-            const promotions = [
-                // == HARTONO ==
-                { id: 1, competitor: 'Hartono', title: 'Cicilan Mandiri', type: 'Bank', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Cicilan 0% dengan Kartu Kredit Mandiri.' },
-                { id: 2, competitor: 'Hartono', title: 'Kredivo PayLater', type: 'Bank', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Belanja sekarang, bayar nanti dengan Kredivo.' },
-                { id: 3, competitor: 'Hartono', title: 'DBS Bank Promo', type: 'Bank', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Special deals for DBS card holders.' },
-                { id: 4, competitor: 'Hartono', title: 'Samsung Wearables', type: 'HP', startDate: '2025-08-05', endDate: '2025-08-20', details: 'Galaxy dalam Genggaman Mulai 400 Ribuan!' },
-                { id: 5, competitor: 'Hartono', title: 'Lenovo Intel Core Ultra', type: 'Laptop', startDate: '2025-08-10', endDate: '2025-08-25', details: 'Promo khusus laptop Lenovo dengan Intel Core Ultra.' },
-                
-                // == ELECTRONIC CITY ==
-                { id: 6, competitor: 'Electronic City', title: 'Promo Bank Kemerdekaan', type: 'Bank', startDate: '2025-08-10', endDate: '2025-08-20', details: 'Special Independence Day offers with various banks.' },
-                { id: 7, competitor: 'Electronic City', title: 'Laptop & Gadget Fair', type: 'Event', startDate: '2025-08-15', endDate: '2025-08-25', details: 'Pameran Laptop dan HP berbagai merk.' },
-                { id: 8, competitor: 'Electronic City', title: 'Back to School Essentials', type: 'Event', startDate: '2025-08-01', endDate: '2025-08-15', details: 'Perlengkapan sekolah, laptop dan gadget.' },
-
-                // == ERABLUE ==
-                { id: 9, competitor: 'Erablue', title: 'Pesta Belanja Kembali ke Sekolah', type: 'Event', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Potongan harga laptop dengan kartu pelajar.' },
-                { id: 10, competitor: 'Erablue', title: 'Flash Sale Laptop Termurah', type: 'Laptop', startDate: '2025-08-10', endDate: '2025-08-17', details: 'Harga Spesial Laptop Setiap Hari.' },
-                { id: 11, competitor: 'Erablue', title: 'Pre-Order Samsung Foldable', type: 'HP', startDate: '2025-08-01', endDate: '2025-08-14', details: 'Pre-Order Samsung Galaxy Z Fold & Z Flip, dapatkan bonusnya.' },
-                { id: 12, competitor: 'Erablue', title: 'Promo Kemerdekaan', type: 'Event', startDate: '2025-08-17', endDate: '2025-08-19', details: 'Independence Day Tech Carnival.' }
-            ];
+            // --- COMPETITOR CONFIGURATION (Moved to a higher scope) ---
+            const competitorConfig = {
+                'Hartono': { colorClass: 'hartono', bgColor: '#FEFCE8' },
+                'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF' },
+                'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA' }
+            };
 
             // --- UTILITY FUNCTIONS ---
             const getPromoCategory = (promo) => {
                 const text = (promo.title + ' ' + promo.details).toLowerCase();
-                if (text.includes('back to school') || text.includes('kembali ke sekolah')) return 'Promo Back to school';
-                if (text.includes('independence day') || text.includes('kemerdekaan')) return 'Promo 17 Agustus';
-                if (text.includes('bank') || text.includes('credit card') || text.includes('cicilan') || text.includes('kredivo') || text.includes('dbs') || text.includes('mandiri')) return 'Promo Bank';
-                if (text.includes('laptop')) return 'Promo Laptop';
-                if (text.includes('hp') || text.includes('smartphone') || text.includes('galaxy') || text.includes('foldable')) return 'Promo HP';
-                return null;
+                if (text.includes('bank') || text.includes('credit card') || text.includes('cicilan') || text.includes('dbs') || text.includes('mandiri') || text.includes('kredivo') || text.includes('indodana')) return 'Promo Bank & Payment';
+                if (text.includes('hp') || text.includes('smartphone') || text.includes('galaxy') || text.includes('foldable') || text.includes('reno') || text.includes('vivo') || text.includes('realme') || text.includes('wearables')) return 'Promo HP & Gadget';
+                if (text.includes('laptop') || text.includes('vivobook') || text.includes('acer') || text.includes('lenovo') || text.includes('hp') || text.includes('asus') || text.includes('pc') || text.includes('snapdragon')) return 'Promo Laptop & PC';
+                if (text.includes('tv') || text.includes('soundbar') || text.includes('qled') || text.includes('uhd') || text.includes('google tv') || text.includes('smart tv') || text.includes('speaker')) return 'Promo TV & Audio';
+                if (text.includes('refrigerator') || text.includes('kulkas') || text.includes('mesin cuci') || text.includes('washing machine') || text.includes('water heater') || text.includes('air cooler') || text.includes('setrika')) return 'Promo Home Appliances';
+                if (text.includes('back to school') || text.includes('kembali ke sekolah')) return 'Promo Back to School';
+                if (text.includes('independence day') || text.includes('kemerdekaan') || text.includes('17 agustus')) return 'Promo 17 Agustus';
+                return 'Other Promotions'; // Catch-all for new categories
             };
+
+            const getCategoryImageUrl = (category, competitorColorClass) => {
+                let text = '';
+                let bgColor = '';
+                switch (category) {
+                    case 'Promo Bank & Payment': text = 'Bank'; bgColor = '60A5FA'; break;
+                    case 'Promo HP & Gadget': text = 'Phone'; bgColor = '2DD4BF'; break;
+                    case 'Promo Laptop & PC': text = 'Laptop'; bgColor = 'FBBF24'; break;
+                    case 'Promo TV & Audio': text = 'TV'; bgColor = '60A5FA'; break;
+                    case 'Promo Home Appliances': text = 'Appliance'; bgColor = '2DD4BF'; break;
+                    case 'Promo Back to School': text = 'School'; bgColor = 'FBBF24'; break;
+                    case 'Promo 17 Agustus': text = 'Flag'; bgColor = 'EF4444'; break;
+                    default: text = 'Promo'; bgColor = 'D1D5DB'; break;
+                }
+                // Use competitor's primary color for image background if available
+                if (competitorColorClass === 'hartono') bgColor = 'F59E0B';
+                else if (competitorColorClass === 'electronic-city') bgColor = '2563EB';
+                else if (competitorColorClass === 'erablue') bgColor = '0D9488';
+
+                return `https://placehold.co/100x100/${bgColor}/ffffff?text=${encodeURIComponent(text)}`;
+            };
+
+            // --- UPDATED & REALISTIC PROMOTION DATA (Dates set for AUG 2025) ---
+            // Each promotion now includes its calculated category and a placeholder image URL
+            const promotions = [
+                // Source: MyHartono.com/en/promo-pilihan (Checked on July 31, 2025)
+                { competitor: 'Hartono', title: 'Sony Days – Upgrade TV Tanpa Biaya Kirim!', startDate: '2025-07-04', endDate: '2025-08-03', details: 'Free shipping for TV upgrades.' },
+                { competitor: 'Hartono', title: 'Philips Personal Care Discount up to 30%', startDate: '2025-07-04', endDate: '2025-08-04', details: 'Up to 30% discount on Philips personal care products.' },
+                { competitor: 'Hartono', title: 'Kredivo Belanja Sekarang, Bayar Nanti', startDate: '2025-07-28', endDate: '2025-08-31', details: 'Buy now, pay later with Kredivo.' },
+                { competitor: 'Hartono', title: 'Indodana PayLater Belanja Online Lebih Enteng', startDate: '2025-07-01', endDate: '2025-08-31', details: 'Easier online shopping with Indodana PayLater.' },
+                { competitor: 'Hartono', title: 'Samsung Premium AI TV Exclusive Package', startDate: '2025-07-14', endDate: '2025-08-31', details: 'Exclusive package for Samsung Premium AI TVs.' },
+                { competitor: 'Hartono', title: 'Power UP dengan Snapdragon PC', startDate: '2025-06-23', endDate: '2025-09-30', details: 'Promotion for Snapdragon-powered PCs.' },
+                { competitor: 'Hartono', title: 'Acer Day 2025: Garansi Ekstra!', startDate: '2025-07-08', endDate: '2025-09-30', details: 'Extra warranty for Acer products during Acer Day 2025.' },
+                { competitor: 'Hartono', title: 'Ariston Water Heater Gratis Pemasangan', startDate: '2025-06-01', endDate: '2025-09-30', details: 'Free installation for Ariston water heaters.' },
+                { competitor: 'Hartono', title: 'Samsung Wearables Mulai 400 Ribuan!', startDate: '2025-06-25', endDate: '2025-08-16', details: 'Samsung Galaxy wearables starting from IDR 400,000.' },
+
+                // Source: Eci.id (Electronic City - Checked on July 31, 2025)
+                { competitor: 'Electronic City', title: 'AC Free Installation & Pipe (Mitsubishi)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Free installation, pipe, and bracket for select Mitsubishi AC units.' },
+                { competitor: 'Electronic City', title: 'Flash Sale: SHARP Refrigerator Multidoor', startDate: '2025-08-01', endDate: '2025-08-31', details: 'SHARP Refrigerator Multidoor SJ-IF51PG-BK/BL at Rp. 8.999.000 (23% off).' },
+                { competitor: 'Electronic City', title: 'Flash Sale: SONY Soundbar Speaker HT-S400', startDate: '2025-08-01', endDate: '2025-08-31', details: 'SONY Soundbar Speaker HT-S400 at Rp. 2.499.000 (29% off).' },
+                { competitor: 'Electronic City', title: 'Gebyar Brand Festival: TCL QLED Google TV 55 Inch', startDate: '2025-08-01', endDate: '2025-08-31', details: 'TCL QLED Google TV 55P7K at Rp. 6.999.000 (28% off).' },
+                { competitor: 'Electronic City', title: 'LG UHD Smart TV 50 Inch Discount', startDate: '2025-08-01', endDate: '2025-08-31', details: 'LG UHD Smart TV 50UA7550PSA at Rp. 5.199.000 (30% off).' },
+
+                // Source: Erablue.id (Checked on July 31, 2025)
+                { competitor: 'Erablue', title: 'OPPO Reno14 Series 5G Launch Promo', startDate: '2025-07-25', endDate: '2025-08-31', details: 'Launch promotion for OPPO Reno14 Series 5G with AI photography features and millions in rupiah in promos.' },
+                { competitor: 'Erablue', title: 'Smartphone Discounts (Oppo, Vivo, Realme)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Various smartphone models with discounts (e.g., Oppo Reno12 5G 12GB/512GB SILVER at Rp 4.999.000).' },
+                { competitor: 'Erablue', title: 'TV Discounts (Toshiba, Samsung, Sharp, TCL)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various TV models (e.g., Google TV Toshiba 4K 75 Inch 75M550NP at Rp 14.999.000).' },
+                { competitor: 'Erablue', title: 'Laptop Discounts (Acer, Lenovo, HP, Asus)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various laptop models (e.g., Laptop Acer Aspire Lite 15 Intel Core i5-12450H/8GB/512GB/M365/Win11 (AL15-71P-51VG) Silver at Rp 8.399.000).' },
+                { competitor: 'Erablue', title: 'Kulkas Discounts (LG, Aqua, Electrolux)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various refrigerator models (e.g., Kulkas 2 Pintu LG Inverter 363L GN-B389FLDM at Rp 7.615.000).' },
+                { competitor: 'Erablue', title: 'Mesin Cuci Discounts (Samsung, Polytron, TCL)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various washing machine models (e.g., Mesin Cuci Front Loading Samsung Inverter 14 kg WW14T504DAB/SE at Rp 9.999.000).' }
+            ];
+
+            // Add category and image URL to each promotion object
+            // This loop now runs AFTER competitorConfig is defined
+            promotions.forEach(promo => {
+                promo.category = getPromoCategory(promo);
+                const config = competitorConfig[promo.competitor];
+                promo.imageUrl = getCategoryImageUrl(promo.category, config.colorClass);
+            });
 
             const calculatePromotionSpan = (startDate, endDate) => {
                 const augustStart = new Date('2025-08-01T00:00:00Z');
                 const augustEnd = new Date('2025-08-31T23:59:59Z');
-                let promoStart = new Date(startDate);
-                let promoEnd = new Date(endDate);
-
+                let promoStart = new Date(startDate), promoEnd = new Date(endDate);
+                
+                // Clamp promo dates to August
                 promoStart = promoStart < augustStart ? augustStart : promoStart;
                 promoEnd = promoEnd > augustEnd ? augustEnd : promoEnd;
 
-                if (promoStart > promoEnd) return { startDay: -1, duration: 0 };
+                if (promoStart > promoEnd) {
+                    return { startDay: -1, duration: 0 }; // Promotion is outside August
+                }
                 
+                // Calculate start day relative to August 1st (1-indexed)
                 const startDay = promoStart.getUTCDate();
                 const duration = promoEnd.getUTCDate() - startDay + 1;
                 return { startDay, duration };
             };
             
-            // --- CORE RENDERING FUNCTION ---
+            // --- CORE RENDERING FUNCTION FOR TIMELINE ---
             const createTimeline = () => {
                 const container = document.getElementById('timeline-grid');
                 if (!container) return;
-                container.innerHTML = '';
+                container.innerHTML = ''; // Clear previous content
 
                 const competitors = ['Hartono', 'Electronic City', 'Erablue'];
-                const categories = ['Promo Bank', 'Promo HP', 'Promo Laptop', 'Promo Back to school', 'Promo 17 Agustus'];
-                const competitorConfig = {
-                    'Hartono': { colorClass: 'hartono', bgColor: '#FEFCE8' },
-                    'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF' },
-                    'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA' }
-                };
+                // Dynamically get all unique categories from the promotions data
+                const categories = [...new Set(promotions.map(p => p.category))].sort(); // Use pre-calculated category
+                
+                // competitorConfig is now accessible here as it's defined in a higher scope
 
+                // Create header row
                 const header = document.createElement('div');
                 header.className = 'timeline-header';
                 let headerHTML = '<div class="timeline-header-cell">AUGUST 2025</div>';
+                const today = new Date();
+                const currentDayOfMonth = today.getDate();
+                const currentMonth = today.getMonth(); // 0-indexed
+                const currentYear = today.getFullYear();
+
                 for (let day = 1; day <= 31; day++) {
-                    let specialClass = day === 1 ? 'today' : (day === 17 ? 'independence-day' : '');
+                    let specialClass = '';
+                    // Check if the current day in the loop is today's date in August 2025
+                    if (day === currentDayOfMonth && currentMonth === 7 && currentYear === 2025) { 
+                        specialClass = 'today';
+                    } else if (day === 17) { // Independence Day
+                        specialClass = 'independence-day';
+                    }
                     headerHTML += `<div class="timeline-header-cell ${specialClass}">${day}</div>`;
                 }
                 header.innerHTML = headerHTML;
                 container.appendChild(header);
 
+                // Create rows for each competitor and their categories
                 competitors.forEach(compName => {
                     const config = competitorConfig[compName];
+                    
+                    // Competitor Header Row
                     const competitorRow = document.createElement('div');
                     competitorRow.className = 'timeline-row';
-                    competitorRow.innerHTML = `<div class="timeline-label competitor-header">${compName}</div>` + 
-                                              `<div style="display: contents;">` + 
-                                              Array(31).fill(`<div class="timeline-cell" style="background-color: ${config.bgColor};"></div>`).join('') +
-                                              `</div>`;
+                    const competitorLabel = document.createElement('div');
+                    competitorLabel.className = 'timeline-label competitor-header';
+                    competitorLabel.textContent = compName;
+                    competitorRow.appendChild(competitorLabel);
+
+                    // Add empty cells for the competitor header row to maintain grid structure
+                    for (let i = 0; i < 31; i++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'timeline-cell';
+                        cell.style.backgroundColor = config.bgColor;
+                        competitorRow.appendChild(cell);
+                    }
                     container.appendChild(competitorRow);
 
+                    // Category Rows for each competitor
                     categories.forEach(catName => {
                         const categoryRow = document.createElement('div');
                         categoryRow.className = 'timeline-row';
-                        categoryRow.innerHTML = `<div class="timeline-label">${catName}</div>`;
                         
-                        const cellsWrapper = document.createElement('div');
-                        cellsWrapper.style.display = 'contents';
+                        const categoryLabel = document.createElement('div');
+                        categoryLabel.className = 'timeline-label';
+                        categoryLabel.textContent = catName;
+                        categoryRow.appendChild(categoryLabel);
                         
-                        const dayCells = Array.from({ length: 31 }, () => {
+                        // Create 31 day cells for the current category row
+                        const dayCells = [];
+                        for (let i = 0; i < 31; i++) {
                             const cell = document.createElement('div');
                             cell.className = 'timeline-cell';
                             cell.style.backgroundColor = config.bgColor;
-                            return cell;
-                        });
+                            dayCells.push(cell);
+                            categoryRow.appendChild(cell); // Append cell to the row immediately
+                        }
 
+                        // Add promotions to the respective day cells
                         promotions
-                            .filter(p => p.competitor === compName && getPromoCategory(p) === catName)
+                            .filter(p => p.competitor === compName && p.category === catName) // Use pre-calculated category
                             .forEach(promo => {
                                 const span = calculatePromotionSpan(promo.startDate, promo.endDate);
                                 if (span.duration > 0) {
                                     const bar = document.createElement('div');
                                     bar.className = `timeline-bar ${config.colorClass}`;
-                                    bar.style.width = `${(span.duration * 30) - 4}px`;
+                                    // Calculate width based on number of days and cell width (30px)
+                                    bar.style.width = `${(span.duration * 30) - 4}px`; // -4 for padding/gap
                                     bar.textContent = promo.title;
-                                    bar.title = `[${catName}] ${promo.title}\n\nDetails: ${promo.details}`;
-                                    bar.onclick = () => alert(bar.title);
-                                    dayCells[span.startDay - 1].appendChild(bar);
+                                    bar.title = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`;
+                                    
+                                    // Replace alert with a custom modal for better UX
+                                    bar.onclick = () => showModal(bar.title);
+                                    
+                                    // Append the bar to the correct day cell (0-indexed array, so span.startDay - 1)
+                                    if (dayCells[span.startDay - 1]) {
+                                        dayCells[span.startDay - 1].appendChild(bar);
+                                    }
                                 }
                             });
-
-                        dayCells.forEach(cell => cellsWrapper.appendChild(cell));
-                        categoryRow.appendChild(cellsWrapper);
                         container.appendChild(categoryRow);
                     });
                 });
             };
 
+            // --- NEW FUNCTION: RENDER PROMOTION CARDS ---
+            const renderPromotionCards = () => {
+                const container = document.getElementById('promo-cards-container');
+                if (!container) return;
+                container.innerHTML = ''; // Clear previous content
+
+                const competitors = ['Hartono', 'Electronic City', 'Erablue'];
+                // competitorConfig is now accessible here as it's defined in a higher scope
+
+                competitors.forEach(compName => {
+                    const compPromotions = promotions.filter(p => p.competitor === compName);
+                    if (compPromotions.length === 0) return; // Skip if no promotions for this competitor
+
+                    const card = document.createElement('div');
+                    card.className = 'promo-card';
+                    card.innerHTML = `
+                        <div class="promo-card-header">${compName} Promotions</div>
+                        <div class="promo-card-content" id="promo-content-${compName.replace(/\s/g, '')}">
+                            <!-- Promotions will be appended here -->
+                        </div>
+                    `;
+                    container.appendChild(card);
+
+                    const contentDiv = document.getElementById(`promo-content-${compName.replace(/\s/g, '')}`);
+                    compPromotions.forEach(promo => {
+                        const promoItem = document.createElement('div');
+                        promoItem.className = 'promo-item';
+                        promoItem.innerHTML = `
+                            <img src="${promo.imageUrl}" alt="${promo.category}" class="promo-item-img">
+                            <div class="promo-item-details">
+                                <div class="promo-item-title">${promo.title}</div>
+                                <div class="promo-item-category">${promo.category}</div>
+                                <p class="promo-item-description">${promo.details}</p>
+                                <p class="promo-item-description text-xs text-gray-500 mt-1">
+                                    ${promo.startDate} - ${promo.endDate}
+                                </p>
+                            </div>
+                        `;
+                        contentDiv.appendChild(promoItem);
+                    });
+                });
+            };
+
+            // --- CUSTOM MODAL FOR PROMOTION DETAILS (Replaces alert()) ---
+            const showModal = (message) => {
+                let modal = document.getElementById('promoModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'promoModal';
+                    modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden';
+                    modal.innerHTML = `
+                        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
+                            <h4 class="text-lg font-bold mb-4">Promotion Details</h4>
+                            <p id="modal-content" class="text-gray-700 whitespace-pre-wrap"></p>
+                            <button class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 float-right" onclick="document.getElementById('promoModal').classList.add('hidden')">Close</button>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                }
+                document.getElementById('modal-content').textContent = message;
+                modal.classList.remove('hidden');
+            };
+
             // --- INITIALIZE ---
             createTimeline();
+            renderPromotionCards(); // Call the new function to render cards
             const notification = document.getElementById('notification');
             const notificationText = document.getElementById('notification-text');
-            notificationText.textContent = '✅ Timeline updated with live promotions!';
+            notificationText.textContent = '✅ Timeline and promotion cards loaded!';
             notification.classList.add('show');
             setTimeout(() => notification.classList.remove('show'), 4000);
         });
