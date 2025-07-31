@@ -37,6 +37,7 @@
         .timeline-header {
             display: grid;
             grid-template-columns: 200px repeat(31, 30px);
+            min-width: 1130px; /* Added to ensure full width and enable scrolling */
             position: sticky; top: 0; z-index: 10;
         }
         .timeline-header-cell {
@@ -52,6 +53,7 @@
             display: grid;
             grid-template-columns: 200px repeat(31, 30px);
             min-height: 40px;
+            min-width: 1130px; /* Added to ensure full width and enable scrolling */
             border-bottom: 1px solid #f3f4f6;
         }
         .timeline-label {
@@ -109,6 +111,16 @@
             padding-bottom: 0;
             border-bottom: none;
         }
+        .promo-item-link { /* New style for the link wrapper */
+            display: flex;
+            align-items: flex-start;
+            text-decoration: none; /* Remove underline */
+            color: inherit; /* Inherit text color */
+            cursor: pointer;
+        }
+        .promo-item-link:hover .promo-item-title {
+            color: #2563EB; /* Highlight title on hover */
+        }
         .promo-item-img {
             width: 80px;
             height: 80px;
@@ -124,6 +136,7 @@
             font-weight: 600;
             color: #1f2937;
             margin-bottom: 0.25rem;
+            transition: color 0.2s ease; /* Smooth transition for hover effect */
         }
         .promo-item-category {
             font-size: 0.75rem;
@@ -202,9 +215,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- COMPETITOR CONFIGURATION (Moved to a higher scope) ---
             const competitorConfig = {
-                'Hartono': { colorClass: 'hartono', bgColor: '#FEFCE8' },
-                'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF' },
-                'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA' }
+                'Hartono': { colorClass: 'hartono', bgColor: '#FEFCE8', websiteUrl: 'https://myhartono.com/en/promo-pilihan' },
+                'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF', websiteUrl: 'https://eci.id/' },
+                'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA', websiteUrl: 'https://www.erablue.id/' }
             };
 
             // --- UTILITY FUNCTIONS ---
@@ -245,30 +258,30 @@
             // Each promotion now includes its calculated category and a placeholder image URL
             const promotions = [
                 // Source: MyHartono.com/en/promo-pilihan (Checked on July 31, 2025)
-                { competitor: 'Hartono', title: 'Sony Days – Upgrade TV Tanpa Biaya Kirim!', startDate: '2025-07-04', endDate: '2025-08-03', details: 'Free shipping for TV upgrades.' },
-                { competitor: 'Hartono', title: 'Philips Personal Care Discount up to 30%', startDate: '2025-07-04', endDate: '2025-08-04', details: 'Up to 30% discount on Philips personal care products.' },
-                { competitor: 'Hartono', title: 'Kredivo Belanja Sekarang, Bayar Nanti', startDate: '2025-07-28', endDate: '2025-08-31', details: 'Buy now, pay later with Kredivo.' },
-                { competitor: 'Hartono', title: 'Indodana PayLater Belanja Online Lebih Enteng', startDate: '2025-07-01', endDate: '2025-08-31', details: 'Easier online shopping with Indodana PayLater.' },
-                { competitor: 'Hartono', title: 'Samsung Premium AI TV Exclusive Package', startDate: '2025-07-14', endDate: '2025-08-31', details: 'Exclusive package for Samsung Premium AI TVs.' },
-                { competitor: 'Hartono', title: 'Power UP dengan Snapdragon PC', startDate: '2025-06-23', endDate: '2025-09-30', details: 'Promotion for Snapdragon-powered PCs.' },
-                { competitor: 'Hartono', title: 'Acer Day 2025: Garansi Ekstra!', startDate: '2025-07-08', endDate: '2025-09-30', details: 'Extra warranty for Acer products during Acer Day 2025.' },
-                { competitor: 'Hartono', title: 'Ariston Water Heater Gratis Pemasangan', startDate: '2025-06-01', endDate: '2025-09-30', details: 'Free installation for Ariston water heaters.' },
-                { competitor: 'Hartono', title: 'Samsung Wearables Mulai 400 Ribuan!', startDate: '2025-06-25', endDate: '2025-08-16', details: 'Samsung Galaxy wearables starting from IDR 400,000.' },
+                { competitor: 'Hartono', title: 'Sony Days – Upgrade TV Tanpa Biaya Kirim!', startDate: '2025-07-04', endDate: '2025-08-03', details: 'Free shipping for TV upgrades.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
+                { competitor: 'Hartono', title: 'Philips Personal Care Discount up to 30%', startDate: '2025-07-04', endDate: '2025-08-04', details: 'Up to 30% discount on Philips personal care products.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
+                { competitor: 'Hartono', title: 'Kredivo Belanja Sekarang, Bayar Nanti', startDate: '2025-07-28', endDate: '2025-08-31', details: 'Buy now, pay later with Kredivo.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
+                { competitor: 'Hartono', title: 'Indodana PayLater Belanja Online Lebih Enteng', startDate: '2025-07-01', endDate: '2025-08-31', details: 'Easier online shopping with Indodana PayLater.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
+                { competitor: 'Hartono', title: 'Samsung Premium AI TV Exclusive Package', startDate: '2025-07-14', endDate: '2025-08-31', details: 'Exclusive package for Samsung Premium AI TVs.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
+                { competitor: 'Hartono', title: 'Power UP dengan Snapdragon PC', startDate: '2025-06-23', endDate: '2025-09-30', details: 'Promotion for Snapdragon-powered PCs.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
+                { competitor: 'Hartono', title: 'Acer Day 2025: Garansi Ekstra!', startDate: '2025-07-08', endDate: '2025-09-30', details: 'Extra warranty for Acer products during Acer Day 2025.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
+                { competitor: 'Hartono', title: 'Ariston Water Heater Gratis Pemasangan', startDate: '2025-06-01', endDate: '2025-09-30', details: 'Free installation for Ariston water heaters.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
+                { competitor: 'Hartono', title: 'Samsung Wearables Mulai 400 Ribuan!', startDate: '2025-06-25', endDate: '2025-08-16', details: 'Samsung Galaxy wearables starting from IDR 400,000.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
 
                 // Source: Eci.id (Electronic City - Checked on July 31, 2025)
-                { competitor: 'Electronic City', title: 'AC Free Installation & Pipe (Mitsubishi)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Free installation, pipe, and bracket for select Mitsubishi AC units.' },
-                { competitor: 'Electronic City', title: 'Flash Sale: SHARP Refrigerator Multidoor', startDate: '2025-08-01', endDate: '2025-08-31', details: 'SHARP Refrigerator Multidoor SJ-IF51PG-BK/BL at Rp. 8.999.000 (23% off).' },
-                { competitor: 'Electronic City', title: 'Flash Sale: SONY Soundbar Speaker HT-S400', startDate: '2025-08-01', endDate: '2025-08-31', details: 'SONY Soundbar Speaker HT-S400 at Rp. 2.499.000 (29% off).' },
-                { competitor: 'Electronic City', title: 'Gebyar Brand Festival: TCL QLED Google TV 55 Inch', startDate: '2025-08-01', endDate: '2025-08-31', details: 'TCL QLED Google TV 55P7K at Rp. 6.999.000 (28% off).' },
-                { competitor: 'Electronic City', title: 'LG UHD Smart TV 50 Inch Discount', startDate: '2025-08-01', endDate: '2025-08-31', details: 'LG UHD Smart TV 50UA7550PSA at Rp. 5.199.000 (30% off).' },
+                { competitor: 'Electronic City', title: 'AC Free Installation & Pipe (Mitsubishi)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Free installation, pipe, and bracket for select Mitsubishi AC units.', promoUrl: 'https://eci.id/' },
+                { competitor: 'Electronic City', title: 'Flash Sale: SHARP Refrigerator Multidoor', startDate: '2025-08-01', endDate: '2025-08-31', details: 'SHARP Refrigerator Multidoor SJ-IF51PG-BK/BL at Rp. 8.999.000 (23% off).', promoUrl: 'https://eci.id/' },
+                { competitor: 'Electronic City', title: 'Flash Sale: SONY Soundbar Speaker HT-S400', startDate: '2025-08-01', endDate: '2025-08-31', details: 'SONY Soundbar Speaker HT-S400 at Rp. 2.499.000 (29% off).', promoUrl: 'https://eci.id/' },
+                { competitor: 'Electronic City', title: 'Gebyar Brand Festival: TCL QLED Google TV 55 Inch', startDate: '2025-08-01', endDate: '2025-08-31', details: 'TCL QLED Google TV 55P7K at Rp. 6.999.000 (28% off).', promoUrl: 'https://eci.id/' },
+                { competitor: 'Electronic City', title: 'LG UHD Smart TV 50 Inch Discount', startDate: '2025-08-01', endDate: '2025-08-31', details: 'LG UHD Smart TV 50UA7550PSA at Rp. 5.199.000 (30% off).', promoUrl: 'https://eci.id/' },
 
                 // Source: Erablue.id (Checked on July 31, 2025)
-                { competitor: 'Erablue', title: 'OPPO Reno14 Series 5G Launch Promo', startDate: '2025-07-25', endDate: '2025-08-31', details: 'Launch promotion for OPPO Reno14 Series 5G with AI photography features and millions in rupiah in promos.' },
-                { competitor: 'Erablue', title: 'Smartphone Discounts (Oppo, Vivo, Realme)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Various smartphone models with discounts (e.g., Oppo Reno12 5G 12GB/512GB SILVER at Rp 4.999.000).' },
-                { competitor: 'Erablue', title: 'TV Discounts (Toshiba, Samsung, Sharp, TCL)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various TV models (e.g., Google TV Toshiba 4K 75 Inch 75M550NP at Rp 14.999.000).' },
-                { competitor: 'Erablue', title: 'Laptop Discounts (Acer, Lenovo, HP, Asus)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various laptop models (e.g., Laptop Acer Aspire Lite 15 Intel Core i5-12450H/8GB/512GB/M365/Win11 (AL15-71P-51VG) Silver at Rp 8.399.000).' },
-                { competitor: 'Erablue', title: 'Kulkas Discounts (LG, Aqua, Electrolux)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various refrigerator models (e.g., Kulkas 2 Pintu LG Inverter 363L GN-B389FLDM at Rp 7.615.000).' },
-                { competitor: 'Erablue', title: 'Mesin Cuci Discounts (Samsung, Polytron, TCL)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various washing machine models (e.g., Mesin Cuci Front Loading Samsung Inverter 14 kg WW14T504DAB/SE at Rp 9.999.000).' }
+                { competitor: 'Erablue', title: 'OPPO Reno14 Series 5G Launch Promo', startDate: '2025-07-25', endDate: '2025-08-31', details: 'Launch promotion for OPPO Reno14 Series 5G with AI photography features and millions in rupiah in promos.', promoUrl: 'https://www.erablue.id/' },
+                { competitor: 'Erablue', title: 'Smartphone Discounts (Oppo, Vivo, Realme)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Various smartphone models with discounts (e.g., Oppo Reno12 5G 12GB/512GB SILVER at Rp 4.999.000).', promoUrl: 'https://www.erablue.id/' },
+                { competitor: 'Erablue', title: 'TV Discounts (Toshiba, Samsung, Sharp, TCL)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various TV models (e.g., Google TV Toshiba 4K 75 Inch 75M550NP at Rp 14.999.000).', promoUrl: 'https://www.erablue.id/' },
+                { competitor: 'Erablue', title: 'Laptop Discounts (Acer, Lenovo, HP, Asus)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various laptop models (e.g., Laptop Acer Aspire Lite 15 Intel Core i5-12450H/8GB/512GB/M365/Win11 (AL15-71P-51VG) Silver at Rp 8.399.000).', promoUrl: 'https://www.erablue.id/' },
+                { competitor: 'Erablue', title: 'Kulkas Discounts (LG, Aqua, Electrolux)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various refrigerator models (e.g., Kulkas 2 Pintu LG Inverter 363L GN-B389FLDM at Rp 7.615.000).', promoUrl: 'https://www.erablue.id/' },
+                { competitor: 'Erablue', title: 'Mesin Cuci Discounts (Samsung, Polytron, TCL)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various washing machine models (e.g., Mesin Cuci Front Loading Samsung Inverter 14 kg WW14T504DAB/SE at Rp 9.999.000).', promoUrl: 'https://www.erablue.id/' }
             ];
 
             // Add category and image URL to each promotion object
@@ -427,16 +440,19 @@
                     compPromotions.forEach(promo => {
                         const promoItem = document.createElement('div');
                         promoItem.className = 'promo-item';
+                        // Wrap the image and title in an anchor tag
                         promoItem.innerHTML = `
-                            <img src="${promo.imageUrl}" alt="${promo.category}" class="promo-item-img">
-                            <div class="promo-item-details">
-                                <div class="promo-item-title">${promo.title}</div>
-                                <div class="promo-item-category">${promo.category}</div>
-                                <p class="promo-item-description">${promo.details}</p>
-                                <p class="promo-item-description text-xs text-gray-500 mt-1">
-                                    ${promo.startDate} - ${promo.endDate}
-                                </p>
-                            </div>
+                            <a href="${promo.promoUrl}" target="_blank" rel="noopener noreferrer" class="promo-item-link">
+                                <img src="${promo.imageUrl}" alt="${promo.category}" class="promo-item-img">
+                                <div class="promo-item-details">
+                                    <div class="promo-item-title">${promo.title}</div>
+                                    <div class="promo-item-category">${promo.category}</div>
+                                </div>
+                            </a>
+                            <p class="promo-item-description">${promo.details}</p>
+                            <p class="promo-item-description text-xs text-gray-500 mt-1">
+                                ${promo.startDate} - ${promo.endDate}
+                            </p>
                         `;
                         contentDiv.appendChild(promoItem);
                     });
