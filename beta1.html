@@ -9,152 +9,213 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Yuji+Boku&display=swap" rel="stylesheet">
     <style>
+        /* Global Box-Sizing for consistent layout */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #F0F2F5; /* Softer background */
-            background-image: radial-gradient(#E0E2E5 1px, transparent 1px);
-            background-size: 16px 16px;
+            background-color: #F8F9FA; /* Very light background */
+            background-image: radial-gradient(#E9ECEF 1px, transparent 1px); /* Subtle grid pattern */
+            background-size: 20px 20px;
+            padding: 1.5rem; /* Increased padding for overall buffer */
+            overflow-x: hidden; /* Prevent body horizontal scrollbar from layout issues */
         }
         .paper-card {
             background-color: #FFFFFF;
-            border-radius: 1rem; /* More rounded corners */
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* Stronger shadow */
-            border: 1px solid #e2e8f0; /* Subtle border */
+            border-radius: 1.25rem; /* More pronounced rounded corners */
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 6px 15px -6px rgba(0, 0, 0, 0.08); /* Deeper shadow */
+            border: 1px solid #E0E0E0; /* Light grey border */
         }
         .font-scribble { font-family: 'Yuji Boku', serif; }
         .notification {
             transform: translateX(100%);
-            transition: transform 0.4s ease-out; /* Smoother animation */
-            position: fixed; top: 1.5rem; right: 1.5rem; z-index: 50;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out; /* Smoother animation */
+            position: fixed; top: 2rem; right: 2rem; z-index: 100; /* Higher z-index */
             opacity: 0; /* Start hidden */
+            background-color: #28A745; /* Green for success */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         .notification.show { 
             transform: translateX(0); 
             opacity: 1; /* Fade in */
         }
 
+        /* Header Navigation Buttons */
+        .nav-button {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 0.6rem;
+            color: #6C757D; /* Darker grey text */
+            transition: all 0.2s ease;
+        }
+        .nav-button:hover {
+            background-color: #F0F2F5; /* Lighter hover background */
+            color: #495057; /* Darker text on hover */
+            transform: translateY(-1px);
+        }
+        .nav-button.active {
+            background-color: #E6E6FA; /* Light purple for active */
+            color: #6A5ACD; /* Deeper purple text */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+
+        /* Main Action Button */
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.8rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            color: white;
+            background-color: #DC3545; /* Red */
+            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3); /* Red shadow */
+            transition: all 0.2s ease;
+        }
+        .action-button:hover {
+            background-color: #C82333; /* Darker red on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(220, 53, 69, 0.4);
+        }
+
         /* Timeline Specific Styles */
         .timeline-container {
             overflow-x: auto;
             background: #FFFFFF;
-            border-radius: 0.75rem;
-            border: 1px solid #e5e7eb;
-            padding-bottom: 10px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); /* Inner shadow */
+            border-radius: 1rem; /* Match paper-card radius */
+            border: 1px solid #E0E0E0;
+            padding-bottom: 15px; /* More padding at bottom */
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.05); /* Deeper inner shadow */
+        }
+        .timeline-grid-wrapper { /* New wrapper for consistent horizontal scrolling */
+            width: max-content; /* Force content to take full width */
+            display: flex; /* Use flex to ensure content doesn't wrap */
+            flex-direction: column;
         }
         .timeline-header, .timeline-row {
             display: grid;
-            grid-template-columns: 200px repeat(31, 30px);
-            grid-auto-columns: 30px; /* Explicitly set width for auto-generated columns */
-            width: max-content; /* Ensures content takes full width, enabling scroll */
-            min-height: 40px;
+            grid-template-columns: 200px repeat(31, 40px); /* Wider columns for dates */
+            /* Removed width: max-content here, moved to .timeline-grid-wrapper */
+            min-height: 45px; /* Slightly taller rows */
         }
         .timeline-header {
             position: sticky; top: 0; 
-            z-index: 20; /* Increased z-index */
-            background-color: #4F46E5; /* Deeper purple */
+            z-index: 20; 
+            background-color: #6A5ACD; /* Deeper purple */
             color: white;
-            border-top-left-radius: 0.75rem; /* Match container border-radius */
-            border-top-right-radius: 0.75rem;
-            overflow: hidden; /* For rounded corners on sticky header */
+            border-top-left-radius: 1rem; 
+            border-top-right-radius: 1rem;
+            overflow: hidden; 
         }
         .timeline-header-cell {
-            padding: 10px 4px; /* Slightly more padding */
+            padding: 12px 6px; /* More padding */
             text-align: center;
-            font-size: 12px; /* Slightly larger font */
-            font-weight: 700; /* Bolder */
-            border-right: 1px solid #6D68EC; /* Lighter border for contrast */
-            box-shadow: inset -1px 0 0 rgba(255,255,255,0.1); /* Subtle inner shadow */
+            font-size: 13px; 
+            font-weight: 700; 
+            border-right: 1px solid rgba(255,255,255,0.15); /* Lighter border for contrast */
+            box-shadow: inset -1px 0 0 rgba(0,0,0,0.05); /* Subtle inner shadow */
         }
         .timeline-header-cell:first-child { 
             position: sticky; left: 0; 
-            z-index: 21; /* Increased z-index to be above other header cells */
-            background-color: #4F46E5; /* Match header background */
-            border-right: 1px solid #6D68EC;
+            z-index: 21; 
+            background-color: #6A5ACD; 
+            border-right: 1px solid rgba(255,255,255,0.15);
         }
-        .timeline-header-cell.today { background-color: #EF4444; } /* Red for today */
-        .timeline-header-cell.independence-day { background-color: #DC2626; } /* Darker red for holiday */
+        .timeline-header-cell.today { background-color: #FF6347; } /* Tomato Red for today */
+        .timeline-header-cell.independence-day { background-color: #DC143C; } /* Crimson Red for holiday */
         
         .timeline-row {
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid #F0F2F5; /* Very light border */
         }
         .timeline-row:last-child {
-            border-bottom: none; /* No border on last row */
+            border-bottom: none; 
         }
         .timeline-label {
-            padding: 8px 12px; font-size: 13px; font-weight: 500;
-            color: #374151; border-right: 1px solid #e5e7eb;
-            background-color: #f9fafb; position: sticky; left: 0;
-            z-index: 15; /* Increased z-index to be above normal content */
+            padding: 10px 15px; 
+            font-size: 14px; 
+            font-weight: 600;
+            color: #495057; /* Darker text */
+            border-right: 1px solid #E0E0E0;
+            background-color: #F8F9FA; /* Lighter background */
+            position: sticky; left: 0;
+            z-index: 15; 
             display: flex; align-items: center;
         }
         .timeline-label.competitor-header { 
-            font-weight: 700; font-size: 14px; 
-            background-color: #EEF2FF; /* Lighter blue for competitor header */
-            color: #4338CA; /* Darker blue text */
+            font-weight: 700; 
+            font-size: 15px; 
+            background-color: #E6E6FA; /* Light purple for competitor header */
+            color: #6A5ACD; /* Deeper purple text */
         }
         .timeline-cell { 
-            border-right: 1px solid #f3f4f6; 
+            border-right: 1px solid #F0F2F5; 
             position: relative; 
-            transition: background-color 0.1s ease-in-out; /* Smooth transition */
+            transition: background-color 0.1s ease-in-out; 
         }
         .timeline-cell:hover {
-            background-color: #f0f4f8 !important; /* Lighter hover effect */
+            background-color: #F0F2F5 !important; /* Lighter hover effect */
         }
         .timeline-bar {
-            position: absolute; height: 28px; top: 6px; left: 2px;
-            border-radius: 6px; /* Slightly more rounded */
+            position: absolute; height: 32px; top: 6px; left: 3px; /* Slightly taller and more centered */
+            border-radius: 8px; /* More rounded */
             display: flex; align-items: center;
-            font-size: 10px; /* Smaller font for bars */
+            font-size: 11px; 
             font-weight: 600; color: white;
             cursor: pointer; 
             transition: all 0.2s ease; z-index: 6;
-            padding: 0 6px; /* Less padding */
+            padding: 0 8px; 
             overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow on bars */
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15); /* More prominent shadow */
         }
         .timeline-bar:hover { 
-            transform: translateY(-2px) scale(1.02); /* Lift and grow slightly */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); /* More pronounced shadow on hover */
+            transform: translateY(-3px) scale(1.03); /* Lift and grow more */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
         }
         /* Gradient colors for bars */
-        .timeline-bar.hartono { background: linear-gradient(135deg, #FACC15, #D97706); } /* Yellow-Orange */
-        .timeline-bar.electronic-city { background: linear-gradient(135deg, #3B82F6, #1D4ED8); } /* Blue */
-        .timeline-bar.erablue { background: linear-gradient(135deg, #10B981, #059669); } /* Green */
+        .timeline-bar.hartono { background: linear-gradient(135deg, #FFD700, #FFA500); } /* Gold to Orange */
+        .timeline-bar.electronic-city { background: linear-gradient(135deg, #1E90FF, #0000CD); } /* Dodger Blue to Medium Blue */
+        .timeline-bar.erablue { background: linear-gradient(135deg, #3CB371, #2E8B57); } /* Medium Sea Green to Sea Green */
 
-        /* Styles for the new promotion cards */
+        /* Promotion Cards Section */
         .promo-card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly wider min width */
-            gap: 2rem; /* More space between cards */
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Larger min width */
+            gap: 2.5rem; /* More space between cards */
         }
         .promo-card {
             background-color: #FFFFFF;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border-radius: 1.25rem;
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 6px 15px -6px rgba(0, 0, 0, 0.08);
             overflow: hidden;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #E0E0E0;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .promo-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 20px -5px rgb(0 0 0 / 0.15), 0 6px 8px -6px rgb(0 0 0 / 0.15);
+            transform: translateY(-8px); /* Lift more on hover */
+            box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.18), 0 8px 18px -8px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
         }
         .promo-card-header {
-            padding: 1.25rem; /* More padding */
-            font-size: 1.35rem; /* Larger font */
+            padding: 1.5rem; /* More padding */
+            font-size: 1.5rem; /* Larger font */
             font-weight: 700;
-            color: #374151;
-            background-color: #F3F4F6; /* Lighter background */
-            border-bottom: 1px solid #E5E7EB;
+            color: #343A40; /* Darker grey */
+            background-color: #F0F2F5; /* Lighter background */
+            border-bottom: 1px solid #E0E0E0;
         }
         .promo-card-content {
-            padding: 1.5rem; /* More padding */
+            padding: 2rem; /* More padding */
         }
         .promo-item {
-            margin-bottom: 1.5rem; /* More space between items */
-            padding-bottom: 1.5rem;
-            border-bottom: 1px dashed #E5E7EB; /* Clearer separator */
+            margin-bottom: 2rem; /* More space between items */
+            padding-bottom: 2rem;
+            border-bottom: 1px dashed #E9ECEF; /* Lighter separator */
         }
         .promo-item:last-child {
             margin-bottom: 0;
@@ -167,107 +228,114 @@
             text-decoration: none; 
             color: inherit; 
             cursor: pointer;
-            transition: all 0.2s ease; /* Smooth transition for entire link area */
+            transition: all 0.2s ease; 
+            margin-bottom: 0.75rem; /* Space between link and description */
         }
         .promo-item-link:hover {
-            transform: translateX(5px); /* Slight slide on hover */
+            transform: translateX(8px); /* More pronounced slide on hover */
         }
         .promo-item-link:hover .promo-item-title {
-            color: #4F46E5; /* Highlight title with primary color on hover */
+            color: #6A5ACD; /* Highlight title with primary color on hover */
         }
         .promo-item-img {
-            width: 90px; /* Slightly larger image */
-            height: 90px;
-            border-radius: 0.65rem; /* More rounded */
+            width: 100px; /* Larger image */
+            height: 100px;
+            border-radius: 0.75rem; /* More rounded */
             object-fit: cover;
-            margin-right: 1.25rem; /* More margin */
+            margin-right: 1.5rem; /* More margin */
             flex-shrink: 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow on image */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* More prominent shadow on image */
         }
         .promo-item-details {
             flex-grow: 1;
         }
         .promo-item-title {
-            font-weight: 700; /* Bolder title */
-            color: #1F2937;
-            margin-bottom: 0.4rem; /* More space */
+            font-weight: 700; 
+            color: #212529; /* Even darker text */
+            font-size: 1.15rem; /* Larger title */
+            margin-bottom: 0.5rem; 
             transition: color 0.2s ease; 
         }
         .promo-item-category {
-            font-size: 0.8rem; /* Slightly larger category text */
-            color: #6B7280;
-            margin-bottom: 0.6rem; /* More space */
-            padding: 0.3rem 0.6rem; /* More padding */
-            background-color: #E0E7FF; /* Lighter background for category tag */
-            border-radius: 0.35rem; /* More rounded */
+            font-size: 0.85rem; /* Slightly larger category text */
+            color: #6C757D;
+            margin-bottom: 0.8rem; 
+            padding: 0.4rem 0.8rem; 
+            background-color: #E0E6F8; /* Light blue-purple for category tag */
+            border-radius: 0.4rem; 
             display: inline-block;
-            font-weight: 500;
+            font-weight: 600;
         }
         .promo-item-description {
-            font-size: 0.9rem; /* Slightly larger description */
-            color: #4B5563;
-            line-height: 1.5; /* Better readability */
-            margin-top: 0.5rem; /* More space */
+            font-size: 0.95rem; /* Larger description */
+            color: #495057;
+            line-height: 1.6; /* Better readability */
+            margin-top: 0.75rem; 
         }
         .promo-item-dates {
-            font-size: 0.75rem;
-            color: #6B7280;
-            margin-top: 0.75rem; /* More space */
+            font-size: 0.8rem;
+            color: #6C757D;
+            margin-top: 1rem; 
             font-weight: 500;
         }
 
-        /* General Button Styling */
-        button {
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* Modal Styling */
+        #promoModal {
+            transition: background-color 0.3s ease;
         }
-        button:hover {
+        #modal-dialog {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        #modal-dialog .close-button {
+            background-color: #6A5ACD;
+            box-shadow: 0 4px 8px rgba(106, 90, 205, 0.3);
+        }
+        #modal-dialog .close-button:hover {
+            background-color: #5B4BBE;
             transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 12px rgba(106, 90, 205, 0.4);
         }
-        .bg-red-600 { background-color: #EF4444; } /* Brighter red */
-        .hover\:bg-red-700:hover { background-color: #DC2626; } /* Darker red on hover */
     </style>
 </head>
-<body class="text-gray-800">
+<body>
 
-    <div id="notification" class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg notification">
+    <div id="notification" class="notification">
         <span id="notification-text">Notification message</span>
     </div>
 
     <div class="flex flex-col min-h-screen p-4 md:p-8">
         <!-- Header -->
-        <header class="paper-card flex items-center justify-between p-4 w-full mb-8">
+        <header class="paper-card flex items-center justify-between p-6 w-full mb-10">
             <div class="flex items-center">
-                <svg class="h-9 w-9 mr-3" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg>
-                <h2 class="text-2xl font-bold text-gray-900 font-scribble">あれなんだっけ</h2>
+                <svg class="h-10 w-10 mr-4" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1c1,16.6-7.2,32.1-21.7,40.4C167.8,124.5,160.5,138.8,148.2,148.1z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg>
+                <h2 class="text-3xl font-bold text-gray-900 font-scribble">あれなんだっけ</h2>
             </div>
-            <nav class="flex items-center gap-3 md:gap-5">
-                <button class="px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-800">Marketing Info</button>
-                <button class="px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-800">Store Map</button>
-                <button class="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-50 text-indigo-700 shadow-sm">Promotion Tracker</button>
+            <nav class="flex items-center gap-4 md:gap-6">
+                <button class="nav-button">Marketing Info</button>
+                <button class="nav-button">Store Map</button>
+                <button class="nav-button active">Promotion Tracker</button>
             </nav>
         </header>
 
         <!-- Main Content -->
         <main class="flex-1 p-4 md:p-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
                 <div>
-                    <h1 class="text-4xl font-bold text-gray-900 mb-2">Competitor Promotion Tracker</h1>
-                    <p class="text-gray-600 text-lg">Monitor and analyze competitor promotional activities in real-time</p>
+                    <h1 class="text-5xl font-bold text-gray-900 mb-3">Competitor Promotion Tracker</h1>
+                    <p class="text-gray-600 text-xl">Monitor and analyze competitor promotional activities in real-time</p>
                 </div>
-                <button class="mt-6 md:mt-0 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <button class="action-button mt-8 md:mt-0">
+                    <svg class="-ml-1 mr-2 h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                     </svg>
                     Add New Promotion
                 </button>
             </div>
             
-            <div class="paper-card p-6 mb-10">
-                <h3 class="text-xl font-semibold text-gray-900 mb-5">August 2025 - Detailed Promotions by Competitor</h3>
+            <div class="paper-card p-8 mb-12">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-6">August 2025 - Detailed Promotions by Competitor</h3>
                 <div class="timeline-container">
-                    <div id="timeline-grid">
+                    <div id="timeline-grid-wrapper" class="timeline-grid-wrapper">
                         <!-- JS will build the timeline here -->
                     </div>
                 </div>
@@ -275,7 +343,7 @@
 
             <!-- New Section: Competitor Promotion Cards -->
             <div class="mb-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Current Promotions Overview</h2>
+                <h2 class="text-4xl font-bold text-gray-900 mb-8">Current Promotions Overview</h2>
                 <div id="promo-cards-container" class="promo-card-grid">
                     <!-- Promotion cards will be rendered here by JS -->
                 </div>
@@ -285,20 +353,44 @@
 
     <!-- Custom Modal for Promotion Details -->
     <div id="promoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full mx-4 transform transition-all scale-95 opacity-0" id="modal-dialog">
-            <h4 class="text-xl font-bold mb-4 text-gray-900">Promotion Details</h4>
-            <p id="modal-content" class="text-gray-700 whitespace-pre-wrap leading-relaxed"></p>
-            <button class="mt-8 px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 float-right" onclick="hideModal()">Close</button>
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform scale-95 opacity-0" id="modal-dialog">
+            <h4 class="text-2xl font-bold mb-5 text-gray-900">Promotion Details</h4>
+            <p id="modal-content" class="text-gray-700 whitespace-pre-wrap leading-relaxed text-lg"></p>
+            <button class="action-button close-button mt-10 px-6 py-3" onclick="hideModal()">Close</button>
         </div>
     </div>
 
     <script>
+        // --- GLOBAL FUNCTIONS (Moved outside DOMContentLoaded for accessibility) ---
+        const showModal = (message) => {
+            const modal = document.getElementById('promoModal');
+            const modalDialog = document.getElementById('modal-dialog');
+            document.getElementById('modal-content').textContent = message;
+            modal.classList.remove('hidden');
+            // Trigger reflow to ensure transition plays
+            void modalDialog.offsetWidth; 
+            modalDialog.classList.remove('scale-95', 'opacity-0');
+            modalDialog.classList.add('scale-100', 'opacity-100');
+        };
+
+        const hideModal = () => {
+            const modal = document.getElementById('promoModal');
+            const modalDialog = document.getElementById('modal-dialog');
+            modalDialog.classList.remove('scale-100', 'opacity-100');
+            modalDialog.classList.add('scale-95', 'opacity-0');
+            // Use a short timeout to allow the transition to play before hiding
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // Match this duration to your CSS transition duration
+        };
+
+
         document.addEventListener('DOMContentLoaded', () => {
             // --- COMPETITOR CONFIGURATION ---
             const competitorConfig = {
-                'Hartono': { colorClass: 'hartono', bgColor: '#FEFCE8', websiteUrl: 'https://myhartono.com/en/promo-pilihan' },
-                'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF', websiteUrl: 'https://eci.id/' },
-                'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA', websiteUrl: 'https://www.erablue.id/' }
+                'Hartono': { colorClass: 'hartono', bgColor: '#FFFBEB', websiteUrl: 'https://myhartono.com/en/promo-pilihan' }, 
+                'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF', websiteUrl: 'https://eci.id/' }, 
+                'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA', websiteUrl: 'https://www.erablue.id/' } 
             };
 
             // --- UTILITY FUNCTIONS ---
@@ -328,9 +420,9 @@
                     default: text = 'Promo'; bgColor = 'D1D5DB'; break;
                 }
                 // Use competitor's primary color for image background if available
-                if (competitorColorClass === 'hartono') bgColor = 'F59E0B';
-                else if (competitorColorClass === 'electronic-city') bgColor = '2563EB';
-                else if (competitorColorClass === 'erablue') bgColor = '0D9488';
+                if (competitorColorClass === 'hartono') bgColor = 'FFA500'; // Darker shade for contrast on image
+                else if (competitorColorClass === 'electronic-city') bgColor = '0000CD'; // Darker shade for contrast on image
+                else if (competitorColorClass === 'erablue') bgColor = '2E8B57'; // Darker shade for contrast on image
 
                 return `https://placehold.co/100x100/${bgColor}/ffffff?text=${encodeURIComponent(text)}`;
             };
@@ -343,7 +435,7 @@
                 { competitor: 'Hartono', title: 'Kredivo Belanja Sekarang, Bayar Nanti', startDate: '2025-07-28', endDate: '2025-08-31', details: 'Buy now, pay later with Kredivo.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
                 { competitor: 'Hartono', title: 'Indodana PayLater Belanja Online Lebih Enteng', startDate: '2025-07-01', endDate: '2025-08-31', details: 'Easier online shopping with Indodana PayLater.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
                 { competitor: 'Hartono', title: 'Samsung Premium AI TV Exclusive Package', startDate: '2025-07-14', endDate: '2025-08-31', details: 'Exclusive package for Samsung Premium AI TVs.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-                { competitor: 'Hartono', title: 'Power UP dengan Snapdragon PC', startDate: '2025-06-23', endDate: '2025-09-30', details: 'Promotion for Snapdragon-powered PCs.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
+                { competitor: 'Hartono', title: 'Power UP with Snapdragon PC', startDate: '2025-06-23', endDate: '2025-09-30', details: 'Promotion for Snapdragon-powered PCs.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
                 { competitor: 'Hartono', title: 'Acer Day 2025: Garansi Ekstra!', startDate: '2025-07-08', endDate: '2025-09-30', details: 'Extra warranty for Acer products during Acer Day 2025.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
                 { competitor: 'Hartono', title: 'Ariston Water Heater Gratis Pemasangan', startDate: '2025-06-01', endDate: '2025-09-30', details: 'Free installation for Ariston water heaters.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
                 { competitor: 'Hartono', title: 'Samsung Wearables Mulai 400 Ribuan!', startDate: '2025-06-25', endDate: '2025-08-16', details: 'Samsung Galaxy wearables starting from IDR 400,000.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
@@ -392,17 +484,18 @@
             
             // --- CORE RENDERING FUNCTION FOR TIMELINE ---
             const createTimeline = () => {
-                const container = document.getElementById('timeline-grid');
+                const container = document.getElementById('timeline-grid-wrapper'); // Target the wrapper
                 if (!container) return;
                 container.innerHTML = ''; // Clear previous content
 
                 const competitors = ['Hartono', 'Electronic City', 'Erablue'];
                 const categories = [...new Set(promotions.map(p => p.category))].sort();
-                
-                // Create header row
-                const header = document.createElement('div');
-                header.className = 'timeline-header';
-                let headerHTML = '<div class="timeline-header-cell">AUGUST 2025</div>';
+                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                // Create header row for dates
+                const headerDates = document.createElement('div');
+                headerDates.className = 'timeline-header';
+                let headerDatesHTML = '<div class="timeline-header-cell">AUGUST 2025</div>';
                 const today = new Date();
                 const currentDayOfMonth = today.getDate();
                 const currentMonth = today.getMonth(); // 0-indexed
@@ -412,13 +505,39 @@
                     let specialClass = '';
                     if (day === currentDayOfMonth && currentMonth === 7 && currentYear === 2025) { 
                         specialClass = 'today';
-                    } else if (day === 17) {
+                    } else if (day === 17) { // August 17th is Indonesia's Independence Day
                         specialClass = 'independence-day';
                     }
-                    headerHTML += `<div class="timeline-header-cell ${specialClass}">${day}</div>`;
+                    headerDatesHTML += `<div class="timeline-header-cell ${specialClass}">${day}</div>`;
                 }
-                header.innerHTML = headerHTML;
-                container.appendChild(header);
+                headerDates.innerHTML = headerDatesHTML;
+                container.appendChild(headerDates);
+
+                // Create header row for days of the week
+                const headerDays = document.createElement('div');
+                headerDays.className = 'timeline-header'; // Re-use header styling
+                // Ensure it also expands horizontally
+                headerDays.style.gridTemplateColumns = '200px repeat(31, 40px)'; // Match date columns width
+                headerDays.style.width = 'max-content'; 
+                
+                let headerDaysHTML = '<div class="timeline-header-cell text-xs font-normal" style="background-color: #7B68EE;">Day</div>'; // Label for the day row, with distinct color
+                const firstDayOfAugust = new Date('2025-08-01T00:00:00Z');
+                for (let day = 0; day < 31; day++) {
+                    const date = new Date(firstDayOfAugust);
+                    date.setUTCDate(firstDayOfAugust.getUTCDate() + day);
+                    const dayOfWeek = daysOfWeek[date.getUTCDay()];
+                    let specialClass = '';
+                    if (date.getUTCDate() === currentDayOfMonth && currentMonth === 7 && currentYear === 2025) { 
+                        specialClass = 'today';
+                    } else if (date.getUTCDate() === 17) {
+                        specialClass = 'independence-day';
+                    }
+                    // Apply a lighter background to day cells to differentiate from date cells
+                    headerDaysHTML += `<div class="timeline-header-cell text-xs font-normal ${specialClass}" style="background-color: #7B68EE;">${dayOfWeek}</div>`;
+                }
+                headerDays.innerHTML = headerDaysHTML;
+                container.appendChild(headerDays);
+
 
                 // Create rows for each competitor and their categories
                 competitors.forEach(compName => {
@@ -426,15 +545,17 @@
                     
                     const competitorRow = document.createElement('div');
                     competitorRow.className = 'timeline-row';
+                    // Create the competitor label cell
                     const competitorLabel = document.createElement('div');
                     competitorLabel.className = 'timeline-label competitor-header';
                     competitorLabel.textContent = compName;
                     competitorRow.appendChild(competitorLabel);
 
+                    // Create 31 cells for the competitor's main row and set their background color
                     for (let i = 0; i < 31; i++) {
                         const cell = document.createElement('div');
                         cell.className = 'timeline-cell';
-                        cell.style.backgroundColor = config.bgColor;
+                        cell.style.backgroundColor = config.bgColor; /* Apply competitor's background color */
                         competitorRow.appendChild(cell);
                     }
                     container.appendChild(competitorRow);
@@ -464,7 +585,7 @@
                                 if (span.duration > 0) {
                                     const bar = document.createElement('div');
                                     bar.className = `timeline-bar ${config.colorClass}`;
-                                    bar.style.width = `${(span.duration * 30) - 4}px`;
+                                    bar.style.width = `${(span.duration * 40) - 4}px`; // Adjusted width based on new column width
                                     bar.textContent = promo.title;
                                     bar.title = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`;
                                     bar.onclick = () => showModal(bar.title);
@@ -503,10 +624,9 @@
 
                     const contentDiv = document.getElementById(`promo-content-${compName.replace(/\s/g, '')}`);
                     compPromotions.forEach(promo => {
-                        const promoItem = document.createElement('div'); // This div now wraps the entire clickable area and description
+                        const promoItem = document.createElement('div'); 
                         promoItem.className = 'promo-item';
 
-                        // Create the clickable link part
                         const linkElement = document.createElement('a');
                         linkElement.href = promo.promoUrl;
                         linkElement.target = '_blank';
@@ -522,7 +642,6 @@
                         `;
                         promoItem.appendChild(linkElement);
 
-                        // Add description and dates outside the main clickable link but inside promo-item
                         const descriptionParagraph = document.createElement('p');
                         descriptionParagraph.className = 'promo-item-description';
                         descriptionParagraph.textContent = promo.details;
@@ -535,29 +654,6 @@
 
                         contentDiv.appendChild(promoItem);
                     });
-                });
-            };
-
-            // --- CUSTOM MODAL FOR PROMOTION DETAILS (Replaces alert()) ---
-            const showModal = (message) => {
-                const modal = document.getElementById('promoModal');
-                const modalDialog = document.getElementById('modal-dialog');
-                document.getElementById('modal-content').textContent = message;
-                modal.classList.remove('hidden');
-                // Trigger reflow to ensure transition plays
-                void modalDialog.offsetWidth; 
-                modalDialog.classList.remove('scale-95', 'opacity-0');
-                modalDialog.classList.add('scale-100', 'opacity-100');
-            };
-
-            const hideModal = () => {
-                const modal = document.getElementById('promoModal');
-                const modalDialog = document.getElementById('modal-dialog');
-                modalDialog.classList.remove('scale-100', 'opacity-100');
-                modalDialog.classList.add('scale-95', 'opacity-0');
-                modal.addEventListener('transitionend', function handler() {
-                    modal.classList.add('hidden');
-                    modal.removeEventListener('transitionend', handler);
                 });
             };
 
