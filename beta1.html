@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Yuji+Boku&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Yuji+Boku&display=swap" rel="stylesheet">
     <style>
         /* Global Box-Sizing for consistent layout */
         * {
@@ -15,26 +15,26 @@
         }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: #F8F9FA; /* Very light background */
-            background-image: radial-gradient(#E9ECEF 1px, transparent 1px); /* Subtle grid pattern */
-            background-size: 20px 20px;
-            padding: 1.5rem; /* Increased padding for overall buffer */
-            overflow-x: hidden; /* Prevent body horizontal scrollbar from layout issues */
+            font-family: 'Inter', sans-serif; /* Changed to Inter for cleaner look */
+            background-color: #F4F7F6; /* Light, calm background */
+            background-image: radial-gradient(#E8EBEA 1px, transparent 1px);
+            background-size: 25px 25px;
+            padding: 2rem; /* Generous padding for overall buffer */
+            overflow-x: hidden; /* Prevent body horizontal scrollbar */
         }
         .paper-card {
             background-color: #FFFFFF;
-            border-radius: 1.25rem; /* More pronounced rounded corners */
-            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 6px 15px -6px rgba(0, 0, 0, 0.08); /* Deeper shadow */
-            border: 1px solid #E0E0E0; /* Light grey border */
+            border-radius: 1rem; /* Consistent rounded corners */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); /* Soft shadow */
+            border: 1px solid #E0E0E0;
         }
         .font-scribble { font-family: 'Yuji Boku', serif; }
         .notification {
             transform: translateX(100%);
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out; /* Smoother animation */
-            position: fixed; top: 2rem; right: 2rem; z-index: 100; /* Higher z-index */
-            opacity: 0; /* Start hidden */
-            background-color: #28A745; /* Green for success */
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            position: fixed; top: 2rem; right: 2rem; z-index: 1000; /* High z-index */
+            opacity: 0;
+            background-color: #28A745;
             color: white;
             padding: 0.75rem 1.25rem;
             border-radius: 0.75rem;
@@ -43,27 +43,27 @@
         }
         .notification.show { 
             transform: translateX(0); 
-            opacity: 1; /* Fade in */
+            opacity: 1;
         }
 
         /* Header Navigation Buttons */
         .nav-button {
             padding: 0.6rem 1.2rem;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            border-radius: 0.6rem;
-            color: #6C757D; /* Darker grey text */
+            border-radius: 0.5rem;
+            color: #555;
             transition: all 0.2s ease;
         }
         .nav-button:hover {
-            background-color: #F0F2F5; /* Lighter hover background */
-            color: #495057; /* Darker text on hover */
+            background-color: #F0F0F0;
+            color: #333;
             transform: translateY(-1px);
         }
         .nav-button.active {
-            background-color: #E6E6FA; /* Light purple for active */
-            color: #6A5ACD; /* Deeper purple text */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            background-color: #E6F0FF; /* Light blue for active */
+            color: #007BFF; /* Primary blue */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         /* Main Action Button */
@@ -75,207 +75,197 @@
             font-weight: 600;
             border-radius: 0.75rem;
             color: white;
-            background-color: #DC3545; /* Red */
-            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3); /* Red shadow */
+            background-color: #DC3545;
+            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
             transition: all 0.2s ease;
         }
         .action-button:hover {
-            background-color: #C82333; /* Darker red on hover */
+            background-color: #C82333;
             transform: translateY(-3px);
             box-shadow: 0 8px 16px rgba(220, 53, 69, 0.4);
         }
 
         /* Timeline Specific Styles */
         .timeline-container {
-            overflow-x: auto;
+            overflow-x: auto; /* Enable horizontal scrolling */
             background: #FFFFFF;
-            border-radius: 1rem; /* Match paper-card radius */
+            border-radius: 1rem;
             border: 1px solid #E0E0E0;
-            padding-bottom: 15px; /* More padding at bottom */
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.05); /* Deeper inner shadow */
+            padding-bottom: 15px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
         }
-        .timeline-grid-wrapper { /* New wrapper for consistent horizontal scrolling */
-            width: max-content; /* Force content to take full width */
-            display: flex; /* Use flex to ensure content doesn't wrap */
-            flex-direction: column;
-        }
-        .timeline-header, .timeline-row {
+        .timeline-grid {
             display: grid;
-            grid-template-columns: 200px repeat(31, 40px); /* Wider columns for dates */
-            /* Removed width: max-content here, moved to .timeline-grid-wrapper */
-            min-height: 45px; /* Slightly taller rows */
+            grid-template-columns: 200px repeat(31, 45px); /* Slightly wider columns */
+            width: max-content; /* Force grid to take full content width */
         }
-        .timeline-header {
-            position: sticky; top: 0; 
-            z-index: 20; 
-            background-color: #6A5ACD; /* Deeper purple */
-            color: white;
-            border-top-left-radius: 1rem; 
-            border-top-right-radius: 1rem;
-            overflow: hidden; 
+        .timeline-header-row { /* New class for header rows */
+            display: contents; /* Allows children to be direct grid items */
         }
         .timeline-header-cell {
-            padding: 12px 6px; /* More padding */
+            padding: 12px 0px; /* Adjusted padding */
             text-align: center;
-            font-size: 13px; 
-            font-weight: 700; 
-            border-right: 1px solid rgba(255,255,255,0.15); /* Lighter border for contrast */
-            box-shadow: inset -1px 0 0 rgba(0,0,0,0.05); /* Subtle inner shadow */
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            background-color: #4A4A8A; /* Darker blue-purple for header */
         }
-        .timeline-header-cell:first-child { 
-            position: sticky; left: 0; 
-            z-index: 21; 
-            background-color: #6A5ACD; 
-            border-right: 1px solid rgba(255,255,255,0.15);
+        .timeline-header-cell:first-child {
+            position: sticky; left: 0;
+            z-index: 21; /* Keep sticky */
+            background-color: #4A4A8A;
+            border-right: 1px solid rgba(255,255,255,0.1);
         }
-        .timeline-header-cell.today { background-color: #FF6347; } /* Tomato Red for today */
-        .timeline-header-cell.independence-day { background-color: #DC143C; } /* Crimson Red for holiday */
+        .timeline-header-cell.today { background-color: #FF5722; } /* Deep Orange */
+        .timeline-header-cell.independence-day { background-color: #D32F2F; } /* Darker Red */
         
         .timeline-row {
-            border-bottom: 1px solid #F0F2F5; /* Very light border */
-        }
-        .timeline-row:last-child {
-            border-bottom: none; 
+            display: contents; /* Allows children to be direct grid items */
         }
         .timeline-label {
-            padding: 10px 15px; 
-            font-size: 14px; 
-            font-weight: 600;
-            color: #495057; /* Darker text */
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
             border-right: 1px solid #E0E0E0;
-            background-color: #F8F9FA; /* Lighter background */
+            border-bottom: 1px solid #E0E0E0; /* Add bottom border for all labels */
+            background-color: #F8F8F8; /* Light grey for labels */
             position: sticky; left: 0;
-            z-index: 15; 
+            z-index: 15;
             display: flex; align-items: center;
         }
-        .timeline-label.competitor-header { 
-            font-weight: 700; 
-            font-size: 15px; 
-            background-color: #E6E6FA; /* Light purple for competitor header */
-            color: #6A5ACD; /* Deeper purple text */
+        .timeline-label.competitor-header {
+            font-weight: 700;
+            font-size: 15px;
+            background-color: #E0E6F8; /* Light blue for competitor header */
+            color: #0056B3; /* Darker blue text */
         }
-        .timeline-cell { 
-            border-right: 1px solid #F0F2F5; 
-            position: relative; 
-            transition: background-color 0.1s ease-in-out; 
+        .timeline-cell {
+            border-right: 1px solid #F0F0F0; /* Lighter border for cells */
+            border-bottom: 1px solid #F0F0F0; /* Add bottom border for all cells */
+            position: relative;
+            background-color: white; /* Default cell background */
         }
-        .timeline-cell:hover {
-            background-color: #F0F2F5 !important; /* Lighter hover effect */
-        }
+        /* Specific background colors for competitor rows */
+        .timeline-row.hartono .timeline-cell { background-color: #FFFBEB; } /* Light yellow */
+        .timeline-row.electronic-city .timeline-cell { background-color: #E6F0FF; } /* Light blue */
+        .timeline-row.erablue .timeline-cell { background-color: #E8F8F0; } /* Light green */
+
         .timeline-bar {
-            position: absolute; height: 32px; top: 6px; left: 3px; /* Slightly taller and more centered */
-            border-radius: 8px; /* More rounded */
-            display: flex; align-items: center;
-            font-size: 11px; 
+            position: absolute; height: 35px; top: 5px; left: 3px;
+            border-radius: 0.5rem;
+            display: flex; align-items: center; justify-content: center; /* Center text */
+            font-size: 10px;
             font-weight: 600; color: white;
-            cursor: pointer; 
+            cursor: pointer;
             transition: all 0.2s ease; z-index: 6;
-            padding: 0 8px; 
+            padding: 0 8px;
             overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15); /* More prominent shadow */
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
         }
-        .timeline-bar:hover { 
-            transform: translateY(-3px) scale(1.03); /* Lift and grow more */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+        .timeline-bar:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
         }
         /* Gradient colors for bars */
-        .timeline-bar.hartono { background: linear-gradient(135deg, #FFD700, #FFA500); } /* Gold to Orange */
-        .timeline-bar.electronic-city { background: linear-gradient(135deg, #1E90FF, #0000CD); } /* Dodger Blue to Medium Blue */
-        .timeline-bar.erablue { background: linear-gradient(135deg, #3CB371, #2E8B57); } /* Medium Sea Green to Sea Green */
+        .timeline-bar.hartono { background: linear-gradient(135deg, #FFC107, #FF8C00); } /* Amber to DarkOrange */
+        .timeline-bar.electronic-city { background: linear-gradient(135deg, #007BFF, #0056B3); } /* Primary Blue */
+        .timeline-bar.erablue { background: linear-gradient(135deg, #28A745, #1E7E34); } /* Success Green */
 
         /* Promotion Cards Section */
         .promo-card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Larger min width */
-            gap: 2.5rem; /* More space between cards */
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
         }
         .promo-card {
             background-color: #FFFFFF;
-            border-radius: 1.25rem;
-            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 6px 15px -6px rgba(0, 0, 0, 0.08);
+            border-radius: 1rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
             overflow: hidden;
             border: 1px solid #E0E0E0;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .promo-card:hover {
-            transform: translateY(-8px); /* Lift more on hover */
-            box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.18), 0 8px 18px -8px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
         }
         .promo-card-header {
-            padding: 1.5rem; /* More padding */
-            font-size: 1.5rem; /* Larger font */
+            padding: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #343A40; /* Darker grey */
-            background-color: #F0F2F5; /* Lighter background */
+            color: #333;
+            background-color: #F8F8F8;
             border-bottom: 1px solid #E0E0E0;
         }
         .promo-card-content {
-            padding: 2rem; /* More padding */
+            padding: 2rem;
         }
         .promo-item {
-            margin-bottom: 2rem; /* More space between items */
+            margin-bottom: 2rem;
             padding-bottom: 2rem;
-            border-bottom: 1px dashed #E9ECEF; /* Lighter separator */
+            border-bottom: 1px dashed #E0E0E0;
         }
         .promo-item:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
             border-bottom: none;
         }
-        .promo-item-link { 
+        .promo-item-link {
             display: flex;
             align-items: flex-start;
-            text-decoration: none; 
-            color: inherit; 
+            text-decoration: none;
+            color: inherit;
             cursor: pointer;
-            transition: all 0.2s ease; 
-            margin-bottom: 0.75rem; /* Space between link and description */
+            transition: all 0.2s ease;
+            margin-bottom: 0.75rem;
         }
         .promo-item-link:hover {
-            transform: translateX(8px); /* More pronounced slide on hover */
+            transform: translateX(5px);
         }
         .promo-item-link:hover .promo-item-title {
-            color: #6A5ACD; /* Highlight title with primary color on hover */
+            color: #007BFF; /* Primary blue on hover */
         }
         .promo-item-img {
-            width: 100px; /* Larger image */
-            height: 100px;
-            border-radius: 0.75rem; /* More rounded */
+            width: 90px;
+            height: 90px;
+            border-radius: 0.6rem;
             object-fit: cover;
-            margin-right: 1.5rem; /* More margin */
+            margin-right: 1.25rem;
             flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* More prominent shadow on image */
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
         }
         .promo-item-details {
             flex-grow: 1;
         }
         .promo-item-title {
-            font-weight: 700; 
-            color: #212529; /* Even darker text */
-            font-size: 1.15rem; /* Larger title */
-            margin-bottom: 0.5rem; 
-            transition: color 0.2s ease; 
+            font-weight: 700;
+            color: #222;
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            transition: color 0.2s ease;
         }
         .promo-item-category {
-            font-size: 0.85rem; /* Slightly larger category text */
-            color: #6C757D;
-            margin-bottom: 0.8rem; 
-            padding: 0.4rem 0.8rem; 
-            background-color: #E0E6F8; /* Light blue-purple for category tag */
-            border-radius: 0.4rem; 
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.6rem;
+            padding: 0.3rem 0.7rem;
+            background-color: #E6F0FF;
+            border-radius: 0.4rem;
             display: inline-block;
             font-weight: 600;
         }
         .promo-item-description {
-            font-size: 0.95rem; /* Larger description */
-            color: #495057;
-            line-height: 1.6; /* Better readability */
-            margin-top: 0.75rem; 
+            font-size: 0.9rem;
+            color: #444;
+            line-height: 1.5;
+            margin-top: 0.75rem;
         }
         .promo-item-dates {
-            font-size: 0.8rem;
-            color: #6C757D;
-            margin-top: 1rem; 
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 1rem;
             font-weight: 500;
         }
 
@@ -287,13 +277,13 @@
             transition: transform 0.3s ease-out, opacity 0.3s ease-out;
         }
         #modal-dialog .close-button {
-            background-color: #6A5ACD;
-            box-shadow: 0 4px 8px rgba(106, 90, 205, 0.3);
+            background-color: #007BFF; /* Primary blue */
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
         }
         #modal-dialog .close-button:hover {
-            background-color: #5B4BBE;
+            background-color: #0056B3; /* Darker blue */
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(106, 90, 205, 0.4);
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
         }
     </style>
 </head>
@@ -335,7 +325,7 @@
             <div class="paper-card p-8 mb-12">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-6">August 2025 - Detailed Promotions by Competitor</h3>
                 <div class="timeline-container">
-                    <div id="timeline-grid-wrapper" class="timeline-grid-wrapper">
+                    <div id="timeline-grid" class="timeline-grid">
                         <!-- JS will build the timeline here -->
                     </div>
                 </div>
@@ -389,8 +379,8 @@
             // --- COMPETITOR CONFIGURATION ---
             const competitorConfig = {
                 'Hartono': { colorClass: 'hartono', bgColor: '#FFFBEB', websiteUrl: 'https://myhartono.com/en/promo-pilihan' }, 
-                'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF', websiteUrl: 'https://eci.id/' }, 
-                'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA', websiteUrl: 'https://www.erablue.id/' } 
+                'Electronic City': { colorClass: 'electronic-city', bgColor: '#E6F0FF', websiteUrl: 'https://eci.id/' }, /* Adjusted bgColor for contrast */
+                'Erablue': { colorClass: 'erablue', bgColor: '#E8F8F0', websiteUrl: 'https://www.erablue.id/' } /* Adjusted bgColor for contrast */
             };
 
             // --- UTILITY FUNCTIONS ---
@@ -410,21 +400,16 @@
                 let text = '';
                 let bgColor = '';
                 switch (category) {
-                    case 'Promo Bank & Payment': text = 'Bank'; bgColor = '60A5FA'; break;
-                    case 'Promo HP & Gadget': text = 'Phone'; bgColor = '2DD4BF'; break;
-                    case 'Promo Laptop & PC': text = 'Laptop'; bgColor = 'FBBF24'; break;
-                    case 'Promo TV & Audio': text = 'TV'; bgColor = '60A5FA'; break;
-                    case 'Promo Home Appliances': text = 'Appliance'; bgColor = '2DD4BF'; break;
-                    case 'Promo Back to School': text = 'School'; bgColor = 'FBBF24'; break;
-                    case 'Promo 17 Agustus': text = 'Flag'; bgColor = 'EF4444'; break;
-                    default: text = 'Promo'; bgColor = 'D1D5DB'; break;
+                    case 'Promo Bank & Payment': text = 'Bank'; bgColor = '007BFF'; break; /* Use primary blue */
+                    case 'Promo HP & Gadget': text = 'Phone'; bgColor = '28A745'; break; /* Use success green */
+                    case 'Promo Laptop & PC': text = 'Laptop'; bgColor = 'FFC107'; break; /* Use amber */
+                    case 'Promo TV & Audio': text = 'TV'; bgColor = '007BFF'; break;
+                    case 'Promo Home Appliances': text = 'Appliance'; bgColor = '28A745'; break;
+                    case 'Promo Back to School': text = 'School'; bgColor = 'FFC107'; break;
+                    case 'Promo 17 Agustus': text = 'Flag'; bgColor = 'DC3545'; break; /* Use red */
+                    default: text = 'Promo'; bgColor = '6C757D'; break; /* Dark grey */
                 }
-                // Use competitor's primary color for image background if available
-                if (competitorColorClass === 'hartono') bgColor = 'FFA500'; // Darker shade for contrast on image
-                else if (competitorColorClass === 'electronic-city') bgColor = '0000CD'; // Darker shade for contrast on image
-                else if (competitorColorClass === 'erablue') bgColor = '2E8B57'; // Darker shade for contrast on image
-
-                return `https://placehold.co/100x100/${bgColor}/ffffff?text=${encodeURIComponent(text)}`;
+                return `https://placehold.co/100x100/${bgColor.replace('#', '')}/ffffff?text=${encodeURIComponent(text)}`;
             };
 
             // --- UPDATED & REALISTIC PROMOTION DATA (Dates set for AUG 2025) ---
@@ -484,9 +469,9 @@
             
             // --- CORE RENDERING FUNCTION FOR TIMELINE ---
             const createTimeline = () => {
-                const container = document.getElementById('timeline-grid-wrapper'); // Target the wrapper
+                const container = document.getElementById('timeline-grid'); 
                 if (!container) return;
-                container.innerHTML = ''; // Clear previous content
+                container.innerHTML = ''; 
 
                 const competitors = ['Hartono', 'Electronic City', 'Erablue'];
                 const categories = [...new Set(promotions.map(p => p.category))].sort();
@@ -494,18 +479,21 @@
 
                 // Create header row for dates
                 const headerDates = document.createElement('div');
-                headerDates.className = 'timeline-header';
-                let headerDatesHTML = '<div class="timeline-header-cell">AUGUST 2025</div>';
+                headerDates.className = 'timeline-header-row'; /* Use new class for row */
+                headerDates.style.gridColumn = '1 / -1'; /* Span across all columns */
+                headerDates.style.display = 'contents'; /* Allow children to be grid items */
+
+                let headerDatesHTML = `<div class="timeline-header-cell">AUGUST 2025</div>`;
                 const today = new Date();
                 const currentDayOfMonth = today.getDate();
-                const currentMonth = today.getMonth(); // 0-indexed
+                const currentMonth = today.getMonth(); 
                 const currentYear = today.getFullYear();
 
                 for (let day = 1; day <= 31; day++) {
                     let specialClass = '';
                     if (day === currentDayOfMonth && currentMonth === 7 && currentYear === 2025) { 
                         specialClass = 'today';
-                    } else if (day === 17) { // August 17th is Indonesia's Independence Day
+                    } else if (day === 17) { 
                         specialClass = 'independence-day';
                     }
                     headerDatesHTML += `<div class="timeline-header-cell ${specialClass}">${day}</div>`;
@@ -515,12 +503,11 @@
 
                 // Create header row for days of the week
                 const headerDays = document.createElement('div');
-                headerDays.className = 'timeline-header'; // Re-use header styling
-                // Ensure it also expands horizontally
-                headerDays.style.gridTemplateColumns = '200px repeat(31, 40px)'; // Match date columns width
-                headerDays.style.width = 'max-content'; 
+                headerDays.className = 'timeline-header-row'; /* Use new class for row */
+                headerDays.style.gridColumn = '1 / -1'; /* Span across all columns */
+                headerDays.style.display = 'contents'; /* Allow children to be grid items */
                 
-                let headerDaysHTML = '<div class="timeline-header-cell text-xs font-normal" style="background-color: #7B68EE;">Day</div>'; // Label for the day row, with distinct color
+                let headerDaysHTML = `<div class="timeline-header-cell text-xs font-normal" style="background-color: #5A5A9A;">Day</div>`; /* Distinct color */
                 const firstDayOfAugust = new Date('2025-08-01T00:00:00Z');
                 for (let day = 0; day < 31; day++) {
                     const date = new Date(firstDayOfAugust);
@@ -532,8 +519,7 @@
                     } else if (date.getUTCDate() === 17) {
                         specialClass = 'independence-day';
                     }
-                    // Apply a lighter background to day cells to differentiate from date cells
-                    headerDaysHTML += `<div class="timeline-header-cell text-xs font-normal ${specialClass}" style="background-color: #7B68EE;">${dayOfWeek}</div>`;
+                    headerDaysHTML += `<div class="timeline-header-cell text-xs font-normal ${specialClass}" style="background-color: #5A5A9A;">${dayOfWeek}</div>`;
                 }
                 headerDays.innerHTML = headerDaysHTML;
                 container.appendChild(headerDays);
@@ -544,8 +530,9 @@
                     const config = competitorConfig[compName];
                     
                     const competitorRow = document.createElement('div');
-                    competitorRow.className = 'timeline-row';
-                    // Create the competitor label cell
+                    competitorRow.className = 'timeline-row'; /* Use timeline-row for grid behavior */
+                    competitorRow.classList.add(config.colorClass); /* Add competitor class for background */
+                    
                     const competitorLabel = document.createElement('div');
                     competitorLabel.className = 'timeline-label competitor-header';
                     competitorLabel.textContent = compName;
@@ -562,7 +549,8 @@
 
                     categories.forEach(catName => {
                         const categoryRow = document.createElement('div');
-                        categoryRow.className = 'timeline-row';
+                        categoryRow.className = 'timeline-row'; /* Use timeline-row for grid behavior */
+                        categoryRow.classList.add(config.colorClass); /* Add competitor class for background */
                         
                         const categoryLabel = document.createElement('div');
                         categoryLabel.className = 'timeline-label';
@@ -573,7 +561,7 @@
                         for (let i = 0; i < 31; i++) {
                             const cell = document.createElement('div');
                             cell.className = 'timeline-cell';
-                            cell.style.backgroundColor = config.bgColor;
+                            cell.style.backgroundColor = config.bgColor; /* Apply competitor's background color */
                             dayCells.push(cell);
                             categoryRow.appendChild(cell);
                         }
@@ -585,7 +573,7 @@
                                 if (span.duration > 0) {
                                     const bar = document.createElement('div');
                                     bar.className = `timeline-bar ${config.colorClass}`;
-                                    bar.style.width = `${(span.duration * 40) - 4}px`; // Adjusted width based on new column width
+                                    bar.style.width = `${(span.duration * 45) - 6}px`; /* Adjusted width based on new column width and padding */
                                     bar.textContent = promo.title;
                                     bar.title = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`;
                                     bar.onclick = () => showModal(bar.title);
