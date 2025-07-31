@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Portal - Competitor Promotion Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Yuji+Boku&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #F8F7F4;
+            background-image: radial-gradient(#D9D9D9 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+        .paper-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        .font-scribble {
+            font-family: 'Yuji Boku', serif;
+        }
+        .notification {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        /* --- Timeline Styles --- */
+        .timeline-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        .timeline-header {
+            display: grid;
+            grid-template-columns: 200px repeat(31, 30px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .timeline-header-cell {
+            background-color: #6366f1;
+            color: white;
+            padding: 8px 4px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            border-right: 1px solid #7c7ee8;
+        }
+        .timeline-header-cell:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 11;
+        }
+        .timeline-header-cell.today { background-color: #ef4444; }
+        .timeline-header-cell.independence-day { background-color: #dc2626; }
+        
+        .timeline-row {
+            display: grid;
+            grid-template-columns: 200px repeat(31, 30px);
+            min-height: 40px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .timeline-label {
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            border-right: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+        }
+        .timeline-label.competitor-header {
+            font-weight: 700;
+            font-size: 14px;
+            background-color: #eef2ff;
+        }
+        .timeline-cell {
+            border-right: 1px solid #f3f4f6;
+            position: relative;
+        }
+        .timeline-bar {
+            position: absolute;
+            height: 28px;
+            top: 6px; left: 2px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 6;
+            padding: 0 8px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .timeline-bar:hover {
+            transform: scaleY(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .timeline-bar.hartono { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
+        .timeline-bar.electronic-city { background: linear-gradient(135deg, #60A5FA, #2563EB); }
+        .timeline-bar.erablue { background: linear-gradient(135deg, #2DD4BF, #0D9488); }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div id="notification" class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg notification">
+        <span id="notification-text">Notification message</span>
+    </div>
+
+    <div class="flex flex-col min-h-screen p-4 md:p-8">
+        <!-- Header -->
+        <header class="paper-card flex items-center justify-between p-4 w-full mb-6">
+            <div class="flex items-center">
+                <svg class="h-8 w-8 mr-2" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1c1,16.6-7.2,32.1-21.7,40.4C167.8,124.5,160.5,138.8,148.2,148.1z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg>
+                <h2 class="text-xl font-bold text-gray-900 font-scribble">あれなんだっけ</h2>
+            </div>
+            <nav class="flex items-center gap-2 md:gap-4">
+                <button class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100">Marketing Information</button>
+                <button class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100">Store Development Map</button>
+                <button class="px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-900">Promotion Tracker</button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 md:p-8">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Competitor Promotion Tracker</h1>
+                    <p class="text-gray-600 mt-2">Monitor and analyze competitor promotional activities in real-time</p>
+                </div>
+                <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">Add Promotion</button>
+            </div>
+            
+            <div class="paper-card p-6 mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">August 2025 - Detailed Promotions by Competitor</h3>
+                <div class="timeline-container">
+                    <div id="timeline-grid">
+                        <!-- The entire timeline grid will be built by JS here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- UPDATED & REALISTIC PROMOTION DATA (DATES MODIFIED FOR AUG 2025) ---
+            const promotions = [
+                // == HARTONO ==
+                { id: 1, competitor: 'Hartono', title: 'Cicilan Mandiri', type: 'Bank', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Cicilan 0% dengan Kartu Kredit Mandiri.' },
+                { id: 2, competitor: 'Hartono', title: 'Kredivo PayLater', type: 'Bank', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Belanja sekarang, bayar nanti dengan Kredivo.' },
+                { id: 3, competitor: 'Hartono', title: 'DBS Bank Promo', type: 'Bank', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Special deals for DBS card holders.' },
+                { id: 4, competitor: 'Hartono', title: 'Samsung Wearables', type: 'HP', startDate: '2025-08-05', endDate: '2025-08-20', details: 'Galaxy dalam Genggaman Mulai 400 Ribuan!' },
+                { id: 5, competitor: 'Hartono', title: 'Lenovo Intel Core Ultra', type: 'Laptop', startDate: '2025-08-10', endDate: '2025-08-25', details: 'Promo khusus laptop Lenovo dengan Intel Core Ultra.' },
+                
+                // == ELECTRONIC CITY ==
+                { id: 6, competitor: 'Electronic City', title: 'Promo Bank Kemerdekaan', type: 'Bank', startDate: '2025-08-10', endDate: '2025-08-20', details: 'Special Independence Day offers with various banks.' },
+                { id: 7, competitor: 'Electronic City', title: 'Laptop & Gadget Fair', type: 'Event', startDate: '2025-08-15', endDate: '2025-08-25', details: 'Pameran Laptop dan HP berbagai merk.' },
+                { id: 8, competitor: 'Electronic City', title: 'Back to School Essentials', type: 'Event', startDate: '2025-08-01', endDate: '2025-08-15', details: 'Perlengkapan sekolah, laptop dan gadget.' },
+
+                // == ERABLUE ==
+                { id: 9, competitor: 'Erablue', title: 'Pesta Belanja Kembali ke Sekolah', type: 'Event', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Potongan harga laptop dengan kartu pelajar.' },
+                { id: 10, competitor: 'Erablue', title: 'Flash Sale Laptop Termurah', type: 'Laptop', startDate: '2025-08-10', endDate: '2025-08-17', details: 'Harga Spesial Laptop Setiap Hari.' },
+                { id: 11, competitor: 'Erablue', title: 'Pre-Order Samsung Foldable', type: 'HP', startDate: '2025-08-01', endDate: '2025-08-14', details: 'Pre-Order Samsung Galaxy Z Fold & Z Flip, dapatkan bonusnya.' },
+                { id: 12, competitor: 'Erablue', title: 'Promo Kemerdekaan', type: 'Event', startDate: '2025-08-17', endDate: '2025-08-19', details: 'Independence Day Tech Carnival.' }
+            ];
+
+            // --- UTILITY FUNCTIONS ---
+            const getPromoCategory = (promo) => {
+                const text = (promo.title + ' ' + promo.details).toLowerCase();
+                if (text.includes('back to school') || text.includes('kembali ke sekolah')) return 'Promo Back to school';
+                if (text.includes('independence day') || text.includes('kemerdekaan')) return 'Promo 17 Agustus';
+                if (text.includes('bank') || text.includes('credit card') || text.includes('cicilan') || text.includes('kredivo') || text.includes('dbs') || text.includes('mandiri')) return 'Promo Bank';
+                if (text.includes('laptop')) return 'Promo Laptop';
+                if (text.includes('hp') || text.includes('smartphone') || text.includes('galaxy') || text.includes('foldable')) return 'Promo HP';
+                return null;
+            };
+
+            const calculatePromotionSpan = (startDate, endDate) => {
+                const augustStart = new Date('2025-08-01T00:00:00Z');
+                const augustEnd = new Date('2025-08-31T23:59:59Z');
+                let promoStart = new Date(startDate);
+                let promoEnd = new Date(endDate);
+
+                promoStart = promoStart < augustStart ? augustStart : promoStart;
+                promoEnd = promoEnd > augustEnd ? augustEnd : promoEnd;
+
+                if (promoStart > promoEnd) return { startDay: -1, duration: 0 };
+                
+                const startDay = promoStart.getUTCDate();
+                const duration = promoEnd.getUTCDate() - startDay + 1;
+                return { startDay, duration };
+            };
+            
+            // --- CORE RENDERING FUNCTION ---
+            const createTimeline = () => {
+                const container = document.getElementById('timeline-grid');
+                if (!container) return;
+                container.innerHTML = '';
+
+                const competitors = ['Hartono', 'Electronic City', 'Erablue'];
+                const categories = ['Promo Bank', 'Promo HP', 'Promo Laptop', 'Promo Back to school', 'Promo 17 Agustus'];
+                const competitorConfig = {
+                    'Hartono': { colorClass: 'hartono', bgColor: '#FEFCE8' },
+                    'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF' },
+                    'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA' }
+                };
+
+                const header = document.createElement('div');
+                header.className = 'timeline-header';
+                let headerHTML = '<div class="timeline-header-cell">AUGUST 2025</div>';
+                for (let day = 1; day <= 31; day++) {
+                    let specialClass = day === 1 ? 'today' : (day === 17 ? 'independence-day' : '');
+                    headerHTML += `<div class="timeline-header-cell ${specialClass}">${day}</div>`;
+                }
+                header.innerHTML = headerHTML;
+                container.appendChild(header);
+
+                competitors.forEach(compName => {
+                    const config = competitorConfig[compName];
+                    const competitorRow = document.createElement('div');
+                    competitorRow.className = 'timeline-row';
+                    competitorRow.innerHTML = `<div class="timeline-label competitor-header">${compName}</div>` + 
+                                              `<div style="display: contents;">` + 
+                                              Array(31).fill(`<div class="timeline-cell" style="background-color: ${config.bgColor};"></div>`).join('') +
+                                              `</div>`;
+                    container.appendChild(competitorRow);
+
+                    categories.forEach(catName => {
+                        const categoryRow = document.createElement('div');
+                        categoryRow.className = 'timeline-row';
+                        categoryRow.innerHTML = `<div class="timeline-label">${catName}</div>`;
+                        
+                        const cellsWrapper = document.createElement('div');
+                        cellsWrapper.style.display = 'contents';
+                        
+                        const dayCells = Array.from({ length: 31 }, () => {
+                            const cell = document.createElement('div');
+                            cell.className = 'timeline-cell';
+                            cell.style.backgroundColor = config.bgColor;
+                            return cell;
+                        });
+
+                        promotions
+                            .filter(p => p.competitor === compName && getPromoCategory(p) === catName)
+                            .forEach(promo => {
+                                const span = calculatePromotionSpan(promo.startDate, promo.endDate);
+                                if (span.duration > 0) {
+                                    const bar = document.createElement('div');
+                                    bar.className = `timeline-bar ${config.colorClass}`;
+                                    bar.style.width = `${(span.duration * 30) - 4}px`;
+                                    bar.textContent = promo.title;
+                                    bar.title = `[${catName}] ${promo.title}\n\nDetails: ${promo.details}`;
+                                    bar.onclick = () => alert(bar.title);
+                                    dayCells[span.startDay - 1].appendChild(bar);
+                                }
+                            });
+
+                        dayCells.forEach(cell => cellsWrapper.appendChild(cell));
+                        categoryRow.appendChild(cellsWrapper);
+                        container.appendChild(categoryRow);
+                    });
+                });
+            };
+
+            // --- INITIALIZE ---
+            createTimeline();
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            notificationText.textContent = '✅ Timeline updated with live promotions!';
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 4000);
+        });
+    </script>
+</body>
+</html>
