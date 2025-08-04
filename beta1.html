@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Portal - Competitor Promotion Tracker</title>
     
-    <!-- ADD THIS LINE: The Supabase Client Library -->
+    <!-- The Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -432,24 +432,19 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- SUPABASE SETUP ---
-            // These are your project's unique connection details.
             const SUPABASE_URL = 'https://mohswbdebacxysyomyoy.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vaHN3YmRlYmFjeHlzeW9teW95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQyNzc1MjEsImV4cCI6MjA2OTg1MzUyMX0.2sgVgMidw6wT2IAroRaFw-WQS5FPnC47fY-vtWR7LRI';
 
-            // This creates the connection to your database.
-            const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            // ** THE FIX IS HERE **
+            // We use the global 'supabase' object from the library to create our client.
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log('Supabase client initialized. If you see this, it is working!');
 
-
-            // --- GLOBAL STATE (The "Brain" of the page) ---
-            // This will be filled with data from Supabase instead of a hardcoded list.
             let promotions = [];
 
-
-            // --- NEW: FUNCTION TO LOAD DATA FROM SUPABASE ---
             async function loadPromotions() {
-                // This command tells Supabase: "Get everything from the 'promotions' table."
-                const { data, error } = await supabase
+                // Use our new 'supabaseClient' variable
+                const { data, error } = await supabaseClient
                     .from('promotions')
                     .select('*');
 
@@ -457,26 +452,22 @@
                     console.error('Error fetching promotions:', error);
                     showNotification('❌ Error loading data from server.', 'bg-red-500');
                 } else {
-                    // We successfully got the data. Now we prepare it for the webpage.
                     promotions = data;
                     promotions.forEach(promo => {
                         promo.category = promo.category || getPromoCategory(promo);
                         promo.iconHTML = getCategoryIcon(promo.category);
                     });
-                    rerenderAll(); // This redraws the timeline and cards with the new data.
+                    rerenderAll();
                     showNotification('✅ Data loaded successfully!', 'bg-blue-500');
                 }
             }
 
-
-            // --- COMPETITOR CONFIGURATION (This stays the same) ---
             const competitorConfig = {
                 'Hartono': { colorClass: 'hartono', bgColor: '#FEFCE8' },
                 'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF' },
                 'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA' }
             };
 
-            // --- SVG ICONS FOR CATEGORIES (This stays the same) ---
             const categoryIcons = {
                 'Promo Bank & Payment': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="25" width="80" height="50" rx="8" fill="#005A9C"/><rect x="10" y="60" width="80" height="5" fill="#7BB8F2"/><rect x="22" y="35" width="15" height="12"rx="2" fill="#F5A623"/></svg>`,
                 'Promo HP & Gadget': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="35" y="15" width="50" height="70" rx="8" fill="#7BB8F2"/><rect x="15" y="25" width="40" height="60" rx="8" fill="#005A9C"/><rect x="20" y="32" width="30" height="46" rx="3" fill="#F5A623"/></svg>`,
@@ -488,13 +479,11 @@
                 'Other Promotions': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="40" width="60" height="45" rx="5" fill="#005A9C"/><rect x="15" y="25" width="70" height="15" rx="5" fill="#7BB8F2"/><rect x="45" y="25" width="10" height="60" fill="#F5A623"/><path d="M 45 25 C 35 15, 25 15, 25 25" stroke="#F5A623" stroke-width="8" fill="none"/><path d="M 55 25 C 65 15, 75 15, 75 25" stroke="#F5A623" stroke-width="8" fill="none"/></svg>`
             };
 
-            // --- LIST OF PROMOTION CATEGORIES (This stays the same) ---
             const promoCategories = [
                 'Promo Bank & Payment', 'Promo HP & Gadget', 'Promo Laptop & PC', 'Promo TV & Audio',
                 'Promo Home Appliances', 'Promo Back to School', 'Promo 17 Agustus', 'Other Promotions'
             ];
             
-            // --- UTILITY FUNCTIONS (These stay the same) ---
             const getPromoCategory = (promo) => {
                 const text = (promo.title + ' ' + promo.details).toLowerCase();
                 if (text.includes('bank') || text.includes('credit card') || text.includes('cicilan') || text.includes('bca') || text.includes('mandiri')) return 'Promo Bank & Payment';
@@ -519,7 +508,6 @@
                 return { startDay, duration };
             };
 
-            // --- RENDER FUNCTIONS (These stay the same) ---
             const createTimeline = () => {
                 const labelContainer = document.getElementById('timeline-labels');
                 const scrollContainer = document.getElementById('timeline-content-scroll');
@@ -648,7 +636,6 @@
                 updateLastUpdatedText();
             };
 
-            // --- MODAL AND ACTION FUNCTIONS ---
             const showPromoDetailsModal = (promoId) => {
                 const promo = promotions.find(p => p.id === promoId);
                 if (!promo) return;
@@ -715,8 +702,6 @@
                 lastUpdatedElement.textContent = `Last updated: ${now.toLocaleDateString('en-US', options)}`;
             };
             
-
-            // --- NEW: FUNCTION TO ADD DATA TO SUPABASE ---
             const handleAddPromoForm = async (event) => {
                 event.preventDefault();
                 const form = event.target;
@@ -730,20 +715,19 @@
                     category: form.promoType.value || getPromoCategory({title: form.title.value, details: form.details.value})
                 };
 
-                const { data, error } = await supabase.from('promotions').insert([newPromoData]);
+                const { data, error } = await supabaseClient.from('promotions').insert([newPromoData]);
 
                 if (error) {
                     console.error('Error adding promotion:', error);
                     showNotification('❌ Failed to add promotion.', 'bg-red-500');
                 } else {
-                    await loadPromotions(); // Reload all data from the server
+                    await loadPromotions();
                     form.reset();
                     document.getElementById('addPromoModal').classList.add('hidden');
                     showNotification('✅ New promotion added successfully!', 'bg-green-500');
                 }
             };
 
-            // --- NEW: FUNCTION TO EDIT DATA IN SUPABASE ---
             const handleEditPromoForm = async (event) => {
                 event.preventDefault();
                 const form = event.target;
@@ -758,27 +742,26 @@
                     category: form.promoType.value || getPromoCategory({title: form.title.value, details: form.details.value})
                 };
 
-                const { data, error } = await supabase.from('promotions').update(updatedPromoData).eq('id', promoId);
+                const { data, error } = await supabaseClient.from('promotions').update(updatedPromoData).eq('id', promoId);
 
                 if (error) {
                     console.error('Error updating promotion:', error);
                     showNotification('❌ Failed to update promotion.', 'bg-red-500');
                 } else {
-                    await loadPromotions(); // Reload all data
+                    await loadPromotions();
                     document.getElementById('editPromoModal').classList.add('hidden');
                     showNotification('✏️ Promotion updated successfully.', 'bg-green-500');
                 }
             };
 
-            // --- NEW: FUNCTION TO DELETE DATA FROM SUPABASE ---
             const deletePromotion = async (promoId) => {
-                const { error } = await supabase.from('promotions').delete().eq('id', promoId);
+                const { error } = await supabaseClient.from('promotions').delete().eq('id', promoId);
 
                 if (error) {
                     console.error('Error deleting promotion:', error);
                     showNotification('❌ Failed to delete promotion.', 'bg-red-500');
                 } else {
-                    await loadPromotions(); // Reload all data
+                    await loadPromotions();
                     document.getElementById('deleteConfirmModal').classList.add('hidden');
                     document.getElementById('promoModal').classList.add('hidden');
                     showNotification('🗑️ Promotion deleted successfully.', 'bg-blue-500');
@@ -789,7 +772,6 @@
             // --- INITIALIZATION AND EVENT LISTENERS ---
             populatePromoTypeDropdowns();
             
-            // Event listeners for forms and buttons
             document.getElementById('openAddPromoModalBtn').addEventListener('click', () => {
                 document.getElementById('addPromoModal').classList.remove('hidden');
             });
@@ -804,7 +786,6 @@
             });
 
             // --- START THE APPLICATION ---
-            // This is the most important line: it kicks everything off by fetching the data.
             loadPromotions();
         });
     </script>
