@@ -7,333 +7,261 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Yuji+Boku&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Yuji+Boku&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SheetJS library for parsing Excel files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* Global Box-Sizing for consistent layout */
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Inter', sans-serif; /* Changed to Inter for cleaner look */
-            background-color: #F4F7F6; /* Light, calm background */
-            background-image: radial-gradient(#E8EBEA 1px, transparent 1px);
-            background-size: 25px 25px;
-            padding: 2rem; /* Generous padding for overall buffer */
-            overflow-x: hidden; /* Prevent body horizontal scrollbar */
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #F8F7F4;
+            background-image: radial-gradient(#D9D9D9 1px, transparent 1px);
+            background-size: 16px 16px;
         }
         .paper-card {
             background-color: #FFFFFF;
-            border-radius: 1rem; /* Consistent rounded corners */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); /* Soft shadow */
-            border: 1px solid #E0E0E0;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
         }
         .font-scribble { font-family: 'Yuji Boku', serif; }
         .notification {
             transform: translateX(100%);
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-            position: fixed; top: 2rem; right: 2rem; z-index: 1000; /* High z-index */
-            opacity: 0;
-            background-color: #28A745;
-            color: white;
-            padding: 0.75rem 1.25rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease-in-out;
+            position: fixed; top: 1rem; right: 1rem; z-index: 50;
         }
-        .notification.show { 
-            transform: translateX(0); 
-            opacity: 1;
-        }
-
-        /* Header Navigation Buttons */
-        .nav-button {
-            padding: 0.6rem 1.2rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border-radius: 0.5rem;
-            color: #555;
-            transition: all 0.2s ease;
-        }
-        .nav-button:hover {
-            background-color: #F0F0F0;
-            color: #333;
-            transform: translateY(-1px);
-        }
-        .nav-button.active {
-            background-color: #E6F0FF; /* Light blue for active */
-            color: #007BFF; /* Primary blue */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        /* Main Action Button */
-        .action-button {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.8rem 1.8rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 0.75rem;
-            color: white;
-            background-color: #DC3545;
-            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
-            transition: all 0.2s ease;
-        }
-        .action-button:hover {
-            background-color: #C82333;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(220, 53, 69, 0.4);
-        }
-
-        /* Timeline Specific Styles */
+        .notification.show { transform: translateX(0); }
         .timeline-container {
-            overflow-x: auto; /* Enable horizontal scrolling */
-            background: #FFFFFF;
-            border-radius: 1rem;
-            border: 1px solid #E0E0E0;
-            padding-bottom: 15px;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            display: flex; /* Use flexbox to create two columns */
+            background: white;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            padding-bottom: 10px;
         }
-        .timeline-grid {
+        .timeline-fixed-col {
+            flex-shrink: 0; /* Prevents the left column from shrinking */
+            width: 200px;
+            background-color: #f9fafb;
+            border-right: 1px solid #e5e7eb;
+            z-index: 10;
+        }
+        .timeline-scroll-wrapper {
+            flex-grow: 1; /* Allows the right column to take up remaining space */
+            overflow-x: auto;
+        }
+        .timeline-header {
             display: grid;
-            grid-template-columns: 200px repeat(31, 45px); /* Slightly wider columns */
-            width: max-content; /* Force grid to take full content width */
+            grid-template-columns: repeat(31, 30px);
+            position: sticky; top: 0; z-index: 10;
+            background-color: #6366f1;
         }
-        .timeline-header-row { /* New class for header rows */
-            display: contents; /* Allows children to be direct grid items */
-        }
-        .timeline-header-cell {
-            padding: 12px 0px; /* Adjusted padding */
-            text-align: center;
-            font-size: 13px;
-            font-weight: 700;
+        .timeline-header-label {
+            padding: 8px 4px; text-align: center;
+            font-size: 11px; font-weight: 600;
             color: white;
-            border-right: 1px solid rgba(255,255,255,0.1);
-            background-color: #4A4A8A; /* Darker blue-purple for header */
+            background-color: #6366f1;
+            border-right: 1px solid #7c7ee8;
         }
-        .timeline-header-cell:first-child {
-            position: sticky; left: 0;
-            z-index: 21; /* Keep sticky */
-            background-color: #4A4A8A;
-            border-right: 1px solid rgba(255,255,255,0.1);
+        .timeline-header-label.today {
+            background-color: #ef4444;
         }
-        .timeline-header-cell.today { background-color: #FF5722; } /* Deep Orange */
-        .timeline-header-cell.independence-day { background-color: #D32F2F; } /* Darker Red */
-        
+        .timeline-header-label.weekend {
+            background-color: #4f46e5;
+        }
         .timeline-row {
-            display: contents; /* Allows children to be direct grid items */
+            display: grid;
+            grid-template-columns: repeat(31, 30px);
+            min-height: 40px;
+            border-bottom: 1px solid #f3f4f6;
         }
         .timeline-label {
-            padding: 10px 15px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #333;
-            border-right: 1px solid #E0E0E0;
-            border-bottom: 1px solid #E0E0E0; /* Add bottom border for all labels */
-            background-color: #F8F8F8; /* Light grey for labels */
-            position: sticky; left: 0;
-            z-index: 15;
+            padding: 8px 12px; font-size: 13px; font-weight: 500;
+            color: #374151;
+            background-color: #f9fafb;
             display: flex; align-items: center;
+            border-bottom: 1px solid #f3f4f6;
+            min-height: 40px;
         }
-        .timeline-label.competitor-header {
-            font-weight: 700;
-            font-size: 15px;
-            background-color: #E0E6F8; /* Light blue for competitor header */
-            color: #0056B3; /* Darker blue text */
-        }
-        .timeline-cell {
-            border-right: 1px solid #F0F0F0; /* Lighter border for cells */
-            border-bottom: 1px solid #F0F0F0; /* Add bottom border for all cells */
-            position: relative;
-            background-color: white; /* Default cell background */
-        }
-        /* Specific background colors for competitor rows */
-        .timeline-row.hartono .timeline-cell { background-color: #FFFBEB; } /* Light yellow */
-        .timeline-row.electronic-city .timeline-cell { background-color: #E6F0FF; } /* Light blue */
-        .timeline-row.erablue .timeline-cell { background-color: #E8F8F0; } /* Light green */
-
+        .timeline-label.competitor-header { font-weight: 700; font-size: 14px; background-color: #eef2ff; }
+        .timeline-cell { border-right: 1px solid #f3f4f6; position: relative; }
         .timeline-bar {
-            position: absolute; height: 35px; top: 5px; left: 3px;
-            border-radius: 0.5rem;
-            display: flex; align-items: center; justify-content: center; /* Center text */
-            font-size: 10px;
-            font-weight: 600; color: white;
-            cursor: pointer;
-            transition: all 0.2s ease; z-index: 6;
-            padding: 0 8px;
-            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            position: absolute; height: 28px; top: 6px; left: 2px;
+            border-radius: 4px; display: flex; align-items: center;
+            font-size: 11px; font-weight: 600; color: white;
+            cursor: pointer; transition: all 0.2s ease; z-index: 6;
+            padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
         }
-        .timeline-bar:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-        }
-        /* Gradient colors for bars */
-        .timeline-bar.hartono { background: linear-gradient(135deg, #FFC107, #FF8C00); } /* Amber to DarkOrange */
-        .timeline-bar.electronic-city { background: linear-gradient(135deg, #007BFF, #0056B3); } /* Primary Blue */
-        .timeline-bar.erablue { background: linear-gradient(135deg, #28A745, #1E7E34); } /* Success Green */
+        .timeline-bar:hover { transform: scaleY(1.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+        .timeline-bar.hartono { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
+        .timeline-bar.electronic-city { background: linear-gradient(135deg, #60A5FA, #2563EB); }
+        .timeline-bar.erablue { background: linear-gradient(135deg, #2DD4BF, #0D9488); }
 
-        /* Promotion Cards Section */
+        /* Styles for the new promotion cards */
         .promo-card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            align-items: stretch;
         }
         .promo-card {
             background-color: #FFFFFF;
-            border-radius: 1rem;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
             overflow: hidden;
-            border: 1px solid #E0E0E0;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .promo-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
         }
         .promo-card-header {
-            padding: 1.5rem;
-            font-size: 1.4rem;
+            padding: 1rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            color: #333;
-            background-color: #F8F8F8;
-            border-bottom: 1px solid #E0E0E0;
+            color: #374151;
+            background-color: #f3f4f6;
+            border-bottom: 1px solid #e5e7eb;
         }
         .promo-card-content {
-            padding: 2rem;
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
         .promo-item {
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px dashed #E0E0E0;
+            display: flex;
+            align-items: flex-start; /* Align items to the top */
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed #e5e7eb;
+            position: relative;
+            flex-grow: 1; /* Allow item to grow */
         }
         .promo-item:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
             border-bottom: none;
         }
-        .promo-item-link {
-            display: flex;
-            align-items: flex-start;
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-bottom: 0.75rem;
-        }
-        .promo-item-link:hover {
-            transform: translateX(5px);
-        }
-        .promo-item-link:hover .promo-item-title {
-            color: #007BFF; /* Primary blue on hover */
-        }
-        .promo-item-img {
-            width: 90px;
-            height: 90px;
-            border-radius: 0.6rem;
-            object-fit: cover;
-            margin-right: 1.25rem;
+        .promo-item-icon-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 0.5rem;
+            margin-right: 1rem;
             flex-shrink: 0;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease-in-out;
+        }
+        .promo-item-icon-container:hover {
+            transform: scale(1.1);
+        }
+        .promo-item-icon-container svg {
+            width: 100%;
+            height: 100%;
         }
         .promo-item-details {
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         .promo-item-title {
-            font-weight: 700;
-            color: #222;
-            font-size: 1.1rem;
-            margin-bottom: 0.4rem;
-            transition: color 0.2s ease;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
         }
         .promo-item-category {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 0.6rem;
-            padding: 0.3rem 0.7rem;
-            background-color: #E6F0FF;
-            border-radius: 0.4rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: #eef2ff;
+            border-radius: 0.25rem;
             display: inline-block;
-            font-weight: 600;
         }
         .promo-item-description {
-            font-size: 0.9rem;
-            color: #444;
-            line-height: 1.5;
-            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: #4b5563;
         }
-        .promo-item-dates {
-            font-size: 0.75rem;
-            color: #666;
-            margin-top: 1rem;
-            font-weight: 500;
+        .delete-promo-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+        .delete-promo-btn:hover {
+            color: #ef4444;
         }
 
-        /* Modal Styling */
-        #promoModal {
-            transition: background-color 0.3s ease;
+        /* Mobile Accordion Styles */
+        .accordion-item-header {
+            transition: background-color 0.2s;
         }
-        #modal-dialog {
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        .accordion-icon {
+            transition: transform 0.3s ease;
         }
-        #modal-dialog .close-button {
-            background-color: #007BFF; /* Primary blue */
-            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-        }
-        #modal-dialog .close-button:hover {
-            background-color: #0056B3; /* Darker blue */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+        .accordion-icon.rotate-180 {
+            transform: rotate(180deg);
         }
     </style>
 </head>
-<body>
+<body class="text-gray-800">
 
-    <div id="notification" class="notification">
+    <!-- Notification Toast -->
+    <div id="notification" class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg notification">
         <span id="notification-text">Notification message</span>
     </div>
 
     <div class="flex flex-col min-h-screen p-4 md:p-8">
         <!-- Header -->
-        <header class="paper-card flex items-center justify-between p-6 w-full mb-10">
-            <div class="flex items-center">
-                <svg class="h-10 w-10 mr-4" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1c1,16.6-7.2,32.1-21.7,40.4C167.8,124.5,160.5,138.8,148.2,148.1z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg>
-                <h2 class="text-3xl font-bold text-gray-900 font-scribble">あれなんだっけ</h2>
+        <header class="paper-card flex flex-col md:flex-row items-center justify-between p-4 w-full mb-6">
+            <div class="flex items-center mb-4 md:mb-0">
+                <svg class="h-8 w-8 mr-2" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1c1,16.6-7.2,32.1-21.7,40.4C167.8,124.5,160.5,138.8,148.2,148.1z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg>
+                <h2 class="text-xl font-bold text-gray-900 font-scribble">あれなんだっけ</h2>
             </div>
-            <nav class="flex items-center gap-4 md:gap-6">
-                <button class="nav-button">Marketing Info</button>
-                <button class="nav-button">Store Map</button>
-                <button class="nav-button active">Promotion Tracker</button>
+            <nav class="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+                <a href="https://dante19dsc.github.io/analystdante/" target="_blank" rel="noopener noreferrer" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto text-center">Marketing Information</a>
+                <button class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto">Store Development Map</button>
+                <button class="px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-900 w-full md:w-auto">Promotion Tracker</button>
             </nav>
         </header>
 
         <!-- Main Content -->
         <main class="flex-1 p-4 md:p-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h1 class="text-5xl font-bold text-gray-900 mb-3">Competitor Promotion Tracker</h1>
-                    <p class="text-gray-600 text-xl">Monitor and analyze competitor promotional activities in real-time</p>
+                    <h1 class="text-3xl font-bold text-gray-900">Competitor Promotion Tracker</h1>
+                    <p class="text-gray-600 mt-2">Monitor and analyze competitor promotional activities in real-time</p>
+                    <p id="last-updated-text" class="text-xs text-gray-500 mt-1"></p>
                 </div>
-                <button class="action-button mt-8 md:mt-0">
-                    <svg class="-ml-1 mr-2 h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                    </svg>
-                    Add New Promotion
-                </button>
+                <div class="flex gap-2">
+                    <button id="openAddPromoModalBtn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+                        <i class="fa-solid fa-plus mr-2"></i> Add Promotion
+                    </button>
+                </div>
             </div>
             
-            <div class="paper-card p-8 mb-12">
-                <h3 class="text-2xl font-semibold text-gray-900 mb-6">August 2025 - Detailed Promotions by Competitor</h3>
-                <div class="timeline-container">
-                    <div id="timeline-grid" class="timeline-grid">
-                        <!-- JS will build the timeline here -->
-                    </div>
+            <div class="paper-card p-6 mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">August 2025 - Detailed Promotions by Competitor</h3>
+                <!-- Desktop Timeline -->
+                <div class="timeline-container hidden md:flex">
+                    <div id="timeline-labels" class="timeline-fixed-col"></div>
+                    <div id="timeline-content-scroll" class="timeline-scroll-wrapper"></div>
+                </div>
+                <!-- Mobile Accordion -->
+                <div id="mobile-timeline-container" class="block md:hidden space-y-2">
+                    <!-- Mobile timeline will be generated here -->
                 </div>
             </div>
 
             <!-- New Section: Competitor Promotion Cards -->
             <div class="mb-8">
-                <h2 class="text-4xl font-bold text-gray-900 mb-8">Current Promotions Overview</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Current Promotions Overview</h2>
                 <div id="promo-cards-container" class="promo-card-grid">
                     <!-- Promotion cards will be rendered here by JS -->
                 </div>
@@ -341,112 +269,194 @@
         </main>
     </div>
 
-    <!-- Custom Modal for Promotion Details -->
+    <!-- Custom Modal for Promotion Details (Alert replacement) -->
     <div id="promoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform scale-95 opacity-0" id="modal-dialog">
-            <h4 class="text-2xl font-bold mb-5 text-gray-900">Promotion Details</h4>
-            <p id="modal-content" class="text-gray-700 whitespace-pre-wrap leading-relaxed text-lg"></p>
-            <button class="action-button close-button mt-10 px-6 py-3" onclick="hideModal()">Close</button>
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
+            <h4 class="text-lg font-bold mb-4">Promotion Details</h4>
+            <p id="modal-content" class="text-gray-700 whitespace-pre-wrap"></p>
+            <div id="modal-actions" class="mt-6 flex justify-end gap-2">
+                 <!-- Buttons will be injected here -->
+            </div>
         </div>
     </div>
 
+     <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
+            <h4 class="text-lg font-bold mb-2">Confirm Deletion</h4>
+            <p class="text-gray-700 mb-6">Are you sure you want to delete this promotion?</p>
+            <div class="flex justify-end gap-2">
+                <button id="cancelDeleteBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancel</button>
+                <button id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Add/Upload Promotion Modal -->
+    <div id="addPromoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="text-lg font-bold">Add New Promotion</h4>
+                <button onclick="document.getElementById('addPromoModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <form id="addPromoForm" class="space-y-4 mb-4">
+                <div>
+                    <label for="competitor" class="block text-sm font-medium text-gray-700">Competitor</label>
+                    <select id="competitor" name="competitor" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="">Select a Competitor</option>
+                        <option value="Hartono">Hartono</option>
+                        <option value="Electronic City">Electronic City</option>
+                        <option value="Erablue">Erablue</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="promoType" class="block text-sm font-medium text-gray-700">Promotion Type</label>
+                    <select id="promoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="">Select a Category</option>
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700">Promotion Title</label>
+                    <input type="text" id="title" name="title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                 <div>
+                    <label for="promoUrl" class="block text-sm font-medium text-gray-700">Promotion URL</label>
+                    <input type="url" id="promoUrl" name="promoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="https://example.com/promo">
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
+                        <input type="date" id="startDate" name="startDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <div class="flex-1">
+                        <label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label>
+                        <input type="date" id="endDate" name="endDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label for="details" class="block text-sm font-medium text-gray-700">Details</label>
+                    <textarea id="details" name="details" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                </div>
+                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:text-sm">Add Promotion</button>
+            </form>
+
+            <div class="relative py-4">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="bg-white px-2 text-gray-500">Or Upload an Excel file</span>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <label for="file-upload" class="flex justify-center items-center w-full rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 cursor-pointer hover:border-gray-400 transition-colors">
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-20m32-12h-4c-.783 0-1.543.085-2.29.255M24 24v-4m0 4h-4m4 0h4m-4-8v-4m0 4h-4m4 0h4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <div class="flex text-sm text-gray-600">
+                            <span class="relative font-medium text-indigo-600 hover:text-indigo-500">
+                                Upload a file
+                            </span>
+                            <span class="pl-1">or drag and drop</span>
+                        </div>
+                        <p class="text-xs text-gray-500">
+                            .xlsx file with headers: competitor, title, startDate, endDate, details, url
+                        </p>
+                    </div>
+                    <input id="file-upload" name="file-upload" type="file" class="sr-only" accept=".xlsx" />
+                </label>
+            </div>
+        </div>
+    </div>
+
+
     <script>
-        // --- GLOBAL FUNCTIONS (Moved outside DOMContentLoaded for accessibility) ---
-        const showModal = (message) => {
-            const modal = document.getElementById('promoModal');
-            const modalDialog = document.getElementById('modal-dialog');
-            document.getElementById('modal-content').textContent = message;
-            modal.classList.remove('hidden');
-            // Trigger reflow to ensure transition plays
-            void modalDialog.offsetWidth; 
-            modalDialog.classList.remove('scale-95', 'opacity-0');
-            modalDialog.classList.add('scale-100', 'opacity-100');
-        };
-
-        const hideModal = () => {
-            const modal = document.getElementById('promoModal');
-            const modalDialog = document.getElementById('modal-dialog');
-            modalDialog.classList.remove('scale-100', 'opacity-100');
-            modalDialog.classList.add('scale-95', 'opacity-0');
-            // Use a short timeout to allow the transition to play before hiding
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300); // Match this duration to your CSS transition duration
-        };
-
-
         document.addEventListener('DOMContentLoaded', () => {
+            // --- GLOBAL STATE ---
+            let promotions = [
+                // Hartono Electronics
+                { id: 1, competitor: 'Hartono', title: 'Free Shipping Nationwide', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Use code: FREEONGKIRMH. Discounts based on purchase value. Valid for online purchases.', url: 'https://myhartono.com/en/promo-pilihan' },
+                { id: 2, competitor: 'Hartono', title: 'Samsung Galaxy Wearables Special Price', startDate: '2025-06-25', endDate: '2025-08-16', details: 'Starting from Rp400,000. Limited stock availability.', url: 'https://myhartono.com/en/samsung-galaxy-wearable-special-price/' },
+                { id: 3, competitor: 'Hartono', title: 'BCA Credit Card Promotion', startDate: '2025-08-01', endDate: '2025-08-31', details: '0% installment for 6 and 12 months. Valid for online transactions.', url: 'https://myhartono.com/en/bca/' },
+                { id: 4, competitor: 'Hartono', title: 'Trade-In TV & AC Program', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Trade-in values up to Rp1,500,000. Professional pickup service. Max 7 days to request trade-in.', url: 'https://myhartono.com/en/trade-in-tv-and-ac-hartono' },
+                { id: 5, competitor: 'Hartono', title: '"Hadiah Sahabat Setia 2025" Loyalty Program', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Ongoing loyalty program with car giveaway opportunities.', url: 'https://www.instagram.com/myhartono/' },
+
+                // Electronic City
+                { id: 6, competitor: 'Electronic City', title: 'BCA Credit Card Discount up to Rp1,000,000', startDate: '2025-07-31', endDate: '2025-08-10', details: 'Discount tiers from Rp200,000 to Rp1,000,000. Valid at Electronic Festival Exhibition at Supermal Karawaci.', url: 'https://promo.bca.co.id/en/all/2025/07/31/04/electronic-city' },
+                { id: 7, competitor: 'Electronic City', title: 'HUAWEI MatePad Pro 12.2 2025 Discount', startDate: '2025-07-25', endDate: '2025-08-31', details: 'Rp500,000 discount on HUAWEI MatePad Pro.', url: 'https://promo.bca.co.id/en/all/2025/06/25/09/electronic-city' },
+                { id: 8, competitor: 'Electronic City', title: 'OPPO Products Discount', startDate: '2025-07-25', endDate: '2025-09-30', details: 'Rp350,000 discount on various OPPO products.', url: 'https://promo.bca.co.id/id/all/2025/06/10/05/electronic-city' },
+                { id: 9, competitor: 'Electronic City', title: 'PAHLAWAN (PROMO HEMAT TIADA LAWAN)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Independence month promotion.', url: 'https://eci.id' },
+                { id: 10, competitor: 'Electronic City', title: 'DAIKIN Air Conditioner "IRIT KIAN NYAMAN"', startDate: '2025-08-01', endDate: '2025-08-31', details: 'August discount promotion on Daikin ACs.', url: 'https://eci.id/deal/1416/daikin-diskon-agustus-irit-kian-nyaman' },
+                { id: 11, competitor: 'Electronic City', title: 'LG August Special Offer', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Brand-specific August promotions on LG products.', url: 'https://eci.id' },
+                { id: 12, competitor: 'Electronic City', title: 'SCBD Store Clearance Sale', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Extra savings up to 50% at Electronic City SCBD.', url: 'https://www.instagram.com/p/DMzmbD8Rj2u/' },
+                { id: 13, competitor: 'Electronic City', title: 'Mandiri Credit Card Discount', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts up to Rp500,000 and installments up to 12 months.', url: 'https://www.mandirikartukredit.com/hot-offer?kategori=elektronik' },
+
+                // Erablue/Erajaya Group
+                { id: 14, competitor: 'Erablue', title: 'Samsung Galaxy S25 Edge Special Pricing', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Rp17,499,000 (10% discount from Rp19,499,000).', url: 'https://eraspace.com/page/mantra' },
+                { id: 15, competitor: 'Erablue', title: 'Tecno Camon 20 Premier 5G Special Pricing', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Rp3,999,000 (27% discount).', url: 'https://eraspace.com/page/mantra' },
+                { id: 16, competitor: 'Erablue', title: 'Back to School Promotion', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Educational technology focus.', url: 'https://eraspace.com/eraspace/katalog/back-to-school-7719' },
+                { id: 17, competitor: 'Erablue', title: 'OPPO Reno14 Series Promotion', startDate: '2025-07-25', endDate: '2025-08-31', details: 'Special pricing on new mobile phone releases.', url: 'https://erafone.com/katalog/first-selling-oppo-reno14-series-7746' },
+                { id: 18, competitor: 'Erablue', title: 'OPPO Contest Promotion (August 2025)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Win prizes like Umrah vouchers and mobile phones when you purchase select OPPO phones.', url: 'https://www.erablue.id/promosi/beli-handphone-gratis-umroh-hanya-di-erablue-electronics-1582259' },
+                { id: 19, competitor: 'Erablue', title: 'Sharp Electronics Special Pricing', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts starting from Rp200,000 on Sharp products.', url: 'https://www.erablue.id/promosi/super-brand-day-sharp-di-erablue-bikin-agustus-makin-meriah-1582258' },
+                { id: 20, competitor: 'Erablue', title: 'Mandiri Credit Card Programs', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts up to Rp1,000,000 with 0% interest on installments.', url: 'https://www.mandirikartukredit.com/hot-offer?kategori=elektronik%2Bhome-appliances' },
+                { id: 21, competitor: 'Erablue', title: 'Audio Festival', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Promotions on sound equipment and accessories.', url: 'https://eraspace.com/urbanrepublic/katalog/audio-festival-2238' },
+            ];
+
             // --- COMPETITOR CONFIGURATION ---
             const competitorConfig = {
-                'Hartono': { colorClass: 'hartono', bgColor: '#FFFBEB', websiteUrl: 'https://myhartono.com/en/promo-pilihan' }, 
-                'Electronic City': { colorClass: 'electronic-city', bgColor: '#E6F0FF', websiteUrl: 'https://eci.id/' }, /* Adjusted bgColor for contrast */
-                'Erablue': { colorClass: 'erablue', bgColor: '#E8F8F0', websiteUrl: 'https://www.erablue.id/' } /* Adjusted bgColor for contrast */
+                'Hartono': { colorClass: 'hartono', bgColor: '#FEFCE8' },
+                'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF' },
+                'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA' }
             };
 
+            // --- SVG ICONS FOR CATEGORIES ---
+            const categoryIcons = {
+                'Promo Bank & Payment': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="25" width="80" height="50" rx="8" fill="#005A9C"/><rect x="10" y="60" width="80" height="5" fill="#7BB8F2"/><rect x="22" y="35" width="15" height="12" rx="2" fill="#F5A623"/></svg>`,
+                'Promo HP & Gadget': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="35" y="15" width="50" height="70" rx="8" fill="#7BB8F2"/><rect x="15" y="25" width="40" height="60" rx="8" fill="#005A9C"/><rect x="20" y="32" width="30" height="46" rx="3" fill="#F5A623"/></svg>`,
+                'Promo Laptop & PC': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g><path d="M 5 70 L 95 70 L 85 78 L 15 78 Z" fill="#005A9C"/><rect x="18" y="22" width="74" height="48" rx="5" fill="#7BB8F2" transform="skewX(-10)"/><rect x="25" y="28" width="60" height="36" rx="2" fill="#005A9C" transform="skewX(-10)"/></g></svg>`,
+                'Promo TV & Audio': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="20" width="84" height="50" rx="4" fill="#005A9C"/><rect x="13" y="25" width="74" height="40" fill="#7BB8F2"/><path d="M 45 70 L 55 70 L 65 80 L 35 80 Z" fill="#005A9C"/><rect x="20" y="85" width="60" height="5" rx="2.5" fill="#F5A623"/></svg>`,
+                'Promo Home Appliances': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="translate(50 35) scale(0.8)"><path d="M 0 -15 L 0 15 M -13 0 L 13 0 M -9 -9 L 9 9 M -9 9 L 9 -9" stroke="#005A9C" stroke-width="4" stroke-linecap="round"/></g><path d="M 25 60 C 25 50, 50 50, 50 75 S 75 90, 75 80 C 75 70, 60 70, 50 85 Z" fill="#7BB8F2" transform="translate(-15 0)"/><g transform="translate(70 70) scale(0.6)"><circle cx="0" cy="0" r="12" fill="none" stroke="#F5A623" stroke-width="4"/><path d="M 0 0 L 10 5" stroke="#F5A623" stroke-width="4" stroke-linecap="round"/><path d="M 0 0 L -10 5" stroke="#F5A623" stroke-width="4" stroke-linecap="round"/><path d="M 0 0 L 0 -12" stroke="#F5A623" stroke-width="4" stroke-linecap="round"/></g></svg>`,
+                'Promo Back to School': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 15 80 Q 50 90 85 80 L 85 20 Q 50 10 15 20 Z" fill="#005A9C"/><path d="M 50 22 V 82" stroke="#7BB8F2" stroke-width="4"/><circle cx="50" cy="50" r="12" fill="#F5A623"/><path d="M 50 38 Q 55 35 52 30" stroke="#005A9C" stroke-width="3" fill="none"/></svg>`,
+                'Promo 17 Agustus': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="10" width="6" height="80" rx="3" fill="#005A9C"/><path d="M 21 25 C 40 15, 60 35, 80 25 V 45 C 60 55, 40 35, 21 45 Z" fill="#F5A623"/><path d="M 21 45 C 40 35, 60 55, 80 45 V 65 C 60 75, 40 55, 21 65 Z" fill="#7BB8F2"/></svg>`,
+                'Other Promotions': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="40" width="60" height="45" rx="5" fill="#005A9C"/><rect x="15" y="25" width="70" height="15" rx="5" fill="#7BB8F2"/><rect x="45" y="25" width="10" height="60" fill="#F5A623"/><path d="M 45 25 C 35 15, 25 15, 25 25" stroke="#F5A623" stroke-width="8" fill="none"/><path d="M 55 25 C 65 15, 75 15, 75 25" stroke="#F5A623" stroke-width="8" fill="none"/></svg>`
+            };
+
+            // --- LIST OF PROMOTION CATEGORIES ---
+            const promoCategories = [
+                'Promo Bank & Payment',
+                'Promo HP & Gadget',
+                'Promo Laptop & PC',
+                'Promo TV & Audio',
+                'Promo Home Appliances',
+                'Promo Back to School',
+                'Promo 17 Agustus',
+                'Other Promotions'
+            ];
+            
             // --- UTILITY FUNCTIONS ---
             const getPromoCategory = (promo) => {
                 const text = (promo.title + ' ' + promo.details).toLowerCase();
-                if (text.includes('bank') || text.includes('credit card') || text.includes('cicilan') || text.includes('dbs') || text.includes('mandiri') || text.includes('kredivo') || text.includes('indodana')) return 'Promo Bank & Payment';
-                if (text.includes('hp') || text.includes('smartphone') || text.includes('galaxy') || text.includes('foldable') || text.includes('reno') || text.includes('vivo') || text.includes('realme') || text.includes('wearables')) return 'Promo HP & Gadget';
-                if (text.includes('laptop') || text.includes('vivobook') || text.includes('acer') || text.includes('lenovo') || text.includes('hp') || text.includes('asus') || text.includes('pc') || text.includes('snapdragon')) return 'Promo Laptop & PC';
-                if (text.includes('tv') || text.includes('soundbar') || text.includes('qled') || text.includes('uhd') || text.includes('google tv') || text.includes('smart tv') || text.includes('speaker')) return 'Promo TV & Audio';
-                if (text.includes('refrigerator') || text.includes('kulkas') || text.includes('mesin cuci') || text.includes('washing machine') || text.includes('water heater') || text.includes('air cooler') || text.includes('setrika')) return 'Promo Home Appliances';
+                if (text.includes('bank') || text.includes('credit card') || text.includes('cicilan') || text.includes('bca') || text.includes('mandiri') || text.includes('kredivo') || text.includes('indodana')) return 'Promo Bank & Payment';
+                if (text.includes('hp') || text.includes('smartphone') || text.includes('galaxy') || text.includes('foldable') || text.includes('reno') || text.includes('vivo') || text.includes('realme') || text.includes('wearables') || text.includes('iphone') || text.includes('tecno') || text.includes('infinix')) return 'Promo HP & Gadget';
+                if (text.includes('laptop') || text.includes('vivobook') || text.includes('acer') || text.includes('lenovo') || text.includes('hp') || text.includes('asus') || text.includes('pc') || text.includes('snapdragon') || text.includes('matepad') || text.includes('ipad')) return 'Promo Laptop & PC';
+                if (text.includes('tv') || text.includes('soundbar') || text.includes('qled') || text.includes('uhd') || text.includes('google tv') || text.includes('smart tv') || text.includes('speaker') || text.includes('audio')) return 'Promo TV & Audio';
+                if (text.includes('refrigerator') || text.includes('kulkas') || text.includes('mesin cuci') || text.includes('washing machine') || text.includes('water heater') || text.includes('air cooler') || text.includes('setrika') || text.includes('ac ') || text.includes('air conditioner')) return 'Promo Home Appliances';
                 if (text.includes('back to school') || text.includes('kembali ke sekolah')) return 'Promo Back to School';
-                if (text.includes('independence day') || text.includes('kemerdekaan') || text.includes('17 agustus')) return 'Promo 17 Agustus';
-                return 'Other Promotions'; // Catch-all for new categories
+                if (text.includes('independence day') || text.includes('kemerdekaan') || text.includes('17 agustus') || text.includes('pahlawan')) return 'Promo 17 Agustus';
+                return 'Other Promotions';
+            };
+            
+            const getCategoryIcon = (category) => {
+                return categoryIcons[category] || categoryIcons['Other Promotions'];
             };
 
-            const getCategoryImageUrl = (category, competitorColorClass) => {
-                let text = '';
-                let bgColor = '';
-                switch (category) {
-                    case 'Promo Bank & Payment': text = 'Bank'; bgColor = '007BFF'; break; /* Use primary blue */
-                    case 'Promo HP & Gadget': text = 'Phone'; bgColor = '28A745'; break; /* Use success green */
-                    case 'Promo Laptop & PC': text = 'Laptop'; bgColor = 'FFC107'; break; /* Use amber */
-                    case 'Promo TV & Audio': text = 'TV'; bgColor = '007BFF'; break;
-                    case 'Promo Home Appliances': text = 'Appliance'; bgColor = '28A745'; break;
-                    case 'Promo Back to School': text = 'School'; bgColor = 'FFC107'; break;
-                    case 'Promo 17 Agustus': text = 'Flag'; bgColor = 'DC3545'; break; /* Use red */
-                    default: text = 'Promo'; bgColor = '6C757D'; break; /* Dark grey */
-                }
-                return `https://placehold.co/100x100/${bgColor.replace('#', '')}/ffffff?text=${encodeURIComponent(text)}`;
-            };
-
-            // --- UPDATED & REALISTIC PROMOTION DATA (Dates set for AUG 2025) ---
-            const promotions = [
-                // Source: MyHartono.com/en/promo-pilihan (Checked on July 31, 2025)
-                { competitor: 'Hartono', title: 'Sony Days – Upgrade TV Tanpa Biaya Kirim!', startDate: '2025-07-04', endDate: '2025-08-03', details: 'Free shipping for TV upgrades.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-                { competitor: 'Hartono', title: 'Philips Personal Care Discount up to 30%', startDate: '2025-07-04', endDate: '2025-08-04', details: 'Up to 30% discount on Philips personal care products.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-                { competitor: 'Hartono', title: 'Kredivo Belanja Sekarang, Bayar Nanti', startDate: '2025-07-28', endDate: '2025-08-31', details: 'Buy now, pay later with Kredivo.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-                { competitor: 'Hartono', title: 'Indodana PayLater Belanja Online Lebih Enteng', startDate: '2025-07-01', endDate: '2025-08-31', details: 'Easier online shopping with Indodana PayLater.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-                { competitor: 'Hartono', title: 'Samsung Premium AI TV Exclusive Package', startDate: '2025-07-14', endDate: '2025-08-31', details: 'Exclusive package for Samsung Premium AI TVs.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-                { competitor: 'Hartono', title: 'Power UP with Snapdragon PC', startDate: '2025-06-23', endDate: '2025-09-30', details: 'Promotion for Snapdragon-powered PCs.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-                { competitor: 'Hartono', title: 'Acer Day 2025: Garansi Ekstra!', startDate: '2025-07-08', endDate: '2025-09-30', details: 'Extra warranty for Acer products during Acer Day 2025.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-                { competitor: 'Hartono', title: 'Ariston Water Heater Gratis Pemasangan', startDate: '2025-06-01', endDate: '2025-09-30', details: 'Free installation for Ariston water heaters.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-                { competitor: 'Hartono', title: 'Samsung Wearables Mulai 400 Ribuan!', startDate: '2025-06-25', endDate: '2025-08-16', details: 'Samsung Galaxy wearables starting from IDR 400,000.', promoUrl: 'https://myhartono.com/en/promo-pilihan' },
-
-                // Source: Eci.id (Electronic City - Checked on July 31, 2025)
-                { competitor: 'Electronic City', title: 'AC Free Installation & Pipe (Mitsubishi)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Free installation, pipe, and bracket for select Mitsubishi AC units.', promoUrl: 'https://eci.id/' },
-                { competitor: 'Electronic City', title: 'Flash Sale: SHARP Refrigerator Multidoor', startDate: '2025-08-01', endDate: '2025-08-31', details: 'SHARP Refrigerator Multidoor SJ-IF51PG-BK/BL at Rp. 8.999.000 (23% off).', promoUrl: 'https://eci.id/' },
-                { competitor: 'Electronic City', title: 'Flash Sale: SONY Soundbar Speaker HT-S400', startDate: '2025-08-01', endDate: '2025-08-31', details: 'SONY Soundbar Speaker HT-S400 at Rp. 2.499.000 (29% off).', promoUrl: 'https://eci.id/' },
-                { competitor: 'Electronic City', title: 'Gebyar Brand Festival: TCL QLED Google TV 55 Inch', startDate: '2025-08-01', endDate: '2025-08-31', details: 'TCL QLED Google TV 55P7K at Rp. 6.999.000 (28% off).', promoUrl: 'https://eci.id/' },
-                { competitor: 'Electronic City', title: 'LG UHD Smart TV 50 Inch Discount', startDate: '2025-08-01', endDate: '2025-08-31', details: 'LG UHD Smart TV 50UA7550PSA at Rp. 5.199.000 (30% off).', promoUrl: 'https://eci.id/' },
-
-                // Source: Erablue.id (Checked on July 31, 2025)
-                { competitor: 'Erablue', title: 'OPPO Reno14 Series 5G Launch Promo', startDate: '2025-07-25', endDate: '2025-08-31', details: 'Launch promotion for OPPO Reno14 Series 5G with AI photography features and millions in rupiah in promos.', promoUrl: 'https://www.erablue.id/' },
-                { competitor: 'Erablue', title: 'Smartphone Discounts (Oppo, Vivo, Realme)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Various smartphone models with discounts (e.g., Oppo Reno12 5G 12GB/512GB SILVER at Rp 4.999.000).', promoUrl: 'https://www.erablue.id/' },
-                { competitor: 'Erablue', title: 'TV Discounts (Toshiba, Samsung, Sharp, TCL)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various TV models (e.g., Google TV Toshiba 4K 75 Inch 75M550NP at Rp 14.999.000).', promoUrl: 'https://www.erablue.id/' },
-                { competitor: 'Erablue', title: 'Laptop Discounts (Acer, Lenovo, HP, Asus)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various laptop models (e.g., Laptop Acer Aspire Lite 15 Intel Core i5-12450H/8GB/512GB/M365/Win11 (AL15-71P-51VG) Silver at Rp 8.399.000).', promoUrl: 'https://www.erablue.id/' },
-                { competitor: 'Erablue', title: 'Kulkas Discounts (LG, Aqua, Electrolux)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various refrigerator models (e.g., Kulkas 2 Pintu LG Inverter 363L GN-B389FLDM at Rp 7.615.000).', promoUrl: 'https://www.erablue.id/' },
-                { competitor: 'Erablue', title: 'Mesin Cuci Discounts (Samsung, Polytron, TCL)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts on various washing machine models (e.g., Mesin Cuci Front Loading Samsung Inverter 14 kg WW14T504DAB/SE at Rp 9.999.000).', promoUrl: 'https://www.erablue.id/' }
-            ];
-
-            // Add category and image URL to each promotion object
-            promotions.forEach(promo => {
-                promo.category = getPromoCategory(promo);
-                const config = competitorConfig[promo.competitor];
-                promo.imageUrl = getCategoryImageUrl(promo.category, config.colorClass);
-            });
 
             const calculatePromotionSpan = (startDate, endDate) => {
                 const augustStart = new Date('2025-08-01T00:00:00Z');
@@ -458,110 +468,96 @@
                 promoEnd = promoEnd > augustEnd ? augustEnd : promoEnd;
 
                 if (promoStart > promoEnd) {
-                    return { startDay: -1, duration: 0 }; // Promotion is outside August
+                    return { startDay: -1, duration: 0 };
                 }
                 
-                // Calculate start day relative to August 1st (1-indexed)
                 const startDay = promoStart.getUTCDate();
                 const duration = promoEnd.getUTCDate() - startDay + 1;
                 return { startDay, duration };
             };
             
-            // --- CORE RENDERING FUNCTION FOR TIMELINE ---
             const createTimeline = () => {
-                const container = document.getElementById('timeline-grid'); 
-                if (!container) return;
-                container.innerHTML = ''; 
+                const labelContainer = document.getElementById('timeline-labels');
+                const scrollContainer = document.getElementById('timeline-content-scroll');
+
+                if (!labelContainer || !scrollContainer) return;
+
+                labelContainer.innerHTML = '';
+                scrollContainer.innerHTML = '';
 
                 const competitors = ['Hartono', 'Electronic City', 'Erablue'];
                 const categories = [...new Set(promotions.map(p => p.category))].sort();
-                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                
+                // Create header for the fixed label column
+                const fixedHeader = document.createElement('div');
+                fixedHeader.className = 'timeline-label competitor-header sticky top-0 bg-[#6366f1] text-white';
+                fixedHeader.style.zIndex = 11;
+                fixedHeader.textContent = 'AUGUST 2025';
+                labelContainer.appendChild(fixedHeader);
 
-                // Create header row for dates
-                const headerDates = document.createElement('div');
-                headerDates.className = 'timeline-header-row'; /* Use new class for row */
-                headerDates.style.gridColumn = '1 / -1'; /* Span across all columns */
-                headerDates.style.display = 'contents'; /* Allow children to be grid items */
-
-                let headerDatesHTML = `<div class="timeline-header-cell">AUGUST 2025</div>`;
+                // Create header for the scrollable date grid
+                const header = document.createElement('div');
+                header.className = 'timeline-header';
+                let headerHTML = '';
                 const today = new Date();
                 const currentDayOfMonth = today.getDate();
-                const currentMonth = today.getMonth(); 
+                const currentMonth = today.getMonth();
                 const currentYear = today.getFullYear();
 
                 for (let day = 1; day <= 31; day++) {
                     let specialClass = '';
+                    const dateInLoop = new Date(Date.UTC(2025, 7, day));
+                    const dayOfWeek = dateInLoop.getUTCDay();
+
+                    if (dayOfWeek === 0 || dayOfWeek === 6) {
+                        specialClass = 'weekend';
+                    }
+                    
                     if (day === currentDayOfMonth && currentMonth === 7 && currentYear === 2025) { 
-                        specialClass = 'today';
-                    } else if (day === 17) { 
-                        specialClass = 'independence-day';
-                    }
-                    headerDatesHTML += `<div class="timeline-header-cell ${specialClass}">${day}</div>`;
+                        specialClass += ' today';
+                    } 
+                    
+                    headerHTML += `<div class="timeline-header-label ${specialClass.trim()}">${day}</div>`;
                 }
-                headerDates.innerHTML = headerDatesHTML;
-                container.appendChild(headerDates);
+                header.innerHTML = headerHTML;
+                scrollContainer.appendChild(header);
 
-                // Create header row for days of the week
-                const headerDays = document.createElement('div');
-                headerDays.className = 'timeline-header-row'; /* Use new class for row */
-                headerDays.style.gridColumn = '1 / -1'; /* Span across all columns */
-                headerDays.style.display = 'contents'; /* Allow children to be grid items */
-                
-                let headerDaysHTML = `<div class="timeline-header-cell text-xs font-normal" style="background-color: #5A5A9A;">Day</div>`; /* Distinct color */
-                const firstDayOfAugust = new Date('2025-08-01T00:00:00Z');
-                for (let day = 0; day < 31; day++) {
-                    const date = new Date(firstDayOfAugust);
-                    date.setUTCDate(firstDayOfAugust.getUTCDate() + day);
-                    const dayOfWeek = daysOfWeek[date.getUTCDay()];
-                    let specialClass = '';
-                    if (date.getUTCDate() === currentDayOfMonth && currentMonth === 7 && currentYear === 2025) { 
-                        specialClass = 'today';
-                    } else if (date.getUTCDate() === 17) {
-                        specialClass = 'independence-day';
-                    }
-                    headerDaysHTML += `<div class="timeline-header-cell text-xs font-normal ${specialClass}" style="background-color: #5A5A9A;">${dayOfWeek}</div>`;
-                }
-                headerDays.innerHTML = headerDaysHTML;
-                container.appendChild(headerDays);
-
-
-                // Create rows for each competitor and their categories
                 competitors.forEach(compName => {
                     const config = competitorConfig[compName];
                     
-                    const competitorRow = document.createElement('div');
-                    competitorRow.className = 'timeline-row'; /* Use timeline-row for grid behavior */
-                    competitorRow.classList.add(config.colorClass); /* Add competitor class for background */
-                    
+                    // Competitor Header Label
                     const competitorLabel = document.createElement('div');
                     competitorLabel.className = 'timeline-label competitor-header';
                     competitorLabel.textContent = compName;
-                    competitorRow.appendChild(competitorLabel);
+                    labelContainer.appendChild(competitorLabel);
 
-                    // Create 31 cells for the competitor's main row and set their background color
+                    // Create competitor row in the scrollable grid
+                    const competitorRow = document.createElement('div');
+                    competitorRow.className = 'timeline-row';
                     for (let i = 0; i < 31; i++) {
                         const cell = document.createElement('div');
                         cell.className = 'timeline-cell';
-                        cell.style.backgroundColor = config.bgColor; /* Apply competitor's background color */
+                        cell.style.backgroundColor = config.bgColor;
                         competitorRow.appendChild(cell);
                     }
-                    container.appendChild(competitorRow);
+                    scrollContainer.appendChild(competitorRow);
 
                     categories.forEach(catName => {
-                        const categoryRow = document.createElement('div');
-                        categoryRow.className = 'timeline-row'; /* Use timeline-row for grid behavior */
-                        categoryRow.classList.add(config.colorClass); /* Add competitor class for background */
-                        
+                        // Category Label
                         const categoryLabel = document.createElement('div');
                         categoryLabel.className = 'timeline-label';
                         categoryLabel.textContent = catName;
-                        categoryRow.appendChild(categoryLabel);
+                        labelContainer.appendChild(categoryLabel);
+                        
+                        // Category Row in the scrollable grid
+                        const categoryRow = document.createElement('div');
+                        categoryRow.className = 'timeline-row';
                         
                         const dayCells = [];
                         for (let i = 0; i < 31; i++) {
                             const cell = document.createElement('div');
                             cell.className = 'timeline-cell';
-                            cell.style.backgroundColor = config.bgColor; /* Apply competitor's background color */
+                            cell.style.backgroundColor = config.bgColor;
                             dayCells.push(cell);
                             categoryRow.appendChild(cell);
                         }
@@ -573,22 +569,70 @@
                                 if (span.duration > 0) {
                                     const bar = document.createElement('div');
                                     bar.className = `timeline-bar ${config.colorClass}`;
-                                    bar.style.width = `${(span.duration * 45) - 6}px`; /* Adjusted width based on new column width and padding */
+                                    bar.style.width = `${(span.duration * 30) - 4}px`;
                                     bar.textContent = promo.title;
-                                    bar.title = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`;
-                                    bar.onclick = () => showModal(bar.title);
+                                    bar.dataset.promoId = promo.id;
+                                    
+                                    bar.onclick = () => showPromoDetailsModal(promo.id);
                                     
                                     if (dayCells[span.startDay - 1]) {
                                         dayCells[span.startDay - 1].appendChild(bar);
                                     }
                                 }
                             });
-                        container.appendChild(categoryRow);
+                        scrollContainer.appendChild(categoryRow);
                     });
                 });
             };
 
-            // --- RENDER PROMOTION CARDS ---
+            const createMobileTimeline = () => {
+                const container = document.getElementById('mobile-timeline-container');
+                if (!container) return;
+                container.innerHTML = '';
+
+                const competitors = ['Hartono', 'Electronic City', 'Erablue'];
+
+                competitors.forEach(compName => {
+                    const config = competitorConfig[compName];
+                    const competitorPromos = promotions.filter(p => p.competitor === compName);
+                    if (competitorPromos.length === 0) return;
+
+                    const competitorDiv = document.createElement('div');
+                    competitorDiv.className = 'border border-gray-200 rounded-lg overflow-hidden';
+
+                    const header = document.createElement('button');
+                    header.className = 'accordion-item-header w-full p-4 text-left font-bold flex justify-between items-center';
+                    header.style.backgroundColor = config.bgColor;
+                    header.innerHTML = `
+                        <span>${compName}</span>
+                        <i class="fa-solid fa-chevron-down accordion-icon"></i>
+                    `;
+
+                    const content = document.createElement('div');
+                    content.className = 'accordion-item-content hidden p-4 bg-white';
+                    
+                    competitorPromos.forEach(promo => {
+                        content.innerHTML += `
+                            <div class="mb-4 pb-4 border-b border-gray-200 last:border-b-0">
+                                <p class="font-semibold">${promo.title}</p>
+                                <p class="text-sm text-gray-600">${promo.details}</p>
+                                <p class="text-xs text-gray-500 mt-1">${promo.startDate} to ${promo.endDate}</p>
+                                <a href="${promo.url || '#'}" target="_blank" class="text-sm text-blue-600 hover:underline">Lihat Promosi</a>
+                            </div>
+                        `;
+                    });
+
+                    header.addEventListener('click', () => {
+                        content.classList.toggle('hidden');
+                        header.querySelector('.accordion-icon').classList.toggle('rotate-180');
+                    });
+
+                    competitorDiv.appendChild(header);
+                    competitorDiv.appendChild(content);
+                    container.appendChild(competitorDiv);
+                });
+            };
+
             const renderPromotionCards = () => {
                 const container = document.getElementById('promo-cards-container');
                 if (!container) return;
@@ -612,47 +656,204 @@
 
                     const contentDiv = document.getElementById(`promo-content-${compName.replace(/\s/g, '')}`);
                     compPromotions.forEach(promo => {
-                        const promoItem = document.createElement('div'); 
+                        const promoItem = document.createElement('div');
                         promoItem.className = 'promo-item';
-
-                        const linkElement = document.createElement('a');
-                        linkElement.href = promo.promoUrl;
-                        linkElement.target = '_blank';
-                        linkElement.rel = 'noopener noreferrer';
-                        linkElement.className = 'promo-item-link';
-
-                        linkElement.innerHTML = `
-                            <img src="${promo.imageUrl}" alt="${promo.category}" class="promo-item-img">
+                        promoItem.innerHTML = `
+                            <a href="${promo.url || '#'}" target="_blank" rel="noopener noreferrer" title="Kunjungi halaman promosi">
+                                <div class="promo-item-icon-container">
+                                    ${promo.iconHTML}
+                                </div>
+                            </a>
                             <div class="promo-item-details">
-                                <div class="promo-item-title">${promo.title}</div>
-                                <div class="promo-item-category">${promo.category}</div>
+                                <div class="flex-grow">
+                                    <div class="promo-item-title">${promo.title}</div>
+                                    <div class="promo-item-category">${promo.category}</div>
+                                    <p class="promo-item-description">${promo.details}</p>
+                                </div>
+                                <p class="promo-item-description text-xs text-gray-500 mt-2">
+                                    ${promo.startDate} - ${promo.endDate}
+                                </p>
                             </div>
+                            <button class="delete-promo-btn" data-promo-id="${promo.id}" title="Delete Promotion">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
                         `;
-                        promoItem.appendChild(linkElement);
-
-                        const descriptionParagraph = document.createElement('p');
-                        descriptionParagraph.className = 'promo-item-description';
-                        descriptionParagraph.textContent = promo.details;
-                        promoItem.appendChild(descriptionParagraph);
-
-                        const datesParagraph = document.createElement('p');
-                        datesParagraph.className = 'promo-item-dates';
-                        datesParagraph.textContent = `${promo.startDate} - ${promo.endDate}`;
-                        promoItem.appendChild(datesParagraph);
-
                         contentDiv.appendChild(promoItem);
+                    });
+                });
+
+                // Add event listeners for the new delete buttons
+                document.querySelectorAll('.delete-promo-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent card click events
+                        const promoId = e.currentTarget.dataset.promoId;
+                        showDeleteConfirmModal(parseInt(promoId));
                     });
                 });
             };
 
-            // --- INITIALIZE ---
-            createTimeline();
-            renderPromotionCards();
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notification-text');
-            notificationText.textContent = '✅ Timeline and promotion cards loaded!';
-            notification.classList.add('show');
-            setTimeout(() => notification.classList.remove('show'), 4000);
+            const showPromoDetailsModal = (promoId) => {
+                const promo = promotions.find(p => p.id === promoId);
+                if (!promo) return;
+
+                const modal = document.getElementById('promoModal');
+                document.getElementById('modal-content').textContent = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`;
+                
+                const modalActions = document.getElementById('modal-actions');
+                modalActions.innerHTML = `
+                    <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" onclick="showDeleteConfirmModal(${promoId})">Delete</button>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onclick="document.getElementById('promoModal').classList.add('hidden')">Close</button>
+                `;
+
+                modal.classList.remove('hidden');
+            };
+
+            const showDeleteConfirmModal = (promoId) => {
+                const confirmModal = document.getElementById('deleteConfirmModal');
+                confirmModal.classList.remove('hidden');
+
+                document.getElementById('confirmDeleteBtn').onclick = () => {
+                    deletePromotion(promoId);
+                };
+            };
+            
+            const deletePromotion = (promoId) => {
+                promotions = promotions.filter(p => p.id !== promoId);
+                rerenderAll();
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+                document.getElementById('promoModal').classList.add('hidden');
+                showNotification('🗑️ Promotion deleted successfully.', 'bg-blue-500');
+            };
+
+            const rerenderAll = () => {
+                createTimeline();
+                createMobileTimeline();
+                renderPromotionCards();
+            };
+            
+            const populatePromoTypeDropdown = () => {
+                const select = document.getElementById('promoType');
+                if (!select) return;
+                
+                select.innerHTML = '<option value="">Select a Category</option>';
+
+                promoCategories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    select.appendChild(option);
+                });
+            };
+
+            const updatePromotionsAndRender = (newPromos) => {
+                const processedNewPromos = newPromos.map(p => {
+                    const category = p.category || getPromoCategory(p);
+                    return {
+                        ...p,
+                        id: Date.now() + Math.random(), // Assign a unique ID
+                        category: category,
+                        iconHTML: getCategoryIcon(category),
+                        url: p.url || '#'
+                    };
+                });
+
+                promotions.push(...processedNewPromos);
+                rerenderAll();
+                updateLastUpdatedText();
+                showNotification(`✅ Added ${processedNewPromos.length} new promotions.`, 'bg-green-500');
+            };
+
+            const handleFileUpload = (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const firstSheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[firstSheetName];
+                        const json = XLSX.utils.sheet_to_json(worksheet);
+
+                        const requiredHeaders = ['competitor', 'title', 'startDate', 'endDate', 'details'];
+                        const fileHeaders = Object.keys(json[0] || {});
+                        const hasAllHeaders = requiredHeaders.every(header => fileHeaders.includes(header));
+                        
+                        if (!hasAllHeaders) {
+                            showNotification('❌ Invalid Excel file. Missing required headers: competitor, title, startDate, endDate, details. Optional: url', 'bg-red-500');
+                            return;
+                        }
+
+                        updatePromotionsAndRender(json);
+
+                    } catch (error) {
+                        showNotification('❌ Error processing file. Please check the format.', 'bg-red-500');
+                        console.error('File processing error:', error);
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+                event.target.value = '';
+            };
+
+            const handleAddPromoForm = (event) => {
+                event.preventDefault();
+                const form = event.target;
+                const newPromo = {
+                    competitor: form.competitor.value,
+                    category: form.promoType.value,
+                    title: form.title.value,
+                    startDate: form.startDate.value,
+                    endDate: form.endDate.value,
+                    details: form.details.value,
+                    url: form.promoUrl.value
+                };
+                
+                if (!newPromo.competitor || !newPromo.title || !newPromo.startDate || !newPromo.endDate || !newPromo.category) {
+                    showNotification('❌ All fields except URL are required!', 'bg-red-500');
+                    return;
+                }
+
+                updatePromotionsAndRender([newPromo]);
+                form.reset();
+                document.getElementById('addPromoModal').classList.add('hidden');
+            };
+
+            const showNotification = (message, colorClass = 'bg-green-500') => {
+                const notification = document.getElementById('notification');
+                const notificationText = document.getElementById('notification-text');
+                notificationText.textContent = message;
+                notification.className = `text-white px-4 py-2 rounded-lg shadow-lg notification ${colorClass}`;
+                notification.classList.add('show');
+                setTimeout(() => notification.classList.remove('show'), 4000);
+            };
+
+            const updateLastUpdatedText = () => {
+                const lastUpdatedElement = document.getElementById('last-updated-text');
+                const now = new Date();
+                const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                lastUpdatedElement.textContent = `Last updated: ${now.toLocaleDateString('en-US', options)}`;
+            };
+
+            // --- INITIALIZATION AND EVENT LISTENERS ---
+            promotions.forEach(promo => {
+                promo.category = getPromoCategory(promo);
+                promo.iconHTML = getCategoryIcon(promo.category);
+            });
+            
+            rerenderAll();
+            populatePromoTypeDropdown();
+            updateLastUpdatedText();
+            showNotification('✅ Timeline and promotion cards loaded!', 'bg-green-500');
+
+            document.getElementById('openAddPromoModalBtn').addEventListener('click', () => {
+                document.getElementById('addPromoModal').classList.remove('hidden');
+            });
+            document.getElementById('file-upload').addEventListener('change', handleFileUpload);
+            document.getElementById('addPromoForm').addEventListener('submit', handleAddPromoForm);
+            document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+                document.getElementById('deleteConfirmModal').classList.add('hidden');
+            });
         });
     </script>
 </body>
