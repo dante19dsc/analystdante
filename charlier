@@ -23,8 +23,9 @@
             // ===================================================================
             // PASTE YOUR KEYS HERE - THIS IS THE MOST IMPORTANT STEP
             // ===================================================================
-            const JSONBIN_URL = 'PASTE_YOUR_BIN_URL_HERE'; // Example: 'https://api.jsonbin.io/v3/b/68904e27f7e7a370d1f349bb'
-            const JSONBIN_API_KEY = 'PASTE_YOUR_API_KEY_HERE'; // Example: '$2a$10$sOSZ5D6cVDPPwJUTty/w0uvrbNINyCukvfWIeW2bv4BhXiQe8jwym'
+                PASTE_YOUR_BIN_URL_HERE should be replaced with https://api.jsonbin.io/v3/b/68904e27f7e7a370d1f349bb
+
+    PASTE_YOUR_API_KEY_HERE should be replaced with $2a$10$sOSZ5D6cVDPPwJUTty/w0uvrbNINyCukvfWIeW2bv4BhXiQe8jwym
             // ===================================================================
 
             let promotions = [];
