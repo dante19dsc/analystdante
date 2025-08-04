@@ -261,16 +261,18 @@
                     promoCategories.forEach(catName => {
                         const promosForCategory = competitorPromos[catName] || [];
                         if (promosForCategory.length > 0) {
-                             const categoryLabel = document.createElement('div');
-                             categoryLabel.className = 'timeline-label';
-                             categoryLabel.textContent = catName;
-                             labelContainer.appendChild(categoryLabel);
+                             promosForCategory.forEach((promo, index) => {
+                                 // Create a label on the left. Only show category name for the first item.
+                                 const categoryLabel = document.createElement('div');
+                                 categoryLabel.className = 'timeline-label';
+                                 categoryLabel.textContent = index === 0 ? catName : '';
+                                 labelContainer.appendChild(categoryLabel);
 
-                             const categoryRow = document.createElement('div');
-                             categoryRow.className = 'timeline-row';
-                             scrollContainer.appendChild(categoryRow);
+                                 // Create a new row for EACH promotion to prevent overlap
+                                 const promoRow = document.createElement('div');
+                                 promoRow.className = 'timeline-row';
+                                 scrollContainer.appendChild(promoRow);
 
-                             promosForCategory.forEach(promo => {
                                  const span = calculatePromotionSpan(promo.startDate, promo.endDate);
                                  if (span.duration > 0) {
                                      const bar = document.createElement('div');
@@ -280,7 +282,7 @@
                                      bar.textContent = promo.title;
                                      bar.dataset.promoId = promo.tempId;
                                      bar.onclick = () => showPromoDetailsModal(promo.tempId);
-                                     categoryRow.appendChild(bar);
+                                     promoRow.appendChild(bar);
                                  }
                              });
                         }
