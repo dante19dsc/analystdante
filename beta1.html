@@ -68,6 +68,7 @@
         }
         .timeline-header-label.today {
             background-color: #ef4444;
+            animation: pulse 2s infinite;
         }
         .timeline-header-label.weekend {
             background-color: #4f46e5;
@@ -93,8 +94,9 @@
             position: absolute; height: 28px; top: 6px;
             border-radius: 4px; display: flex; align-items: center;
             font-size: 11px; font-weight: 600; color: white;
-            cursor: pointer; transition: all 0.2s ease; z-index: 6;
+            cursor: pointer; transition: all 0.2s ease, width 0.5s ease-out;
             padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+            width: 0; /* Initial width for animation */
         }
         .timeline-bar:hover { transform: scaleY(1.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
         .timeline-bar.hartono { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
@@ -115,15 +117,25 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .promo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
         .promo-card-header {
             padding: 1rem;
             font-size: 1.25rem;
             font-weight: 700;
-            color: #374151;
-            background-color: #f3f4f6;
-            border-bottom: 1px solid #e5e7eb;
+            color: white;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
         }
+        .promo-card-header.hartono { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
+        .promo-card-header.electronic-city { background: linear-gradient(135deg, #60A5FA, #2563EB); }
+        .promo-card-header.erablue { background: linear-gradient(135deg, #2DD4BF, #0D9488); }
+
         .promo-card-content {
             padding: 1rem;
             flex-grow: 1;
@@ -137,6 +149,8 @@
             padding-bottom: 1rem;
             border-bottom: 1px dashed #e5e7eb;
             position: relative;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
         }
         .promo-item:last-child {
             margin-bottom: 0;
@@ -221,6 +235,28 @@
         .accordion-icon.rotate-180 {
             transform: rotate(180deg);
         }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -261,14 +297,10 @@
             
             <div class="paper-card p-6 mb-8">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">August 2025 - Detailed Promotions by Competitor</h3>
-                <!-- Desktop Timeline -->
-                <div class="timeline-container hidden md:flex">
+                <!-- Timeline for all screen sizes -->
+                <div class="timeline-container flex">
                     <div id="timeline-labels" class="timeline-fixed-col"></div>
                     <div id="timeline-content-scroll" class="timeline-scroll-wrapper"></div>
-                </div>
-                <!-- Mobile Accordion -->
-                <div id="mobile-timeline-container" class="block md:hidden space-y-2">
-                    <!-- Mobile timeline will be generated here -->
                 </div>
             </div>
 
@@ -652,54 +684,6 @@
                 });
             };
 
-            const createMobileTimeline = () => {
-                const container = document.getElementById('mobile-timeline-container');
-                if (!container) return;
-                container.innerHTML = '';
-
-                const competitors = ['Hartono', 'Electronic City', 'Erablue'];
-
-                competitors.forEach(compName => {
-                    const config = competitorConfig[compName];
-                    const competitorPromos = promotions.filter(p => p.competitor === compName);
-                    if (competitorPromos.length === 0) return;
-
-                    const competitorDiv = document.createElement('div');
-                    competitorDiv.className = 'border border-gray-200 rounded-lg overflow-hidden';
-
-                    const header = document.createElement('button');
-                    header.className = 'accordion-item-header w-full p-4 text-left font-bold flex justify-between items-center';
-                    header.style.backgroundColor = config.bgColor;
-                    header.innerHTML = `
-                        <span>${compName}</span>
-                        <i class="fa-solid fa-chevron-down accordion-icon"></i>
-                    `;
-
-                    const content = document.createElement('div');
-                    content.className = 'accordion-item-content hidden p-4 bg-white';
-                    
-                    competitorPromos.forEach(promo => {
-                        content.innerHTML += `
-                            <div class="mb-4 pb-4 border-b border-gray-200 last:border-b-0">
-                                <p class="font-semibold">${promo.title}</p>
-                                <p class="text-sm text-gray-600">${promo.details}</p>
-                                <p class="text-xs text-gray-500 mt-1">${promo.startDate} to ${promo.endDate}</p>
-                                <a href="${promo.url || '#'}" target="_blank" class="text-sm text-blue-600 hover:underline">Lihat Promosi</a>
-                            </div>
-                        `;
-                    });
-
-                    header.addEventListener('click', () => {
-                        content.classList.toggle('hidden');
-                        header.querySelector('.accordion-icon').classList.toggle('rotate-180');
-                    });
-
-                    competitorDiv.appendChild(header);
-                    competitorDiv.appendChild(content);
-                    container.appendChild(competitorDiv);
-                });
-            };
-
             const renderPromotionCards = () => {
                 const container = document.getElementById('promo-cards-container');
                 if (!container) return;
@@ -714,7 +698,7 @@
                     const card = document.createElement('div');
                     card.className = 'promo-card';
                     card.innerHTML = `
-                        <div class="promo-card-header">${compName} Promotions</div>
+                        <div class="promo-card-header ${competitorConfig[compName].colorClass}">${compName} Promotions</div>
                         <div class="promo-card-content" id="promo-content-${compName.replace(/\s/g, '')}">
                             <!-- Promotions will be appended here -->
                         </div>
@@ -722,9 +706,10 @@
                     container.appendChild(card);
 
                     const contentDiv = document.getElementById(`promo-content-${compName.replace(/\s/g, '')}`);
-                    compPromotions.forEach(promo => {
+                    compPromotions.forEach((promo, index) => {
                         const promoItem = document.createElement('div');
                         promoItem.className = 'promo-item';
+                        promoItem.style.animationDelay = `${index * 100}ms`;
                         promoItem.innerHTML = `
                             <a href="${promo.url || '#'}" target="_blank" rel="noopener noreferrer" title="Kunjungi halaman promosi">
                                 <div class="promo-item-icon-container">
@@ -860,7 +845,6 @@
 
             const rerenderAll = () => {
                 createTimeline();
-                createMobileTimeline();
                 renderPromotionCards();
             };
             
