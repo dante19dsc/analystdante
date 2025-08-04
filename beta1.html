@@ -10,8 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Yuji+Boku&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SheetJS library for parsing Excel files -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
             font-family: 'Space Grotesk', sans-serif;
@@ -139,8 +137,6 @@
         .promo-card-content {
             padding: 1rem;
             flex-grow: 1;
-            display: grid;
-            grid-auto-rows: 1fr;
         }
         .promo-item {
             display: flex;
@@ -180,8 +176,6 @@
         }
         .promo-item-details {
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
         }
         .promo-item-title {
             font-weight: 600;
@@ -196,9 +190,6 @@
             background-color: #eef2ff;
             border-radius: 0.25rem;
             display: inline-block;
-        }
-        .promo-item-description-wrapper {
-            flex-grow: 1;
         }
         .promo-item-description {
             font-size: 0.875rem;
@@ -223,17 +214,6 @@
         }
         .promo-item-actions .delete-promo-btn:hover {
             color: #ef4444; /* Red for delete */
-        }
-
-        /* Mobile Accordion Styles */
-        .accordion-item-header {
-            transition: background-color 0.2s;
-        }
-        .accordion-icon {
-            transition: transform 0.3s ease;
-        }
-        .accordion-icon.rotate-180 {
-            transform: rotate(180deg);
         }
 
         /* Animations */
@@ -338,7 +318,7 @@
     </div>
 
 
-    <!-- Add/Upload Promotion Modal -->
+    <!-- Add Promotion Modal -->
     <div id="addPromoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full mx-4">
             <div class="flex justify-between items-center mb-4">
@@ -362,7 +342,6 @@
                     <label for="promoType" class="block text-sm font-medium text-gray-700">Promotion Type</label>
                     <select id="promoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         <option value="">Select a Category</option>
-                        <!-- Options will be populated by JS -->
                     </select>
                 </div>
                 <div>
@@ -389,35 +368,6 @@
                 </div>
                 <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:text-sm">Add Promotion</button>
             </form>
-
-            <div class="relative py-4">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-300"></div>
-                </div>
-                <div class="relative flex justify-center text-sm">
-                    <span class="bg-white px-2 text-gray-500">Or Upload an Excel file</span>
-                </div>
-            </div>
-
-            <div class="mt-4">
-                <label for="file-upload" class="flex justify-center items-center w-full rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 cursor-pointer hover:border-gray-400 transition-colors">
-                    <div class="space-y-1 text-center">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-20m32-12h-4c-.783 0-1.543.085-2.29.255M24 24v-4m0 4h-4m4 0h4m-4-8v-4m0 4h-4m4 0h4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                        <div class="flex text-sm text-gray-600">
-                            <span class="relative font-medium text-indigo-600 hover:text-indigo-500">
-                                Upload a file
-                            </span>
-                            <span class="pl-1">or drag and drop</span>
-                        </div>
-                        <p class="text-xs text-gray-500">
-                            .xlsx file with headers: competitor, title, startDate, endDate, details, url
-                        </p>
-                    </div>
-                    <input id="file-upload" name="file-upload" type="file" class="sr-only" accept=".xlsx" />
-                </label>
-            </div>
         </div>
     </div>
 
@@ -477,7 +427,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- GLOBAL STATE ---
+            // --- GLOBAL STATE (The "Brain" of the page) ---
             let promotions = [
                 // Hartono Electronics
                 { id: 1, competitor: 'Hartono', title: 'Free Shipping Nationwide', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Use code: FREEONGKIRMH. Discounts based on purchase value. Valid for online purchases.', url: 'https://myhartono.com/en/promo-pilihan' },
@@ -528,94 +478,66 @@
 
             // --- LIST OF PROMOTION CATEGORIES ---
             const promoCategories = [
-                'Promo Bank & Payment',
-                'Promo HP & Gadget',
-                'Promo Laptop & PC',
-                'Promo TV & Audio',
-                'Promo Home Appliances',
-                'Promo Back to School',
-                'Promo 17 Agustus',
-                'Other Promotions'
+                'Promo Bank & Payment', 'Promo HP & Gadget', 'Promo Laptop & PC', 'Promo TV & Audio',
+                'Promo Home Appliances', 'Promo Back to School', 'Promo 17 Agustus', 'Other Promotions'
             ];
             
             // --- UTILITY FUNCTIONS ---
             const getPromoCategory = (promo) => {
                 const text = (promo.title + ' ' + promo.details).toLowerCase();
-                if (text.includes('bank') || text.includes('credit card') || text.includes('cicilan') || text.includes('bca') || text.includes('mandiri') || text.includes('kredivo') || text.includes('indodana')) return 'Promo Bank & Payment';
-                if (text.includes('hp') || text.includes('smartphone') || text.includes('galaxy') || text.includes('foldable') || text.includes('reno') || text.includes('vivo') || text.includes('realme') || text.includes('wearables') || text.includes('iphone') || text.includes('tecno') || text.includes('infinix')) return 'Promo HP & Gadget';
-                if (text.includes('laptop') || text.includes('vivobook') || text.includes('acer') || text.includes('lenovo') || text.includes('hp') || text.includes('asus') || text.includes('pc') || text.includes('snapdragon') || text.includes('matepad') || text.includes('ipad')) return 'Promo Laptop & PC';
-                if (text.includes('tv') || text.includes('soundbar') || text.includes('qled') || text.includes('uhd') || text.includes('google tv') || text.includes('smart tv') || text.includes('speaker') || text.includes('audio')) return 'Promo TV & Audio';
-                if (text.includes('refrigerator') || text.includes('kulkas') || text.includes('mesin cuci') || text.includes('washing machine') || text.includes('water heater') || text.includes('air cooler') || text.includes('setrika') || text.includes('ac ') || text.includes('air conditioner')) return 'Promo Home Appliances';
-                if (text.includes('back to school') || text.includes('kembali ke sekolah')) return 'Promo Back to School';
-                if (text.includes('independence day') || text.includes('kemerdekaan') || text.includes('17 agustus') || text.includes('pahlawan')) return 'Promo 17 Agustus';
+                if (text.includes('bank') || text.includes('credit card') || text.includes('cicilan') || text.includes('bca') || text.includes('mandiri')) return 'Promo Bank & Payment';
+                if (text.includes('hp') || text.includes('smartphone') || text.includes('galaxy') || text.includes('wearables') || text.includes('iphone') || text.includes('tecno') || text.includes('matepad')) return 'Promo HP & Gadget';
+                if (text.includes('laptop') || text.includes('pc')) return 'Promo Laptop & PC';
+                if (text.includes('tv') || text.includes('audio') || text.includes('soundbar')) return 'Promo TV & Audio';
+                if (text.includes('ac ') || text.includes('kulkas') || text.includes('mesin cuci') || text.includes('air conditioner')) return 'Promo Home Appliances';
+                if (text.includes('back to school')) return 'Promo Back to School';
+                if (text.includes('pahlawan') || text.includes('17 agustus')) return 'Promo 17 Agustus';
                 return 'Other Promotions';
             };
             
-            const getCategoryIcon = (category) => {
-                return categoryIcons[category] || categoryIcons['Other Promotions'];
-            };
-
+            const getCategoryIcon = (category) => categoryIcons[category] || categoryIcons['Other Promotions'];
 
             const calculatePromotionSpan = (startDate, endDate) => {
                 const augustStart = new Date('2025-08-01T00:00:00Z');
                 const augustEnd = new Date('2025-08-31T23:59:59Z');
                 let promoStart = new Date(startDate), promoEnd = new Date(endDate);
-                
-                // Clamp promo dates to August
                 promoStart = promoStart < augustStart ? augustStart : promoStart;
                 promoEnd = promoEnd > augustEnd ? augustEnd : promoEnd;
-
-                if (promoStart > promoEnd) {
-                    return { startDay: -1, duration: 0 };
-                }
-                
+                if (promoStart > promoEnd) return { startDay: -1, duration: 0 };
                 const startDay = promoStart.getUTCDate();
                 const duration = promoEnd.getUTCDate() - startDay + 1;
                 return { startDay, duration };
             };
-            
+
+            // --- RENDER FUNCTIONS (The "Hands" that draw the page) ---
             const createTimeline = () => {
                 const labelContainer = document.getElementById('timeline-labels');
                 const scrollContainer = document.getElementById('timeline-content-scroll');
-
                 if (!labelContainer || !scrollContainer) return;
 
                 labelContainer.innerHTML = '';
                 scrollContainer.innerHTML = '';
 
                 const competitors = ['Hartono', 'Electronic City', 'Erablue'];
-                const categories = [...new Set(promotions.map(p => p.category))].sort();
+                const categories = [...promoCategories];
                 
-                // Create header for the fixed label column
                 const fixedHeader = document.createElement('div');
                 fixedHeader.className = 'timeline-label sticky top-0 bg-[#4f46e5] text-white font-bold';
-                fixedHeader.style.zIndex = 11;
-                fixedHeader.style.height = '41px';
+                fixedHeader.style.zIndex = 11; fixedHeader.style.height = '41px';
                 fixedHeader.textContent = 'AUGUST 2025';
                 labelContainer.appendChild(fixedHeader);
 
-                // Create header for the scrollable date grid
                 const header = document.createElement('div');
                 header.className = 'timeline-header';
                 let headerHTML = '';
                 const today = new Date();
-                const currentDayOfMonth = today.getDate();
-                const currentMonth = today.getMonth();
-                const currentYear = today.getFullYear();
-
+                const currentDayOfMonth = today.getDate(), currentMonth = today.getMonth(), currentYear = today.getFullYear();
                 for (let day = 1; day <= 31; day++) {
                     let specialClass = '';
                     const dateInLoop = new Date(Date.UTC(2025, 7, day));
                     const dayOfWeek = dateInLoop.getUTCDay();
-
-                    if (dayOfWeek === 0 || dayOfWeek === 6) {
-                        specialClass = 'weekend';
-                    }
-                    
-                    if (day === currentDayOfMonth && currentMonth === 7 && currentYear === 2025) { 
-                        specialClass += ' today';
-                    } 
-                    
+                    if (dayOfWeek === 0 || dayOfWeek === 6) specialClass = 'weekend';
+                    if (day === currentDayOfMonth && currentMonth === 7 && currentYear === 2025) specialClass += ' today';
                     headerHTML += `<div class="timeline-header-label ${specialClass.trim()}">${day}</div>`;
                 }
                 header.innerHTML = headerHTML;
@@ -623,58 +545,45 @@
 
                 competitors.forEach(compName => {
                     const config = competitorConfig[compName];
-                    
-                    // Competitor Header Label
                     const competitorLabel = document.createElement('div');
                     competitorLabel.className = 'timeline-label competitor-header';
                     competitorLabel.textContent = compName;
                     labelContainer.appendChild(competitorLabel);
-
-                    // Create competitor row in the scrollable grid
                     const competitorRow = document.createElement('div');
                     competitorRow.className = 'timeline-row';
                     for (let i = 0; i < 31; i++) {
                         const cell = document.createElement('div');
-                        cell.className = 'timeline-cell';
-                        cell.style.backgroundColor = config.bgColor;
+                        cell.className = 'timeline-cell'; cell.style.backgroundColor = config.bgColor;
                         competitorRow.appendChild(cell);
                     }
                     scrollContainer.appendChild(competitorRow);
 
                     categories.forEach(catName => {
                         const promosForCategory = promotions.filter(p => p.competitor === compName && p.category === catName);
-
                         if (promosForCategory.length > 0) {
                             promosForCategory.forEach((promo, index) => {
-                                // Add the category label only for the first item in the group
                                 if (index === 0) {
                                     const categoryLabel = document.createElement('div');
                                     categoryLabel.className = 'timeline-label';
                                     categoryLabel.textContent = catName;
                                     labelContainer.appendChild(categoryLabel);
                                 } else {
-                                    // For subsequent items, add a blank spacer label
                                     const spacerLabel = document.createElement('div');
                                     spacerLabel.className = 'timeline-label';
-                                    spacerLabel.innerHTML = `&nbsp;`;
+                                    spacerLabel.innerHTML = ` `;
                                     labelContainer.appendChild(spacerLabel);
                                 }
-
-                                // Create a new timeline row for EACH promotion
                                 const promoRow = document.createElement('div');
                                 promoRow.className = 'timeline-row';
-
                                 const span = calculatePromotionSpan(promo.startDate, promo.endDate);
                                 if (span.duration > 0) {
                                     const bar = document.createElement('div');
                                     bar.className = `timeline-bar ${config.colorClass}`;
                                     bar.style.left = `${(span.startDay - 1) * 30 + 2}px`;
-                                    bar.style.width = `${span.duration * 30 - 4}px`;
+                                    setTimeout(() => { bar.style.width = `${span.duration * 30 - 4}px`; }, 100);
                                     bar.textContent = promo.title;
                                     bar.dataset.promoId = promo.id;
-                                    
                                     bar.onclick = () => showPromoDetailsModal(promo.id);
-                                    
                                     promoRow.appendChild(bar);
                                 }
                                 scrollContainer.appendChild(promoRow);
@@ -688,107 +597,74 @@
                 const container = document.getElementById('promo-cards-container');
                 if (!container) return;
                 container.innerHTML = '';
-
                 const competitors = ['Hartono', 'Electronic City', 'Erablue'];
 
                 competitors.forEach(compName => {
                     const compPromotions = promotions.filter(p => p.competitor === compName);
                     if (compPromotions.length === 0) return;
-
                     const card = document.createElement('div');
                     card.className = 'promo-card';
-                    card.innerHTML = `
-                        <div class="promo-card-header ${competitorConfig[compName].colorClass}">${compName} Promotions</div>
-                        <div class="promo-card-content" id="promo-content-${compName.replace(/\s/g, '')}">
-                            <!-- Promotions will be appended here -->
-                        </div>
-                    `;
+                    card.innerHTML = `<div class="promo-card-header ${competitorConfig[compName].colorClass}">${compName} Promotions</div>
+                        <div class="promo-card-content" id="promo-content-${compName.replace(/\s/g, '')}"></div>`;
                     container.appendChild(card);
-
                     const contentDiv = document.getElementById(`promo-content-${compName.replace(/\s/g, '')}`);
                     compPromotions.forEach((promo, index) => {
                         const promoItem = document.createElement('div');
                         promoItem.className = 'promo-item';
-                        promoItem.style.animationDelay = `${index * 100}ms`;
+                        promoItem.style.animationDelay = `${index * 50}ms`;
                         promoItem.innerHTML = `
                             <a href="${promo.url || '#'}" target="_blank" rel="noopener noreferrer" title="Kunjungi halaman promosi">
-                                <div class="promo-item-icon-container">
-                                    ${promo.iconHTML}
-                                </div>
+                                <div class="promo-item-icon-container">${promo.iconHTML}</div>
                             </a>
                             <div class="promo-item-details">
-                                <div class="promo-item-description-wrapper">
-                                    <div class="promo-item-title">${promo.title}</div>
-                                    <div class="promo-item-category">${promo.category}</div>
-                                    <p class="promo-item-description">${promo.details}</p>
-                                </div>
-                                <p class="promo-item-description text-xs text-gray-500 mt-2">
-                                    ${promo.startDate} - ${promo.endDate}
-                                </p>
+                                <div class="promo-item-title">${promo.title}</div>
+                                <div class="promo-item-category">${promo.category}</div>
+                                <p class="promo-item-description">${promo.details}</p>
+                                <p class="promo-item-description text-xs text-gray-500 mt-2">${promo.startDate} - ${promo.endDate}</p>
                             </div>
                             <div class="promo-item-actions">
-                                <button class="edit-promo-btn" data-promo-id="${promo.id}" title="Edit Promotion">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </button>
-                                <button class="delete-promo-btn" data-promo-id="${promo.id}" title="Delete Promotion">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            </div>
-                        `;
+                                <button class="edit-promo-btn" data-promo-id="${promo.id}" title="Edit Promotion"><i class="fa-solid fa-pencil"></i></button>
+                                <button class="delete-promo-btn" data-promo-id="${promo.id}" title="Delete Promotion"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>`;
                         contentDiv.appendChild(promoItem);
                     });
                 });
 
-                // Add event listeners for the new buttons
-                document.querySelectorAll('.edit-promo-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const promoId = e.currentTarget.dataset.promoId;
-                        showEditPromoModal(parseInt(promoId));
-                    });
-                });
-                document.querySelectorAll('.delete-promo-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const promoId = e.currentTarget.dataset.promoId;
-                        showDeleteConfirmModal(parseInt(promoId));
-                    });
-                });
-                
-                equalizeCardHeights();
+                document.querySelectorAll('.edit-promo-btn').forEach(button => button.addEventListener('click', (e) => showEditPromoModal(parseInt(e.currentTarget.dataset.promoId))));
+                document.querySelectorAll('.delete-promo-btn').forEach(button => button.addEventListener('click', (e) => showDeleteConfirmModal(parseInt(e.currentTarget.dataset.promoId))));
             };
 
+            const rerenderAll = () => {
+                createTimeline();
+                renderPromotionCards();
+                updateLastUpdatedText();
+            };
+
+            // --- MODAL AND ACTION FUNCTIONS ---
             const showPromoDetailsModal = (promoId) => {
                 const promo = promotions.find(p => p.id === promoId);
                 if (!promo) return;
-
                 const modal = document.getElementById('promoModal');
                 document.getElementById('modal-content').textContent = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`;
-                
                 const modalActions = document.getElementById('modal-actions');
-                modalActions.innerHTML = ''; // Clear previous buttons
-
+                modalActions.innerHTML = '';
                 const deleteButton = document.createElement('button');
                 deleteButton.className = 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700';
                 deleteButton.textContent = 'Delete';
                 deleteButton.onclick = () => showDeleteConfirmModal(promoId);
-
                 const closeButton = document.createElement('button');
-                closeButton.className = 'px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700';
+                closeButton.className = 'px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300';
                 closeButton.textContent = 'Close';
                 closeButton.onclick = () => document.getElementById('promoModal').classList.add('hidden');
-
                 modalActions.appendChild(deleteButton);
                 modalActions.appendChild(closeButton);
-
                 modal.classList.remove('hidden');
             };
 
             const showDeleteConfirmModal = (promoId) => {
                 const confirmModal = document.getElementById('deleteConfirmModal');
+                document.getElementById('confirmDeleteBtn').dataset.promoId = promoId;
                 confirmModal.classList.remove('hidden');
-
-                document.getElementById('confirmDeleteBtn').onclick = () => {
-                    deletePromotion(promoId);
-                };
             };
             
             const deletePromotion = (promoId) => {
@@ -802,7 +678,6 @@
             const showEditPromoModal = (promoId) => {
                 const promo = promotions.find(p => p.id === promoId);
                 if (!promo) return;
-
                 const modal = document.getElementById('editPromoModal');
                 document.getElementById('editPromoId').value = promo.id;
                 document.getElementById('editCompetitor').value = promo.competitor;
@@ -812,8 +687,28 @@
                 document.getElementById('editStartDate').value = promo.startDate;
                 document.getElementById('editEndDate').value = promo.endDate;
                 document.getElementById('editDetails').value = promo.details;
-
                 modal.classList.remove('hidden');
+            };
+            
+            const handleAddPromoForm = (event) => {
+                event.preventDefault();
+                const form = event.target;
+                const newPromo = {
+                    id: Date.now(), // Simple unique ID for client-side
+                    competitor: form.competitor.value,
+                    title: form.title.value,
+                    startDate: form.startDate.value,
+                    endDate: form.endDate.value,
+                    details: form.details.value,
+                    url: form.promoUrl.value,
+                };
+                newPromo.category = getPromoCategory(newPromo);
+                newPromo.iconHTML = getCategoryIcon(newPromo.category);
+                promotions.push(newPromo);
+                rerenderAll();
+                form.reset();
+                document.getElementById('addPromoModal').classList.add('hidden');
+                showNotification('✅ New promotion added successfully!', 'bg-green-500');
             };
 
             const handleEditPromoForm = (event) => {
@@ -821,40 +716,30 @@
                 const form = event.target;
                 const promoId = parseInt(form.editPromoId.value);
                 const promoIndex = promotions.findIndex(p => p.id === promoId);
-
                 if (promoIndex > -1) {
                     const updatedPromo = {
-                        ...promotions[promoIndex],
+                        id: promoId,
                         competitor: form.competitor.value,
-                        category: form.promoType.value,
                         title: form.title.value,
                         url: form.promoUrl.value,
                         startDate: form.startDate.value,
                         endDate: form.endDate.value,
-                        details: form.details.value
+                        details: form.details.value,
                     };
                     updatedPromo.category = getPromoCategory(updatedPromo);
                     updatedPromo.iconHTML = getCategoryIcon(updatedPromo.category);
                     promotions[promoIndex] = updatedPromo;
-                    
                     rerenderAll();
                     document.getElementById('editPromoModal').classList.add('hidden');
                     showNotification('✏️ Promotion updated successfully.', 'bg-green-500');
                 }
             };
-
-            const rerenderAll = () => {
-                createTimeline();
-                renderPromotionCards();
-            };
             
-            const populatePromoTypeDropdown = () => {
+            const populatePromoTypeDropdowns = () => {
                 const selects = [document.getElementById('promoType'), document.getElementById('editPromoType')];
                 selects.forEach(select => {
                     if (!select) return;
-                    
                     select.innerHTML = '<option value="">Select a Category</option>';
-
                     promoCategories.forEach(category => {
                         const option = document.createElement('option');
                         option.value = category;
@@ -864,116 +749,20 @@
                 });
             };
 
-            const updatePromotionsAndRender = (newPromos) => {
-                const processedNewPromos = newPromos.map(p => {
-                    const category = p.category || getPromoCategory(p);
-                    return {
-                        ...p,
-                        id: Date.now() + Math.random(), // Assign a unique ID
-                        category: category,
-                        iconHTML: getCategoryIcon(category),
-                        url: p.url || '#'
-                    };
-                });
-
-                promotions.push(...processedNewPromos);
-                rerenderAll();
-                updateLastUpdatedText();
-                showNotification(`✅ Added ${processedNewPromos.length} new promotions.`, 'bg-green-500');
-            };
-
-            const handleFileUpload = (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        const firstSheetName = workbook.SheetNames[0];
-                        const worksheet = workbook.Sheets[firstSheetName];
-                        const json = XLSX.utils.sheet_to_json(worksheet);
-
-                        const requiredHeaders = ['competitor', 'title', 'startDate', 'endDate', 'details'];
-                        const fileHeaders = Object.keys(json[0] || {});
-                        const hasAllHeaders = requiredHeaders.every(header => fileHeaders.includes(header));
-                        
-                        if (!hasAllHeaders) {
-                            showNotification('❌ Invalid Excel file. Missing required headers: competitor, title, startDate, endDate, details. Optional: url', 'bg-red-500');
-                            return;
-                        }
-
-                        updatePromotionsAndRender(json);
-
-                    } catch (error) {
-                        showNotification('❌ Error processing file. Please check the format.', 'bg-red-500');
-                        console.error('File processing error:', error);
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-                event.target.value = '';
-            };
-
-            const handleAddPromoForm = (event) => {
-                event.preventDefault();
-                const form = event.target;
-                const newPromo = {
-                    competitor: form.competitor.value,
-                    category: form.promoType.value,
-                    title: form.title.value,
-                    startDate: form.startDate.value,
-                    endDate: form.endDate.value,
-                    details: form.details.value,
-                    url: form.promoUrl.value
-                };
-                
-                if (!newPromo.competitor || !newPromo.title || !newPromo.startDate || !newPromo.endDate || !newPromo.category) {
-                    showNotification('❌ All fields except URL are required!', 'bg-red-500');
-                    return;
-                }
-
-                updatePromotionsAndRender([newPromo]);
-                form.reset();
-                document.getElementById('addPromoModal').classList.add('hidden');
-            };
-
             const showNotification = (message, colorClass = 'bg-green-500') => {
                 const notification = document.getElementById('notification');
                 const notificationText = document.getElementById('notification-text');
                 notificationText.textContent = message;
                 notification.className = `text-white px-4 py-2 rounded-lg shadow-lg notification ${colorClass}`;
                 notification.classList.add('show');
-                setTimeout(() => notification.classList.remove('show'), 4000);
+                setTimeout(() => notification.classList.remove('show'), 3000);
             };
 
             const updateLastUpdatedText = () => {
                 const lastUpdatedElement = document.getElementById('last-updated-text');
                 const now = new Date();
-                const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
                 lastUpdatedElement.textContent = `Last updated: ${now.toLocaleDateString('en-US', options)}`;
-            };
-            
-            const equalizeCardHeights = () => {
-                const cards = document.querySelectorAll('.promo-card');
-                let maxHeight = 0;
-                
-                // Reset heights first to get natural height
-                cards.forEach(card => {
-                    card.style.height = 'auto';
-                });
-
-                // Find the max height
-                cards.forEach(card => {
-                    if (card.offsetHeight > maxHeight) {
-                        maxHeight = card.offsetHeight;
-                    }
-                });
-
-                // Set all cards to the max height
-                cards.forEach(card => {
-                    card.style.height = `${maxHeight}px`;
-                });
             };
 
             // --- INITIALIZATION AND EVENT LISTENERS ---
@@ -982,38 +771,24 @@
                 promo.iconHTML = getCategoryIcon(promo.category);
             });
             
+            populatePromoTypeDropdowns();
             rerenderAll();
-            populatePromoTypeDropdown();
-            updateLastUpdatedText();
-            showNotification('✅ Timeline and promotion cards loaded!', 'bg-green-500');
-
+            
             document.getElementById('openAddPromoModalBtn').addEventListener('click', () => {
                 document.getElementById('addPromoModal').classList.remove('hidden');
             });
-            document.getElementById('file-upload').addEventListener('change', handleFileUpload);
+            
             document.getElementById('addPromoForm').addEventListener('submit', handleAddPromoForm);
             document.getElementById('editPromoForm').addEventListener('submit', handleEditPromoForm);
+            
             document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
                 document.getElementById('deleteConfirmModal').classList.add('hidden');
             });
-
-            // Debounce function to limit how often a function is called
-            function debounce(func, wait = 20, immediate = true) {
-                let timeout;
-                return function() {
-                    const context = this, args = arguments;
-                    const later = function() {
-                        timeout = null;
-                        if (!immediate) func.apply(context, args);
-                    };
-                    const callNow = immediate && !timeout;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                    if (callNow) func.apply(context, args);
-                };
-            };
-
-            window.addEventListener('resize', debounce(rerenderAll, 250));
+            
+            document.getElementById('confirmDeleteBtn').addEventListener('click', (e) => {
+                const promoId = parseInt(e.currentTarget.dataset.promoId);
+                deletePromotion(promoId);
+            });
         });
     </script>
 </body>
