@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Portal - Competitor Promotion Tracker</title>
+    
+    <!-- ADD THIS LINE: The Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -427,46 +431,54 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- SUPABASE SETUP ---
+            // These are your project's unique connection details.
+            const SUPABASE_URL = 'https://mohswbdebacxysyomyoy.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vaHN3YmRlYmFjeHlzeW9teW95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQyNzc1MjEsImV4cCI6MjA2OTg1MzUyMX0.2sgVgMidw6wT2IAroRaFw-WQS5FPnC47fY-vtWR7LRI';
+
+            // This creates the connection to your database.
+            const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized. If you see this, it is working!');
+
+
             // --- GLOBAL STATE (The "Brain" of the page) ---
-            let promotions = [
-                // Hartono Electronics
-                { id: 1, competitor: 'Hartono', title: 'Free Shipping Nationwide', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Use code: FREEONGKIRMH. Discounts based on purchase value. Valid for online purchases.', url: 'https://myhartono.com/en/promo-pilihan' },
-                { id: 2, competitor: 'Hartono', title: 'Samsung Galaxy Wearables Special Price', startDate: '2025-06-25', endDate: '2025-08-16', details: 'Starting from Rp400,000. Limited stock availability.', url: 'https://myhartono.com/en/samsung-galaxy-wearable-special-price/' },
-                { id: 3, competitor: 'Hartono', title: 'BCA Credit Card Promotion', startDate: '2025-08-01', endDate: '2025-08-31', details: '0% installment for 6 and 12 months. Valid for online transactions.', url: 'https://myhartono.com/en/bca/' },
-                { id: 4, competitor: 'Hartono', title: 'Trade-In TV & AC Program', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Trade-in values up to Rp1,500,000. Professional pickup service. Max 7 days to request trade-in.', url: 'https://myhartono.com/en/trade-in-tv-and-ac-hartono' },
-                { id: 5, competitor: 'Hartono', title: '"Hadiah Sahabat Setia 2025" Loyalty Program', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Ongoing loyalty program with car giveaway opportunities.', url: 'https://www.instagram.com/myhartono/' },
+            // This will be filled with data from Supabase instead of a hardcoded list.
+            let promotions = [];
 
-                // Electronic City
-                { id: 6, competitor: 'Electronic City', title: 'BCA Credit Card Discount up to Rp1,000,000', startDate: '2025-07-31', endDate: '2025-08-10', details: 'Discount tiers from Rp200,000 to Rp1,000,000. Valid at Electronic Festival Exhibition at Supermal Karawaci.', url: 'https://promo.bca.co.id/en/all/2025/07/31/04/electronic-city' },
-                { id: 7, competitor: 'Electronic City', title: 'HUAWEI MatePad Pro 12.2 2025 Discount', startDate: '2025-07-25', endDate: '2025-08-31', details: 'Rp500,000 discount on HUAWEI MatePad Pro.', url: 'https://promo.bca.co.id/en/all/2025/06/25/09/electronic-city' },
-                { id: 8, competitor: 'Electronic City', title: 'OPPO Products Discount', startDate: '2025-07-25', endDate: '2025-09-30', details: 'Rp350,000 discount on various OPPO products.', url: 'https://promo.bca.co.id/id/all/2025/06/10/05/electronic-city' },
-                { id: 9, competitor: 'Electronic City', title: 'PAHLAWAN (PROMO HEMAT TIADA LAWAN)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Independence month promotion.', url: 'https://eci.id' },
-                { id: 10, competitor: 'Electronic City', title: 'DAIKIN Air Conditioner "IRIT KIAN NYAMAN"', startDate: '2025-08-01', endDate: '2025-08-31', details: 'August discount promotion on Daikin ACs.', url: 'https://eci.id/deal/1416/daikin-diskon-agustus-irit-kian-nyaman' },
-                { id: 11, competitor: 'Electronic City', title: 'LG August Special Offer', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Brand-specific August promotions on LG products.', url: 'https://eci.id' },
-                { id: 12, competitor: 'Electronic City', title: 'SCBD Store Clearance Sale', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Extra savings up to 50% at Electronic City SCBD.', url: 'https://www.instagram.com/p/DMzmbD8Rj2u/' },
-                { id: 13, competitor: 'Electronic City', title: 'Mandiri Credit Card Discount', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts up to Rp500,000 and installments up to 12 months.', url: 'https://www.mandirikartukredit.com/hot-offer?kategori=elektronik' },
 
-                // Erablue/Erajaya Group
-                { id: 14, competitor: 'Erablue', title: 'Samsung Galaxy S25 Edge Special Pricing', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Rp17,499,000 (10% discount from Rp19,499,000).', url: 'https://eraspace.com/page/mantra' },
-                { id: 15, competitor: 'Erablue', title: 'Tecno Camon 20 Premier 5G Special Pricing', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Rp3,999,000 (27% discount).', url: 'https://eraspace.com/page/mantra' },
-                { id: 16, competitor: 'Erablue', title: 'Back to School Promotion', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Educational technology focus.', url: 'https://eraspace.com/eraspace/katalog/back-to-school-7719' },
-                { id: 17, competitor: 'Erablue', title: 'OPPO Reno14 Series Promotion', startDate: '2025-07-25', endDate: '2025-08-31', details: 'Special pricing on new mobile phone releases.', url: 'https://erafone.com/katalog/first-selling-oppo-reno14-series-7746' },
-                { id: 18, competitor: 'Erablue', title: 'OPPO Contest Promotion (August 2025)', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Win prizes like Umrah vouchers and mobile phones when you purchase select OPPO phones.', url: 'https://www.erablue.id/promosi/beli-handphone-gratis-umroh-hanya-di-erablue-electronics-1582259' },
-                { id: 19, competitor: 'Erablue', title: 'Sharp Electronics Special Pricing', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts starting from Rp200,000 on Sharp products.', url: 'https://www.erablue.id/promosi/super-brand-day-sharp-di-erablue-bikin-agustus-makin-meriah-1582258' },
-                { id: 20, competitor: 'Erablue', title: 'Mandiri Credit Card Programs', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Discounts up to Rp1,000,000 with 0% interest on installments.', url: 'https://www.mandirikartukredit.com/hot-offer?kategori=elektronik%2Bhome-appliances' },
-                { id: 21, competitor: 'Erablue', title: 'Audio Festival', startDate: '2025-08-01', endDate: '2025-08-31', details: 'Promotions on sound equipment and accessories.', url: 'https://eraspace.com/urbanrepublic/katalog/audio-festival-2238' },
-            ];
+            // --- NEW: FUNCTION TO LOAD DATA FROM SUPABASE ---
+            async function loadPromotions() {
+                // This command tells Supabase: "Get everything from the 'promotions' table."
+                const { data, error } = await supabase
+                    .from('promotions')
+                    .select('*');
 
-            // --- COMPETITOR CONFIGURATION ---
+                if (error) {
+                    console.error('Error fetching promotions:', error);
+                    showNotification('❌ Error loading data from server.', 'bg-red-500');
+                } else {
+                    // We successfully got the data. Now we prepare it for the webpage.
+                    promotions = data;
+                    promotions.forEach(promo => {
+                        promo.category = promo.category || getPromoCategory(promo);
+                        promo.iconHTML = getCategoryIcon(promo.category);
+                    });
+                    rerenderAll(); // This redraws the timeline and cards with the new data.
+                    showNotification('✅ Data loaded successfully!', 'bg-blue-500');
+                }
+            }
+
+
+            // --- COMPETITOR CONFIGURATION (This stays the same) ---
             const competitorConfig = {
                 'Hartono': { colorClass: 'hartono', bgColor: '#FEFCE8' },
                 'Electronic City': { colorClass: 'electronic-city', bgColor: '#EFF6FF' },
                 'Erablue': { colorClass: 'erablue', bgColor: '#F0FDFA' }
             };
 
-            // --- SVG ICONS FOR CATEGORIES ---
+            // --- SVG ICONS FOR CATEGORIES (This stays the same) ---
             const categoryIcons = {
-                'Promo Bank & Payment': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="25" width="80" height="50" rx="8" fill="#005A9C"/><rect x="10" y="60" width="80" height="5" fill="#7BB8F2"/><rect x="22" y="35" width="15" height="12" rx="2" fill="#F5A623"/></svg>`,
+                'Promo Bank & Payment': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="25" width="80" height="50" rx="8" fill="#005A9C"/><rect x="10" y="60" width="80" height="5" fill="#7BB8F2"/><rect x="22" y="35" width="15" height="12"rx="2" fill="#F5A623"/></svg>`,
                 'Promo HP & Gadget': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="35" y="15" width="50" height="70" rx="8" fill="#7BB8F2"/><rect x="15" y="25" width="40" height="60" rx="8" fill="#005A9C"/><rect x="20" y="32" width="30" height="46" rx="3" fill="#F5A623"/></svg>`,
                 'Promo Laptop & PC': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g><path d="M 5 70 L 95 70 L 85 78 L 15 78 Z" fill="#005A9C"/><rect x="18" y="22" width="74" height="48" rx="5" fill="#7BB8F2" transform="skewX(-10)"/><rect x="25" y="28" width="60" height="36" rx="2" fill="#005A9C" transform="skewX(-10)"/></g></svg>`,
                 'Promo TV & Audio': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="20" width="84" height="50" rx="4" fill="#005A9C"/><rect x="13" y="25" width="74" height="40" fill="#7BB8F2"/><path d="M 45 70 L 55 70 L 65 80 L 35 80 Z" fill="#005A9C"/><rect x="20" y="85" width="60" height="5" rx="2.5" fill="#F5A623"/></svg>`,
@@ -476,13 +488,13 @@
                 'Other Promotions': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="40" width="60" height="45" rx="5" fill="#005A9C"/><rect x="15" y="25" width="70" height="15" rx="5" fill="#7BB8F2"/><rect x="45" y="25" width="10" height="60" fill="#F5A623"/><path d="M 45 25 C 35 15, 25 15, 25 25" stroke="#F5A623" stroke-width="8" fill="none"/><path d="M 55 25 C 65 15, 75 15, 75 25" stroke="#F5A623" stroke-width="8" fill="none"/></svg>`
             };
 
-            // --- LIST OF PROMOTION CATEGORIES ---
+            // --- LIST OF PROMOTION CATEGORIES (This stays the same) ---
             const promoCategories = [
                 'Promo Bank & Payment', 'Promo HP & Gadget', 'Promo Laptop & PC', 'Promo TV & Audio',
                 'Promo Home Appliances', 'Promo Back to School', 'Promo 17 Agustus', 'Other Promotions'
             ];
             
-            // --- UTILITY FUNCTIONS ---
+            // --- UTILITY FUNCTIONS (These stay the same) ---
             const getPromoCategory = (promo) => {
                 const text = (promo.title + ' ' + promo.details).toLowerCase();
                 if (text.includes('bank') || text.includes('credit card') || text.includes('cicilan') || text.includes('bca') || text.includes('mandiri')) return 'Promo Bank & Payment';
@@ -494,9 +506,7 @@
                 if (text.includes('pahlawan') || text.includes('17 agustus')) return 'Promo 17 Agustus';
                 return 'Other Promotions';
             };
-            
             const getCategoryIcon = (category) => categoryIcons[category] || categoryIcons['Other Promotions'];
-
             const calculatePromotionSpan = (startDate, endDate) => {
                 const augustStart = new Date('2025-08-01T00:00:00Z');
                 const augustEnd = new Date('2025-08-31T23:59:59Z');
@@ -509,7 +519,7 @@
                 return { startDay, duration };
             };
 
-            // --- RENDER FUNCTIONS (The "Hands" that draw the page) ---
+            // --- RENDER FUNCTIONS (These stay the same) ---
             const createTimeline = () => {
                 const labelContainer = document.getElementById('timeline-labels');
                 const scrollContainer = document.getElementById('timeline-content-scroll');
@@ -592,7 +602,6 @@
                     });
                 });
             };
-
             const renderPromotionCards = () => {
                 const container = document.getElementById('promo-cards-container');
                 if (!container) return;
@@ -633,7 +642,6 @@
                 document.querySelectorAll('.edit-promo-btn').forEach(button => button.addEventListener('click', (e) => showEditPromoModal(parseInt(e.currentTarget.dataset.promoId))));
                 document.querySelectorAll('.delete-promo-btn').forEach(button => button.addEventListener('click', (e) => showDeleteConfirmModal(parseInt(e.currentTarget.dataset.promoId))));
             };
-
             const rerenderAll = () => {
                 createTimeline();
                 renderPromotionCards();
@@ -660,21 +668,11 @@
                 modalActions.appendChild(closeButton);
                 modal.classList.remove('hidden');
             };
-
             const showDeleteConfirmModal = (promoId) => {
                 const confirmModal = document.getElementById('deleteConfirmModal');
                 document.getElementById('confirmDeleteBtn').dataset.promoId = promoId;
                 confirmModal.classList.remove('hidden');
             };
-            
-            const deletePromotion = (promoId) => {
-                promotions = promotions.filter(p => p.id !== promoId);
-                rerenderAll();
-                document.getElementById('deleteConfirmModal').classList.add('hidden');
-                document.getElementById('promoModal').classList.add('hidden');
-                showNotification('🗑️ Promotion deleted successfully.', 'bg-blue-500');
-            };
-
             const showEditPromoModal = (promoId) => {
                 const promo = promotions.find(p => p.id === promoId);
                 if (!promo) return;
@@ -689,52 +687,6 @@
                 document.getElementById('editDetails').value = promo.details;
                 modal.classList.remove('hidden');
             };
-            
-            const handleAddPromoForm = (event) => {
-                event.preventDefault();
-                const form = event.target;
-                const newPromo = {
-                    id: Date.now(), // Simple unique ID for client-side
-                    competitor: form.competitor.value,
-                    title: form.title.value,
-                    startDate: form.startDate.value,
-                    endDate: form.endDate.value,
-                    details: form.details.value,
-                    url: form.promoUrl.value,
-                };
-                newPromo.category = getPromoCategory(newPromo);
-                newPromo.iconHTML = getCategoryIcon(newPromo.category);
-                promotions.push(newPromo);
-                rerenderAll();
-                form.reset();
-                document.getElementById('addPromoModal').classList.add('hidden');
-                showNotification('✅ New promotion added successfully!', 'bg-green-500');
-            };
-
-            const handleEditPromoForm = (event) => {
-                event.preventDefault();
-                const form = event.target;
-                const promoId = parseInt(form.editPromoId.value);
-                const promoIndex = promotions.findIndex(p => p.id === promoId);
-                if (promoIndex > -1) {
-                    const updatedPromo = {
-                        id: promoId,
-                        competitor: form.competitor.value,
-                        title: form.title.value,
-                        url: form.promoUrl.value,
-                        startDate: form.startDate.value,
-                        endDate: form.endDate.value,
-                        details: form.details.value,
-                    };
-                    updatedPromo.category = getPromoCategory(updatedPromo);
-                    updatedPromo.iconHTML = getCategoryIcon(updatedPromo.category);
-                    promotions[promoIndex] = updatedPromo;
-                    rerenderAll();
-                    document.getElementById('editPromoModal').classList.add('hidden');
-                    showNotification('✏️ Promotion updated successfully.', 'bg-green-500');
-                }
-            };
-            
             const populatePromoTypeDropdowns = () => {
                 const selects = [document.getElementById('promoType'), document.getElementById('editPromoType')];
                 selects.forEach(select => {
@@ -748,7 +700,6 @@
                     });
                 });
             };
-
             const showNotification = (message, colorClass = 'bg-green-500') => {
                 const notification = document.getElementById('notification');
                 const notificationText = document.getElementById('notification-text');
@@ -757,38 +708,104 @@
                 notification.classList.add('show');
                 setTimeout(() => notification.classList.remove('show'), 3000);
             };
-
             const updateLastUpdatedText = () => {
                 const lastUpdatedElement = document.getElementById('last-updated-text');
                 const now = new Date();
                 const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
                 lastUpdatedElement.textContent = `Last updated: ${now.toLocaleDateString('en-US', options)}`;
             };
+            
 
+            // --- NEW: FUNCTION TO ADD DATA TO SUPABASE ---
+            const handleAddPromoForm = async (event) => {
+                event.preventDefault();
+                const form = event.target;
+                const newPromoData = {
+                    competitor: form.competitor.value,
+                    title: form.title.value,
+                    startDate: form.startDate.value,
+                    endDate: form.endDate.value,
+                    details: form.details.value,
+                    url: form.promoUrl.value,
+                    category: form.promoType.value || getPromoCategory({title: form.title.value, details: form.details.value})
+                };
+
+                const { data, error } = await supabase.from('promotions').insert([newPromoData]);
+
+                if (error) {
+                    console.error('Error adding promotion:', error);
+                    showNotification('❌ Failed to add promotion.', 'bg-red-500');
+                } else {
+                    await loadPromotions(); // Reload all data from the server
+                    form.reset();
+                    document.getElementById('addPromoModal').classList.add('hidden');
+                    showNotification('✅ New promotion added successfully!', 'bg-green-500');
+                }
+            };
+
+            // --- NEW: FUNCTION TO EDIT DATA IN SUPABASE ---
+            const handleEditPromoForm = async (event) => {
+                event.preventDefault();
+                const form = event.target;
+                const promoId = parseInt(form.editPromoId.value);
+                const updatedPromoData = {
+                    competitor: form.competitor.value,
+                    title: form.title.value,
+                    url: form.promoUrl.value,
+                    startDate: form.startDate.value,
+                    endDate: form.endDate.value,
+                    details: form.details.value,
+                    category: form.promoType.value || getPromoCategory({title: form.title.value, details: form.details.value})
+                };
+
+                const { data, error } = await supabase.from('promotions').update(updatedPromoData).eq('id', promoId);
+
+                if (error) {
+                    console.error('Error updating promotion:', error);
+                    showNotification('❌ Failed to update promotion.', 'bg-red-500');
+                } else {
+                    await loadPromotions(); // Reload all data
+                    document.getElementById('editPromoModal').classList.add('hidden');
+                    showNotification('✏️ Promotion updated successfully.', 'bg-green-500');
+                }
+            };
+
+            // --- NEW: FUNCTION TO DELETE DATA FROM SUPABASE ---
+            const deletePromotion = async (promoId) => {
+                const { error } = await supabase.from('promotions').delete().eq('id', promoId);
+
+                if (error) {
+                    console.error('Error deleting promotion:', error);
+                    showNotification('❌ Failed to delete promotion.', 'bg-red-500');
+                } else {
+                    await loadPromotions(); // Reload all data
+                    document.getElementById('deleteConfirmModal').classList.add('hidden');
+                    document.getElementById('promoModal').classList.add('hidden');
+                    showNotification('🗑️ Promotion deleted successfully.', 'bg-blue-500');
+                }
+            };
+
+            
             // --- INITIALIZATION AND EVENT LISTENERS ---
-            promotions.forEach(promo => {
-                promo.category = getPromoCategory(promo);
-                promo.iconHTML = getCategoryIcon(promo.category);
-            });
-            
             populatePromoTypeDropdowns();
-            rerenderAll();
             
+            // Event listeners for forms and buttons
             document.getElementById('openAddPromoModalBtn').addEventListener('click', () => {
                 document.getElementById('addPromoModal').classList.remove('hidden');
             });
-            
             document.getElementById('addPromoForm').addEventListener('submit', handleAddPromoForm);
             document.getElementById('editPromoForm').addEventListener('submit', handleEditPromoForm);
-            
             document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
                 document.getElementById('deleteConfirmModal').classList.add('hidden');
             });
-            
             document.getElementById('confirmDeleteBtn').addEventListener('click', (e) => {
                 const promoId = parseInt(e.currentTarget.dataset.promoId);
                 deletePromotion(promoId);
             });
+
+            // --- START THE APPLICATION ---
+            // This is the most important line: it kicks everything off by fetching the data.
+            loadPromotions();
         });
     </script>
 </body>
