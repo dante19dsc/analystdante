@@ -32,15 +32,15 @@
         .timeline-full-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--border-color); min-height: 40px; }
         .timeline-full-row:last-child { border-bottom: none; }
         .timeline-sticky-label { flex: 0 0 200px; padding: 8px 12px; font-size: 13px; font-weight: 500; color: var(--text-primary); background-color: #fdfdfd; border-right: 1px solid var(--border-color); position: sticky; left: 0; z-index: 10; display: flex; align-items: center; }
-        .timeline-cells-container { flex-grow: 1; position: relative; display: grid; }
+        .timeline-cells-container { flex-grow: 1; position: relative; display: flex; }
         .timeline-header-row { position: sticky; top: 0; z-index: 20; background-color: var(--color-purple); color: white; }
         .timeline-header-row .timeline-sticky-label { font-weight: 700; background-color: var(--color-purple); color: white; }
-        .timeline-header-day { padding: 8px 4px; text-align: center; font-size: 11px; font-weight: 600; border-right: 1px solid #4a476b; display: flex; align-items: center; justify-content: center; }
+        .timeline-header-day { flex: 1 1 0%; padding: 8px 4px; text-align: center; font-size: 11px; font-weight: 600; border-right: 1px solid #4a476b; display: flex; align-items: center; justify-content: center; min-width: 30px; }
         .timeline-header-day.today { background-color: var(--color-tan); animation: pulse 2s infinite; }
         .timeline-header-day.weekend { background-color: #4a476b; }
         .timeline-competitor-header .timeline-sticky-label { font-weight: 700; font-size: 14px; background-color: #f7f7f9; }
-        .timeline-bar { position: absolute; height: 28px; top: 50%; transform: translateY(-50%); border-radius: 4px; display: flex; align-items: center; font-size: 11px; font-weight: 600; color: white; cursor: pointer; transition: all 0.2s ease, width 0.5s ease-out; padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 0; }
-        .timeline-bar:hover { transform: translateY(-50%) scaleY(1.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+        .timeline-bar { position: absolute; height: 28px; top: 50%; transform: translateY(-50%); border-radius: 4px; display: flex; align-items: center; font-size: 11px; font-weight: 600; color: white; cursor: pointer; transition: all 0.2s ease; padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; box-sizing: border-box; }
+        .timeline-bar:hover { transform: translateY(-50%) scaleY(1.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 5; }
         .timeline-bar.hartono { background-color: var(--color-tan); }
         .timeline-bar.electronic-city { background-color: var(--color-lavender); }
         .timeline-bar.erablue { background-color: var(--color-purple); }
@@ -243,7 +243,6 @@
                 headerRow.appendChild(headerLabel);
                 const headerCells = document.createElement('div');
                 headerCells.className = 'timeline-cells-container';
-                headerCells.style.gridTemplateColumns = `repeat(${daysInMonth}, 30px)`;
                 
                 const today = new Date();
                 for (let day = 1; day <= daysInMonth; day++) {
@@ -276,7 +275,6 @@
                     competitorHeaderRow.appendChild(competitorLabel);
                     const competitorCells = document.createElement('div');
                     competitorCells.className = 'timeline-cells-container';
-                    competitorCells.style.gridTemplateColumns = `repeat(${daysInMonth}, 30px)`;
                     competitorCells.style.backgroundColor = config.bgColor;
                     competitorHeaderRow.appendChild(competitorCells);
                     wrapper.appendChild(competitorHeaderRow);
@@ -295,11 +293,12 @@
                                  promoRow.appendChild(categoryLabel);
                                  const promoCells = document.createElement('div');
                                  promoCells.className = 'timeline-cells-container';
-                                 promoCells.style.gridTemplateColumns = `repeat(${daysInMonth}, 30px)`;
                                  const bar = document.createElement('div');
                                  bar.className = `timeline-bar ${config.colorClass}`;
-                                 bar.style.left = `${(span.startDay - 1) * 30 + 2}px`;
-                                 setTimeout(() => { bar.style.width = `${span.duration * 30 - 4}px`; }, 50);
+                                 const startPercent = ((span.startDay - 1) / daysInMonth) * 100;
+                                 const widthPercent = (span.duration / daysInMonth) * 100;
+                                 bar.style.left = `${startPercent}%`;
+                                 bar.style.width = `${widthPercent}%`;
                                  bar.textContent = promo.title;
                                  bar.dataset.promoId = promo.tempId;
                                  bar.onclick = () => showPromoDetailsModal(promo.tempId);
