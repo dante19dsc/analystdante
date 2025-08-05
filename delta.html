@@ -72,11 +72,11 @@
 
         /* --- Promo Card Section --- */
         .promo-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .promo-card-header { padding: 1rem; font-size: 1.25rem; font-weight: 700; color: white; border-bottom: 1px solid var(--color-border); }
+        .promo-card-header { padding: 1rem; font-size: 1.25rem; font-weight: 700; color: white; border-bottom: 1px solid var(--border-color); }
         .promo-card-content { padding: 1rem; flex-grow: 1; }
-        .promo-item { display: flex; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--color-border); position: relative; }
+        .promo-item { display: flex; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); position: relative; }
         .promo-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-        .promo-item-icon-container { width: 80px; height: 80px; border-radius: 0.5rem; margin-right: 1rem; flex-shrink: 0; padding: 12px; border: 1px solid var(--color-border); background-color: #f9fafb; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease-in-out; }
+        .promo-item-icon-container { width: 80px; height: 80px; border-radius: 0.5rem; margin-right: 1rem; flex-shrink: 0; padding: 12px; border: 1px solid var(--border-color); background-color: #f9fafb; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease-in-out; }
         .promo-item-icon-container:hover { transform: scale(1.1); }
         .promo-item-icon-container svg { width: 100%; height: 100%; }
         .promo-item-details { flex-grow: 1; }
@@ -382,7 +382,7 @@
                 const currentCompetitors = countryData[activeCountry].competitors;
                 const competitorConfig = countryData[activeCountry].config;
 
-                // Bar Chart - FIXED COLORS
+                // Bar Chart - FIXED with direct hex colors
                 const barCtx = document.getElementById('bar-chart').getContext('2d');
                 charts.bar = new Chart(barCtx, { 
                     type: 'bar', 
