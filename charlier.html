@@ -2,66 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
     <title>Company Portal - Competitor Promotion Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Yuji+Boku&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-main: #F8F7F4;
-            --card-bg: #FFFFFF;
-            --text-primary: #2d3748;
-            --text-secondary: #718096;
-            --border-color: #e2e8f0;
-            --color-purple: #2c2a4a;
-            --color-lavender: #7f799e;
-            --color-gray: #b9b5b2;
-            --color-tan: #d8b89d;
+            /* Corporate Blue & Slate Palette */
+            --color-bg: #F8F9FA;
+            --color-surface: #FFFFFF;
+            --color-header: #0d1b2a;
+            --color-text-primary: #495057;
+            --color-text-secondary: #6C757D;
+            --color-border: #E9ECEF;
+            --color-accent: #005DFF;
+
+            /* Data Palette */
+            --color-comp-1: #48BFE3; /* Hartono - Teal */
+            --color-comp-2: #7209B7; /* Electronic City - Electric Purple */
+            --color-comp-3: #F4A261; /* Erablue - Mango */
+            --color-comp-4: #F72585; /* Future Competitor - Rose */
         }
-        body { font-family: 'Space Grotesk', sans-serif; background-color: var(--bg-main); color: var(--text-primary); }
-        .paper-card { background-color: var(--card-bg); border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); border: 1px solid var(--border-color); }
-        .font-scribble { font-family: 'Yuji Boku', serif; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--color-bg); 
+            color: var(--color-text-primary); 
+        }
+        .paper-card { 
+            background-color: var(--color-surface);
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            padding: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        .paper-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
         .notification { transform: translateX(100%); transition: transform 0.3s ease-in-out; position: fixed; top: 1rem; right: 1rem; z-index: 50; }
         .notification.show { transform: translateX(0); }
         
         /* --- Timeline Styles --- */
-        .timeline-full-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--border-color); min-height: 40px; }
+        .timeline-full-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--color-border); min-height: 44px; }
         .timeline-full-row:last-child { border-bottom: none; }
-        .timeline-sticky-label { flex: 0 0 200px; padding: 8px 12px; font-size: 13px; font-weight: 500; color: var(--text-primary); background-color: #fdfdfd; border-right: 1px solid var(--border-color); position: sticky; left: 0; z-index: 10; display: flex; align-items: center; }
+        .timeline-sticky-label { flex: 0 0 200px; padding: 8px 12px; font-size: 13px; font-weight: 500; color: var(--text-primary); background-color: #fcfcfd; border-right: 1px solid var(--border-color); position: sticky; left: 0; z-index: 10; display: flex; align-items: center; }
         .timeline-cells-container { flex-grow: 1; position: relative; display: flex; }
-        .timeline-header-row { position: sticky; top: 0; z-index: 20; background-color: var(--color-purple); color: white; }
-        .timeline-header-row .timeline-sticky-label { font-weight: 700; background-color: var(--color-purple); color: white; }
-        .timeline-header-day { flex: 1 1 0%; padding: 8px 4px; text-align: center; font-size: 11px; font-weight: 600; border-right: 1px solid #4a476b; display: flex; align-items: center; justify-content: center; min-width: 30px; }
-        .timeline-header-day.today { background-color: var(--color-tan); animation: pulse 2s infinite; }
-        .timeline-header-day.weekend { background-color: #4a476b; }
+        .timeline-header-row { position: sticky; top: 0; z-index: 20; background-color: var(--color-header); color: white; }
+        .timeline-header-row .timeline-sticky-label { font-weight: 700; background-color: var(--color-header); color: white; }
+        .timeline-header-day { flex: 1 1 0%; padding: 8px 4px; text-align: center; font-size: 11px; font-weight: 600; border-right: 1px solid #495057; display: flex; align-items: center; justify-content: center; min-width: 30px; }
+        .timeline-header-day.today { background-color: var(--color-accent); animation: pulse 2s infinite; }
+        .timeline-header-day.weekend { background-color: #1c2e42; }
         .timeline-competitor-header .timeline-sticky-label { font-weight: 700; font-size: 14px; background-color: #f7f7f9; }
         .timeline-bar { position: absolute; height: 28px; top: 50%; transform: translateY(-50%); border-radius: 4px; display: flex; align-items: center; font-size: 11px; font-weight: 600; color: white; cursor: pointer; transition: all 0.2s ease; padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; box-sizing: border-box; }
         .timeline-bar:hover { transform: translateY(-50%) scaleY(1.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 5; }
-        .timeline-bar.hartono { background-color: var(--color-tan); }
-        .timeline-bar.electronic-city { background-color: var(--color-lavender); }
-        .timeline-bar.erablue { background-color: var(--color-purple); }
+        .timeline-bar.hartono { background-color: var(--color-comp-1); }
+        .timeline-bar.electronic-city { background-color: var(--color-comp-2); }
+        .timeline-bar.erablue { background-color: var(--color-comp-3); }
 
         /* --- Custom Scrollbar Styles --- */
         #timeline-wrapper::-webkit-scrollbar { width: 8px; height: 8px; }
         #timeline-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        #timeline-wrapper::-webkit-scrollbar-thumb { background: var(--color-gray); border-radius: 10px; }
-        #timeline-wrapper::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
-        #timeline-wrapper { scrollbar-width: thin; scrollbar-color: var(--color-gray) #f1f1f1; }
+        #timeline-wrapper::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+        #timeline-wrapper::-webkit-scrollbar-thumb:hover { background: #aaa; }
+        #timeline-wrapper { scrollbar-width: thin; scrollbar-color: #ccc #f1f1f1; }
 
         /* --- Promo Card Section --- */
         .promo-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .promo-card { background-color: var(--card-bg); border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; animation: fadeIn 0.5s ease-out forwards; opacity: 0; border: 1px solid var(--border-color); }
-        .promo-card:hover { transform: translateY(-8px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
         .promo-card-header { padding: 1rem; font-size: 1.25rem; font-weight: 700; color: white; border-bottom: 1px solid var(--border-color); }
-        .promo-card-header.hartono { background-color: var(--color-tan); }
-        .promo-card-header.electronic-city { background-color: var(--color-lavender); }
-        .promo-card-header.erablue { background-color: var(--color-purple); }
+        .promo-card-header.hartono { background-color: var(--color-comp-1); }
+        .promo-card-header.electronic-city { background-color: var(--color-comp-2); }
+        .promo-card-header.erablue { background-color: var(--color-comp-3); }
         .promo-card-content { padding: 1rem; flex-grow: 1; }
-        .promo-item { display: flex; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); position: relative; animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+        .promo-item { display: flex; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); position: relative; }
         .promo-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
         .promo-item-icon-container { width: 80px; height: 80px; border-radius: 0.5rem; margin-right: 1rem; flex-shrink: 0; padding: 12px; border: 1px solid var(--border-color); background-color: #f9fafb; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease-in-out; }
         .promo-item-icon-container:hover { transform: scale(1.1); }
@@ -72,15 +91,15 @@
         .promo-item-description { font-size: 0.875rem; color: var(--text-secondary); }
         .promo-item-actions { position: absolute; top: 0; right: 0; display: flex; gap: 0.25rem; }
         .promo-item-actions button { background: none; border: none; color: #9ca3af; cursor: pointer; padding: 0.25rem; }
-        .promo-item-actions button:hover { color: var(--color-lavender); }
+        .promo-item-actions button:hover { color: var(--color-accent); }
         .promo-item-actions .delete-promo-btn:hover { color: #ef4444; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(216, 184, 157, 0.7); } 50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(216, 184, 157, 0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 93, 255, 0.7); } 50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(0, 93, 255, 0); } }
     </style>
 </head>
-<body class="text-gray-800">
+<body>
     <div id="notification" class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg notification"><span id="notification-text"></span></div>
-    <div class="flex flex-col min-h-screen p-4 md:p-8"> <header class="paper-card flex flex-col md:flex-row items-center justify-between p-4 w-full mb-6"> <div class="flex items-center mb-4 md:mb-0"> <svg class="h-8 w-8 mr-2" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1c1,16.6-7.2,32.1-21.7,40.4C167.8,124.5,160.5,138.8,148.2,148.1z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg> <h2 class="text-xl font-bold text-gray-900 font-scribble">あれなんだっけ</h2> </div> <nav class="flex flex-col md:flex-row items-center gap-2 md:gap-4"> <a href="https://dante19dsc.github.io/analystdante/" target="_blank" rel="noopener noreferrer" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto text-center">Marketing Information</a> <button class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto">Store Development Map</button> <button class="px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-900 w-full md:w-auto">Promotion Tracker</button> </nav> </header> <main class="flex-1 min-w-0"> <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"> <div> <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Competitor Promotion Tracker</h1> <p class="text-gray-600 mt-2">Monitor and analyze competitor promotional activities in real-time</p> <p id="last-updated-text" class="text-xs text-gray-500 mt-1"></p> </div> <div class="flex gap-2"> <button id="openAddPromoModalBtn" class="inline-flex items-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white" style="background-color: var(--color-purple);"><i class="fa-solid fa-plus mr-2"></i> Add Promotion </button> </div> </div>
+    <div class="flex flex-col min-h-screen p-4 md:p-8"> <header class="paper-card flex flex-col md:flex-row items-center justify-between p-4 w-full mb-6"> <div class="flex items-center mb-4 md:mb-0"> <svg class="h-8 w-8 mr-2" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1c1,16.6-7.2,32.1-21.7,40.4C167.8,124.5,160.5,138.8,148.2,148.1z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg> <h2 class="text-xl font-bold text-gray-900 font-scribble">あれなんだっけ</h2> </div> <nav class="flex flex-col md:flex-row items-center gap-2 md:gap-4"> <a href="https://dante19dsc.github.io/analystdante/" target="_blank" rel="noopener noreferrer" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto text-center">Marketing Information</a> <button class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto">Store Development Map</button> <button class="px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-900 w-full md:w-auto">Promotion Tracker</button> </nav> </header> <main class="flex-1 min-w-0"> <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"> <div> <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Competitor Promotion Tracker</h1> <p class="text-gray-600 mt-2">Monitor and analyze competitor promotional activities in real-time</p> <p id="last-updated-text" class="text-xs text-gray-500 mt-1"></p> </div> <div class="flex gap-2"> <button id="openAddPromoModalBtn" class="inline-flex items-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white" style="background-color: var(--color-accent);"><i class="fa-solid fa-plus mr-2"></i> Add Promotion </button> </div> </div>
         <div class="paper-card p-6 mb-8 hidden lg:block">
             <div class="flex justify-between items-center mb-4">
                 <h3 id="timeline-title" class="text-lg font-semibold text-gray-900"></h3>
@@ -123,7 +142,7 @@
             </div>
         </div>
         <div class="mb-8"> <h2 class="text-2xl font-bold text-gray-900 mb-6">Current Promotions Overview</h2> <div id="promo-cards-container" class="promo-card-grid"></div> </div> </main> </div>
-    <div id="promoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4"><h4 class="text-lg font-bold mb-4">Promotion Details</h4><p id="modal-content" class="text-gray-700 whitespace-pre-wrap"></p><div id="modal-actions" class="mt-6 flex justify-end gap-2"></div></div></div> <div id="deleteConfirmModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4"><h4 class="text-lg font-bold mb-2">Confirm Deletion</h4><p class="text-gray-700 mb-6">Are you sure you want to delete this promotion?</p><div class="flex justify-end gap-2"><button id="cancelDeleteBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancel</button><button id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Yes, Delete</button></div></div></div> <div id="addPromoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full mx-4"><div class="flex justify-between items-center mb-4"><h4 class="text-lg font-bold">Add New Promotion</h4><button onclick="document.getElementById('addPromoModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button></div><form id="addPromoForm" class="space-y-4 mb-4"><div><label for="competitor" class="block text-sm font-medium text-gray-700">Competitor</label><select id="competitor" name="competitor" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"><option value="">Select a Competitor</option><option value="Hartono">Hartono</option><option value="Electronic City">Electronic City</option><option value="Erablue">Erablue</option></select></div><div><label for="promoType" class="block text-sm font-medium text-gray-700">Promotion Type</label><select id="promoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"><option value="">Select a Category</option></select></div><div><label for="title" class="block text-sm font-medium text-gray-700">Promotion Title</label><input type="text" id="title" name="title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div><label for="promoUrl" class="block text-sm font-medium text-gray-700">Promotion URL</label><input type="url" id="promoUrl" name="promoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="https://example.com/promo"></div><div class="flex gap-4"><div class="flex-1"><label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label><input type="date" id="startDate" name="startDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div class="flex-1"><label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label><input type="date" id="endDate" name="endDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div></div><div><label for="details" class="block text-sm font-medium text-gray-700">Details</label><textarea id="details" name="details" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea></div><button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white" style="background-color: var(--color-purple);">Add Promotion</button></form></div></div> <div id="editPromoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full mx-4"><div class="flex justify-between items-center mb-4"><h4 class="text-lg font-bold">Edit Promotion</h4><button onclick="document.getElementById('editPromoModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button></div><form id="editPromoForm" class="space-y-4"><input type="hidden" id="editPromoId"><div><label for="editCompetitor" class="block text-sm font-medium text-gray-700">Competitor</label><select id="editCompetitor" name="competitor" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"><option value="Hartono">Hartono</option><option value="Electronic City">Electronic City</option><option value="Erablue">Erablue</option></select></div><div><label for="editPromoType" class="block text-sm font-medium text-gray-700">Promotion Type</label><select id="editPromoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div><div><label for="editTitle" class="block text-sm font-medium text-gray-700">Promotion Title</label><input type="text" id="editTitle" name="title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div><label for="editPromoUrl" class="block text-sm font-medium text-gray-700">Promotion URL</label><input type="url" id="editPromoUrl" name="promoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="https://example.com/promo"></div><div class="flex gap-4"><div class="flex-1"><label for="editStartDate" class="block text-sm font-medium text-gray-700">Start Date</label><input type="date" id="editStartDate" name="startDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div class="flex-1"><label for="editEndDate" class="block text-sm font-medium text-gray-700">End Date</label><input type="date" id="editEndDate" name="endDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div></div><div><label for="editDetails" class="block text-sm font-medium text-gray-700">Details</label><textarea id="editDetails" name="details" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea></div><button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white" style="background-color: var(--color-purple);">Save Changes</button></form></div></div>
+    <div id="promoModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-sm w-full mx-4"><h4 class="text-lg font-bold mb-4 text-white">Promotion Details</h4><p id="modal-content" class="text-gray-300 whitespace-pre-wrap"></p><div id="modal-actions" class="mt-6 flex justify-end gap-2"></div></div></div> <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-sm w-full mx-4"><h4 class="text-lg font-bold mb-2 text-white">Confirm Deletion</h4><p class="text-gray-300 mb-6">Are you sure you want to delete this promotion?</p><div class="flex justify-end gap-2"><button id="cancelDeleteBtn" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500">Cancel</button><button id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Yes, Delete</button></div></div></div> <div id="addPromoModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-lg w-full mx-4"><div class="flex justify-between items-center mb-4"><h4 class="text-lg font-bold text-white">Add New Promotion</h4><button onclick="document.getElementById('addPromoModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-200"><i class="fa-solid fa-xmark"></i></button></div><form id="addPromoForm" class="space-y-4 mb-4"><div><label for="competitor" class="block text-sm font-medium text-gray-300">Competitor</label><select id="competitor" name="competitor" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></select></div><div><label for="promoType" class="block text-sm font-medium text-gray-300">Promotion Type</label><select id="promoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></select></div><div><label for="title" class="block text-sm font-medium text-gray-300">Promotion Title</label><input type="text" id="title" name="title" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></div><div><label for="promoUrl" class="block text-sm font-medium text-gray-300">Promotion URL</label><input type="url" id="promoUrl" name="promoUrl" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm" placeholder="https://example.com/promo"></div><div class="flex gap-4"><div class="flex-1"><label for="startDate" class="block text-sm font-medium text-gray-300">Start Date</label><input type="date" id="startDate" name="startDate" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></div><div class="flex-1"><label for="endDate" class="block text-sm font-medium text-gray-300">End Date</label><input type="date" id="endDate" name="endDate" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></div></div><div><label for="details" class="block text-sm font-medium text-gray-300">Details</label><textarea id="details" name="details" rows="3" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></textarea></div><button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-black" style="background-color: var(--color-accent);">Add Promotion</button></form></div></div> <div id="editPromoModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-lg w-full mx-4"><div class="flex justify-between items-center mb-4"><h4 class="text-lg font-bold text-white">Edit Promotion</h4><button onclick="document.getElementById('editPromoModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-200"><i class="fa-solid fa-xmark"></i></button></div><form id="editPromoForm" class="space-y-4"><input type="hidden" id="editPromoId"><div><label for="editCompetitor" class="block text-sm font-medium text-gray-300">Competitor</label><select id="editCompetitor" name="competitor" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></select></div><div><label for="editPromoType" class="block text-sm font-medium text-gray-300">Promotion Type</label><select id="editPromoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></select></div><div><label for="editTitle" class="block text-sm font-medium text-gray-300">Promotion Title</label><input type="text" id="editTitle" name="title" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></div><div><label for="editPromoUrl" class="block text-sm font-medium text-gray-300">Promotion URL</label><input type="url" id="editPromoUrl" name="promoUrl" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm" placeholder="https://example.com/promo"></div><div class="flex gap-4"><div class="flex-1"><label for="editStartDate" class="block text-sm font-medium text-gray-300">Start Date</label><input type="date" id="editStartDate" name="startDate" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></div><div class="flex-1"><label for="editEndDate" class="block text-sm font-medium text-gray-300">End Date</label><input type="date" id="editEndDate" name="endDate" required class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></div></div><div><label for="editDetails" class="block text-sm font-medium text-gray-300">Details</label><textarea id="editDetails" name="details" rows="3" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm"></textarea></div><button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-black" style="background-color: var(--color-accent);">Save Changes</button></form></div></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -141,20 +160,20 @@
             // --- CONFIGURATION DATA ---
             const competitors = ['Hartono', 'Electronic City', 'Erablue'];
             const competitorConfig = { 
-                'Hartono': { colorClass: 'hartono', bgColor: '#fdf6f1', chartColor: '#d8b89d' }, 
-                'Electronic City': { colorClass: 'electronic-city', bgColor: '#f3f2f7', chartColor: '#7f799e' }, 
-                'Erablue': { colorClass: 'erablue', bgColor: '#f0f0f5', chartColor: '#2c2a4a' } 
+                'Hartono': { colorClass: 'hartono', bgColor: '#fdf6f1', chartColor: 'var(--color-comp-1)' }, 
+                'Electronic City': { colorClass: 'electronic-city', bgColor: '#f3f2f7', chartColor: 'var(--color-comp-2)' }, 
+                'Erablue': { colorClass: 'erablue', bgColor: '#f0f0f5', chartColor: 'var(--color-comp-3)' } 
             };
             const promoCategories = [ 'Promo Bank & Payment', 'Promo HP & Gadget', 'Promo Laptop & PC', 'Promo TV & Audio', 'Promo Home Appliances', 'Promo Back to School', 'Promo 17 Agustus', 'Other Promotions' ];
             const categoryColors = {
-                'Promo Bank & Payment': '#2c2a4a',
-                'Promo HP & Gadget': '#d8b89d',
-                'Promo Laptop & PC': '#7f799e',
-                'Promo TV & Audio': '#b9b5b2',
-                'Promo Home Appliances': '#5b5882',
-                'Promo Back to School': '#e4cbb8',
-                'Promo 17 Agustus': '#a5a0c2',
-                'Other Promotions': '#d1cfce'
+                'Promo Bank & Payment': '#0d1b2a',
+                'Promo HP & Gadget': '#005DFF',
+                'Promo Laptop & PC': '#495057',
+                'Promo TV & Audio': '#6C757D',
+                'Promo Home Appliances': '#1c2e42',
+                'Promo Back to School': '#6495ED',
+                'Promo 17 Agustus': '#A0AEC0',
+                'Other Promotions': '#E9ECEF'
             };
             const categoryIcons = { 'Promo Bank & Payment': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="25" width="80" height="50" rx="8" fill="#005A9C"/><rect x="10" y="60" width="80" height="5" fill="#7BB8F2"/><rect x="22" y="35" width="15" height="12"rx="2" fill="#F5A623"/></svg>`, 'Promo HP & Gadget': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="35" y="15" width="50" height="70" rx="8" fill="#7BB8F2"/><rect x="15" y="25" width="40" height="60" rx="8" fill="#005A9C"/><rect x="20" y="32" width="30" height="46" rx="3" fill="#F5A623"/></svg>`, 'Promo Laptop & PC': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g><path d="M 5 70 L 95 70 L 85 78 L 15 78 Z" fill="#005A9C"/><rect x="18" y="22" width="74" height="48" rx="5" fill="#7BB8F2" transform="skewX(-10)"/><rect x="25" y="28" width="60" height="36" rx="2" fill="#005A9C" transform="skewX(-10)"/></g></svg>`, 'Promo TV & Audio': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="20" width="84" height="50" rx="4" fill="#005A9C"/><rect x="13" y="25" width="74" height="40" fill="#7BB8F2"/><path d="M 45 70 L 55 70 L 65 80 L 35 80 Z" fill="#005A9C"/><rect x="20" y="85" width="60" height="5" rx="2.5" fill="#F5A623"/></svg>`, 'Promo Home Appliances': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="translate(50 35) scale(0.8)"><path d="M 0 -15 L 0 15 M -13 0 L 13 0 M -9 -9 L 9 9 M -9 9 L 9 -9" stroke="#005A9C" stroke-width="4" stroke-linecap="round"/></g><path d="M 25 60 C 25 50, 50 50, 50 75 S 75 90, 75 80 C 75 70, 60 70, 50 85 Z" fill="#7BB8F2" transform="translate(-15 0)"/><g transform="translate(70 70) scale(0.6)"><circle cx="0" cy="0" r="12" fill="none" stroke="#F5A623" stroke-width="4"/><path d="M 0 0 L 10 5" stroke="#F5A623" stroke-width="4" stroke-linecap="round"/><path d="M 0 0 L -10 5" stroke="#F5A623" stroke-width="4" stroke-linecap="round"/><path d="M 0 0 L 0 -12" stroke="#F5A623" stroke-width="4" stroke-linecap="round"/></g></svg>`, 'Promo Back to School': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 15 80 Q 50 90 85 80 L 85 20 Q 50 10 15 20 Z" fill="#005A9C"/><path d="M 50 22 V 82" stroke="#7BB8F2" stroke-width="4"/><circle cx="50" cy="50" r="12" fill="#F5A623"/><path d="M 50 38 Q 55 35 52 30" stroke="#005A9C" stroke-width="3" fill="none"/></svg>`, 'Promo 17 Agustus': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="10" width="6" height="80" rx="3" fill="#005A9C"/><path d="M 21 25 C 40 15, 60 35, 80 25 V 45 C 60 55, 40 35, 21 45 Z" fill="#F5A623"/><path d="M 21 45 C 40 35, 60 55, 80 45 V 65 C 60 75, 40 55, 21 65 Z" fill="#7BB8F2"/></svg>`, 'Other Promotions': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="40" width="60" height="45" rx="5" fill="#005A9C"/><rect x="15" y="25" width="70" height="15" rx="5" fill="#7BB8F2"/><rect x="45" y="25" width="10" height="60" fill="#F5A623"/><path d="M 45 25 C 35 15, 25 15, 25 25" stroke="#F5A623" stroke-width="8" fill="none"/><path d="M 55 25 C 65 15, 75 15, 75 25" stroke="#F5A623" stroke-width="8" fill="none"/></svg>` };
             
@@ -340,8 +359,8 @@
                 Object.values(charts).forEach(chart => chart.destroy());
                 charts = {};
 
-                Chart.defaults.font.family = "'Space Grotesk', sans-serif";
-                Chart.defaults.color = '#4b5563';
+                Chart.defaults.font.family = "'Inter', sans-serif";
+                Chart.defaults.color = 'var(--color-text-secondary)';
 
                 // Bar Chart
                 const barCtx = document.getElementById('bar-chart').getContext('2d');
@@ -371,8 +390,14 @@
                             }
                         },
                         scales: {
-                            x: { grid: { display: false } },
-                            y: { grid: { display: false } }
+                            x: { 
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                                ticks: { color: 'var(--color-text-secondary)' }
+                            },
+                            y: { 
+                                grid: { display: false },
+                                ticks: { color: 'var(--color-text-secondary)' }
+                            }
                         }
                     } 
                 });
@@ -389,7 +414,7 @@
                             datasets: [{ 
                                 data: categoryCounts, 
                                 backgroundColor: promoCategories.map(cat => categoryColors[cat]), 
-                                borderColor: '#fff', 
+                                borderColor: 'var(--color-surface)', 
                                 borderWidth: 2 
                             }]
                         },
@@ -453,10 +478,10 @@
             };
 
             // --- MODAL & NOTIFICATION FUNCTIONS ---
-            const showPromoDetailsModal = (promoId) => { const promo = promotions.find(p => p.tempId === promoId); if (!promo) return; const modal = document.getElementById('promoModal'); document.getElementById('modal-content').textContent = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`; const modalActions = document.getElementById('modal-actions'); modalActions.innerHTML = ''; const deleteButton = document.createElement('button'); deleteButton.className = 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700'; deleteButton.textContent = 'Delete'; deleteButton.onclick = () => showDeleteConfirmModal(promo.tempId); const closeButton = document.createElement('button'); closeButton.className = 'px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300'; closeButton.textContent = 'Close'; closeButton.onclick = () => document.getElementById('promoModal').classList.add('hidden'); modalActions.appendChild(deleteButton); modalActions.appendChild(closeButton); modal.classList.remove('hidden'); };
+            const showPromoDetailsModal = (promoId) => { const promo = promotions.find(p => p.tempId === promoId); if (!promo) return; const modal = document.getElementById('promoModal'); document.getElementById('modal-content').textContent = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`; const modalActions = document.getElementById('modal-actions'); modalActions.innerHTML = ''; const deleteButton = document.createElement('button'); deleteButton.className = 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700'; deleteButton.textContent = 'Delete'; deleteButton.onclick = () => showDeleteConfirmModal(promo.tempId); const closeButton = document.createElement('button'); closeButton.className = 'px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500'; closeButton.textContent = 'Close'; closeButton.onclick = () => document.getElementById('promoModal').classList.add('hidden'); modalActions.appendChild(deleteButton); modalActions.appendChild(closeButton); modal.classList.remove('hidden'); };
             const showDeleteConfirmModal = (promoId) => { const confirmModal = document.getElementById('deleteConfirmModal'); document.getElementById('confirmDeleteBtn').dataset.promoId = promoId; confirmModal.classList.remove('hidden'); };
             const showEditPromoModal = (promoId) => { const promo = promotions.find(p => p.tempId === promoId); if (!promo) return; const modal = document.getElementById('editPromoModal'); document.getElementById('editPromoId').value = promo.tempId; document.getElementById('editCompetitor').value = promo.competitor; document.getElementById('editPromoType').value = promo.category; document.getElementById('editTitle').value = promo.title; document.getElementById('editPromoUrl').value = promo.url || ''; document.getElementById('editStartDate').value = promo.startDate; document.getElementById('editEndDate').value = promo.endDate; document.getElementById('editDetails').value = promo.details; modal.classList.remove('hidden'); };
-            const populatePromoTypeDropdowns = () => { const selects = [document.getElementById('promoType'), document.getElementById('editPromoType')]; selects.forEach(select => { if (!select) return; select.innerHTML = '<option value="">Select a Category</option>'; promoCategories.forEach(category => { const option = document.createElement('option'); option.value = category; option.textContent = category; select.appendChild(option); }); }); };
+            const populatePromoTypeDropdowns = () => { const selects = [document.getElementById('promoType'), document.getElementById('editPromoType'), document.getElementById('editCompetitor')]; selects.forEach(select => { if (!select) return; select.innerHTML = '<option value="">Select a Category</option>'; (select.id.includes('Competitor') ? competitors : promoCategories).forEach(item => { const option = document.createElement('option'); option.value = item; option.textContent = item; select.appendChild(option); }); }); };
             const showNotification = (message, colorClass = 'bg-green-500') => { const notification = document.getElementById('notification'); const notificationText = document.getElementById('notification-text'); notificationText.textContent = message; notification.className = `text-white px-4 py-2 rounded-lg shadow-lg notification ${colorClass}`; notification.classList.add('show'); setTimeout(() => notification.classList.remove('show'), 3000); };
             const updateLastUpdatedText = () => { const lastUpdatedElement = document.getElementById('last-updated-text'); const now = new Date(); const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }; lastUpdatedElement.textContent = `Last updated: ${now.toLocaleDateString('en-US', options)}`; };
             
