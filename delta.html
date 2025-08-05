@@ -23,9 +23,9 @@
             --color-accent-secondary: #F39C12; /* Golden Honey */
 
             /* Data Palette */
-            --color-comp-1: #D2691E; /* Hartono - Warm Chocolate */
-            --color-comp-2: #CD853F; /* Electronic City - Sandy Brown */
-            --color-comp-3: #8B4513; /* Erablue - Saddle Brown */
+            --color-comp-1: #D2691E; /* Courts - Warm Chocolate */
+            --color-comp-2: #CD853F; /* Harvey Norman - Sandy Brown */
+            --color-comp-3: #8B4513; /* Gain City - Saddle Brown */
         }
         body { 
             font-family: 'Inter', sans-serif; 
@@ -62,7 +62,10 @@
         .timeline-competitor-header .timeline-sticky-label { font-weight: 700; font-size: 14px; background-color: #fdf8f3; }
         .timeline-bar { position: absolute; height: 28px; top: 50%; transform: translateY(-50%); border-radius: 4px; display: flex; align-items: center; font-size: 11px; font-weight: 600; color: white; cursor: pointer; transition: all 0.2s ease; padding: 0 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; box-sizing: border-box; }
         .timeline-bar:hover { transform: translateY(-50%) scaleY(1.1); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 5; }
-        
+        .timeline-bar.courts { background-color: var(--color-comp-1); }
+        .timeline-bar.harvey-norman { background-color: var(--color-comp-2); }
+        .timeline-bar.gain-city { background-color: var(--color-comp-3); }
+
         /* --- Custom Scrollbar Styles --- */
         #timeline-wrapper::-webkit-scrollbar { width: 8px; height: 8px; }
         #timeline-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
@@ -73,6 +76,9 @@
         /* --- Promo Card Section --- */
         .promo-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
         .promo-card-header { padding: 1rem; font-size: 1.25rem; font-weight: 700; color: white; border-bottom: 1px solid var(--border-color); }
+        .promo-card-header.courts { background-color: var(--color-comp-1); }
+        .promo-card-header.harvey-norman { background-color: var(--color-comp-2); }
+        .promo-card-header.gain-city { background-color: var(--color-comp-3); }
         .promo-card-content { padding: 1rem; flex-grow: 1; }
         .promo-item { display: flex; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); position: relative; }
         .promo-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
@@ -93,14 +99,7 @@
 </head>
 <body>
     <div id="notification" class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg notification"><span id="notification-text"></span></div>
-    <div class="flex flex-col min-h-screen p-4 md:p-8"> <header class="paper-card flex flex-col md:flex-row items-center justify-between p-4 w-full mb-6"> <div class="flex items-center mb-4 md:mb-0"> <svg class="h-8 w-8 mr-2" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1c1,16.6-7.2,32.1-21.7,40.4C167.8,124.5,160.5,138.8,148.2,148.1z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg> <h2 class="text-xl font-bold font-scribble" style="color: var(--color-header);">あれなんだっけ</h2> </div> <nav class="flex flex-col md:flex-row items-center gap-2 md:gap-4"> <a href="https://dante19dsc.github.io/analystdante/" target="_blank" rel="noopener noreferrer" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto text-center">Marketing Information</a> <button class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto">Store Development Map</button> <button class="px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-900 w-full md:w-auto">Promotion Tracker</button> </nav> </header> <main class="flex-1 min-w-0"> <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"> <div> <h1 class="text-2xl md:text-3xl font-bold" style="color: var(--color-header);">Competitor Promotion Tracker</h1> <p style="color: var(--text-secondary);" class="mt-2">Monitor and analyze competitor promotional activities in real-time</p> <p id="last-updated-text" class="text-xs text-gray-500 mt-1"></p> </div> <div class="flex gap-2"> <button id="openAddPromoModalBtn" class="inline-flex items-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white" style="background-color: var(--color-accent);"><i class="fa-solid fa-plus mr-2"></i> Add Promotion </button> </div> </div>
-        <div class="mb-8">
-            <div class="border-b border-gray-200">
-                <nav id="country-tabs" class="-mb-px flex space-x-8" aria-label="Tabs">
-                    <!-- Tabs will be generated here by JS -->
-                </nav>
-            </div>
-        </div>
+    <div class="flex flex-col min-h-screen p-4 md:p-8"> <header class="paper-card flex flex-col md:flex-row items-center justify-between p-4 w-full mb-6"> <div class="flex items-center mb-4 md:mb-0"> <svg class="h-8 w-8 mr-2" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1c1,16.6-7.2,32.1-21.7,40.4C167.8,124.5,160.5,138.8,148.2,148.1z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg> <h2 class="text-xl font-bold font-scribble" style="color: var(--color-header);">あれなんだっけ</h2> </div> <nav class="flex flex-col md:flex-row items-center gap-2 md:gap-4"> <a href="https://github.com/dante19dsc/analystdante/blob/main/delta.html" target="_blank" rel="noopener noreferrer" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto text-center">Marketing Information</a> <button class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto">Store Development Map</button> <button class="px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-900 w-full md:w-auto">Promotion Tracker</button> </nav> </header> <main class="flex-1 min-w-0"> <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"> <div> <h1 class="text-2xl md:text-3xl font-bold" style="color: var(--color-header);">Competitor Promotion Tracker</h1> <p style="color: var(--text-secondary);" class="mt-2">Monitor and analyze competitor promotional activities in real-time</p> <p id="last-updated-text" class="text-xs text-gray-500 mt-1"></p> </div> <div class="flex gap-2"> <button id="openAddPromoModalBtn" class="inline-flex items-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white" style="background-color: var(--color-accent);"><i class="fa-solid fa-plus mr-2"></i> Add Promotion </button> </div> </div>
         <div class="paper-card p-6 mb-8 hidden lg:block">
             <div class="flex justify-between items-center mb-4">
                 <h3 id="timeline-title" class="text-lg font-semibold" style="color: var(--color-header);"></h3>
@@ -110,8 +109,7 @@
                 </div>
             </div>
             <div id="timeline-wrapper" class="border border-gray-200 rounded-lg overflow-x-auto">
-                <!-- JS populates this -->
-            </div>
+                </div>
         </div>
         <div class="paper-card p-4 mb-8 lg:hidden">
             <p class="text-center text-gray-600">The detailed timeline view is available on larger screens.</p>
@@ -123,13 +121,27 @@
                     <h3 class="text-lg font-semibold mb-4" style="color: var(--color-header);">Active Promotions per Competitor (Current Month)</h3>
                     <div class="relative flex-1" style="min-height: 250px;"><canvas id="bar-chart"></canvas></div>
                 </div>
-                <div id="doughnut-charts-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Doughnut charts will be generated here -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="paper-card p-6 flex flex-col">
+                        <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: Courts</h3>
+                        <div class="relative w-40 h-40 md:w-48 md:h-48 mx-auto flex-shrink-0"><canvas id="pie-chart-courts"></canvas></div>
+                        <div id="legend-courts" class="mt-4"></div>
+                    </div>
+                    <div class="paper-card p-6 flex flex-col">
+                        <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: Harvey Norman</h3>
+                        <div class="relative w-40 h-40 md:w-48 md:h-48 mx-auto flex-shrink-0"><canvas id="pie-chart-harvey-norman"></canvas></div>
+                        <div id="legend-harvey-norman" class="mt-4"></div>
+                    </div>
+                    <div class="paper-card p-6 flex flex-col">
+                         <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: Gain City</h3>
+                         <div class="relative w-40 h-40 md:w-48 md:h-48 mx-auto flex-shrink-0"><canvas id="pie-chart-gain-city"></canvas></div>
+                         <div id="legend-gain-city" class="mt-4"></div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="mb-8"> <h2 class="text-2xl font-bold mb-6" style="color: var(--color-header);">Current Promotions Overview</h2> <div id="promo-cards-container" class="promo-card-grid"></div> </div> </main> </div>
-    <div id="promoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-sm w-full mx-4"><h4 class="text-lg font-bold mb-4" style="color: var(--color-header);">Promotion Details</h4><p id="modal-content" style="color: var(--text-secondary);" class="whitespace-pre-wrap"></p><div id="modal-actions" class="mt-6 flex justify-end gap-2"></div></div></div> <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-sm w-full mx-4"><h4 class="text-lg font-bold mb-2" style="color: var(--color-header);">Confirm Deletion</h4><p class="mb-6" style="color: var(--text-secondary);">Are you sure you want to delete this promotion?</p><div class="flex justify-end gap-2"><button id="cancelDeleteBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancel</button><button id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Yes, Delete</button></div></div></div> <div id="addPromoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-lg w-full mx-4"><div class="flex justify-between items-center mb-4"><h4 class="text-lg font-bold" style="color: var(--color-header);">Add New Promotion</h4><button onclick="document.getElementById('addPromoModal').classList.add('hidden')" style="color: var(--text-secondary);"><i class="fa-solid fa-xmark"></i></button></div><form id="addPromoForm" class="space-y-4 mb-4"><div><label for="competitor" class="block text-sm font-medium" style="color: var(--text-secondary);">Competitor</label><select id="competitor" name="competitor" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div><div><label for="promoType" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion Type</label><select id="promoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div><div><label for="title" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion Title</label><input type="text" id="title" name="title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div><label for="promoUrl" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion URL</label><input type="url" id="promoUrl" name="promoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="https://example.com/promo"></div><div class="flex gap-4"><div class="flex-1"><label for="startDate" class="block text-sm font-medium" style="color: var(--text-secondary);">Start Date</label><input type="date" id="startDate" name="startDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div class="flex-1"><label for="endDate" class="block text-sm font-medium" style="color: var(--text-secondary);">End Date</label><input type="date" id="endDate" name="endDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div></div><div><label for="details" class="block text-sm font-medium" style="color: var(--text-secondary);">Details</label><textarea id="details" name="details" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea></div><button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white" style="background-color: var(--color-accent);">Add Promotion</button></form></div></div> <div id="editPromoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-lg w-full mx-4"><div class="flex justify-between items-center mb-4"><h4 class="text-lg font-bold" style="color: var(--color-header);">Edit Promotion</h4><button onclick="document.getElementById('editPromoModal').classList.add('hidden')" style="color: var(--text-secondary);"><i class="fa-solid fa-xmark"></i></button></div><form id="editPromoForm" class="space-y-4"><input type="hidden" id="editPromoId"><div><label for="editCompetitor" class="block text-sm font-medium" style="color: var(--text-secondary);">Competitor</label><select id="editCompetitor" name="competitor" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div><div><label for="editPromoType" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion Type</label><select id="editPromoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div><div><label for="editTitle" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion Title</label><input type="text" id="editTitle" name="title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div><label for="editPromoUrl" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion URL</label><input type="url" id="editPromoUrl" name="promoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="https://example.com/promo"></div><div class="flex gap-4"><div class="flex-1"><label for="editStartDate" class="block text-sm font-medium" style="color: var(--text-secondary);">Start Date</label><input type="date" id="editStartDate" name="startDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div class="flex-1"><label for="editEndDate" class="block text-sm font-medium" style="color: var(--text-secondary);">End Date</label><input type="date" id="editEndDate" name="endDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div></div><div><label for="editDetails" class="block text-sm font-medium" style="color: var(--text-secondary);">Details</label><textarea id="editDetails" name="details" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea></div><button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white" style="background-color: var(--color-accent);">Save Changes</button></form></div></div>
+    <div id="promoModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-sm w-full mx-4"><h4 class="text-lg font-bold mb-4" style="color: var(--color-header);">Promotion Details</h4><p id="modal-content" style="color: var(--text-secondary);" class="whitespace-pre-wrap"></p><div id="modal-actions" class="mt-6 flex justify-end gap-2"></div></div></div> <div id="deleteConfirmModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-sm w-full mx-4"><h4 class="text-lg font-bold mb-2" style="color: var(--color-header);">Confirm Deletion</h4><p class="mb-6" style="color: var(--text-secondary);">Are you sure you want to delete this promotion?</p><div class="flex justify-end gap-2"><button id="cancelDeleteBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancel</button><button id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Yes, Delete</button></div></div></div> <div id="addPromoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-lg w-full mx-4"><div class="flex justify-between items-center mb-4"><h4 class="text-lg font-bold" style="color: var(--color-header);">Add New Promotion</h4><button onclick="document.getElementById('addPromoModal').classList.add('hidden')" style="color: var(--text-secondary);"><i class="fa-solid fa-xmark"></i></button></div><form id="addPromoForm" class="space-y-4 mb-4"><div><label for="competitor" class="block text-sm font-medium" style="color: var(--text-secondary);">Competitor</label><select id="competitor" name="competitor" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div><div><label for="promoType" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion Type</label><select id="promoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div><div><label for="title" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion Title</label><input type="text" id="title" name="title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div><label for="promoUrl" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion URL</label><input type="url" id="promoUrl" name="promoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="https://example.com/promo"></div><div class="flex gap-4"><div class="flex-1"><label for="startDate" class="block text-sm font-medium" style="color: var(--text-secondary);">Start Date</label><input type="date" id="startDate" name="startDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div class="flex-1"><label for="endDate" class="block text-sm font-medium" style="color: var(--text-secondary);">End Date</label><input type="date" id="endDate" name="endDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div></div><div><label for="details" class="block text-sm font-medium" style="color: var(--text-secondary);">Details</label><textarea id="details" name="details" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea></div><button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white" style="background-color: var(--color-accent);">Add Promotion</button></form></div></div> <div id="editPromoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"><div class="paper-card max-w-lg w-full mx-4"><div class="flex justify-between items-center mb-4"><h4 class="text-lg font-bold" style="color: var(--color-header);">Edit Promotion</h4><button onclick="document.getElementById('editPromoModal').classList.add('hidden')" style="color: var(--text-secondary);"><i class="fa-solid fa-xmark"></i></button></div><form id="editPromoForm" class="space-y-4"><input type="hidden" id="editPromoId"><div><label for="editCompetitor" class="block text-sm font-medium" style="color: var(--text-secondary);">Competitor</label><select id="editCompetitor" name="competitor" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div><div><label for="editPromoType" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion Type</label><select id="editPromoType" name="promoType" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div><div><label for="editTitle" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion Title</label><input type="text" id="editTitle" name="title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div><label for="editPromoUrl" class="block text-sm font-medium" style="color: var(--text-secondary);">Promotion URL</label><input type="url" id="editPromoUrl" name="promoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="https://example.com/promo"></div><div class="flex gap-4"><div class="flex-1"><label for="editStartDate" class="block text-sm font-medium" style="color: var(--text-secondary);">Start Date</label><input type="date" id="editStartDate" name="startDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div class="flex-1"><label for="editEndDate" class="block text-sm font-medium" style="color: var(--text-secondary);">End Date</label><input type="date" id="editEndDate" name="endDate" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div></div><div><label for="editDetails" class="block text-sm font-medium" style="color: var(--text-secondary);">Details</label><textarea id="editDetails" name="details" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea></div><button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white" style="background-color: var(--color-accent);">Save Changes</button></form></div></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -143,36 +155,14 @@
             let promotions = [];
             let currentDate = new Date('2025-08-01T00:00:00Z');
             let charts = {}; // To hold chart instances for destruction
-            let activeCountry = 'Indonesia';
 
             // --- CONFIGURATION DATA ---
-            const countryData = {
-                'Indonesia': {
-                    competitors: ['Hartono', 'Electronic City', 'Erablue'],
-                    config: {
-                        'Hartono': { colorClass: 'hartono', bgColor: '#fdf6f1', chartColor: 'var(--color-comp-1)' }, 
-                        'Electronic City': { colorClass: 'electronic-city', bgColor: '#f3f2f7', chartColor: 'var(--color-comp-2)' }, 
-                        'Erablue': { colorClass: 'erablue', bgColor: '#f0f0f5', chartColor: 'var(--color-comp-3)' } 
-                    }
-                },
-                'Singapore': {
-                    competitors: ['COURTS', 'Harvey Norman', 'Gain City'],
-                    config: {
-                        'COURTS': { colorClass: 'hartono', bgColor: '#fdf6f1', chartColor: 'var(--color-comp-1)' }, 
-                        'Harvey Norman': { colorClass: 'electronic-city', bgColor: '#f3f2f7', chartColor: 'var(--color-comp-2)' }, 
-                        'Gain City': { colorClass: 'erablue', bgColor: '#f0f0f5', chartColor: 'var(--color-comp-3)' } 
-                    }
-                },
-                'Malaysia': {
-                    competitors: ['Senheng', 'Harvey Norman', 'COURTS'],
-                    config: {
-                        'Senheng': { colorClass: 'hartono', bgColor: '#fdf6f1', chartColor: 'var(--color-comp-1)' }, 
-                        'Harvey Norman': { colorClass: 'electronic-city', bgColor: '#f3f2f7', chartColor: 'var(--color-comp-2)' }, 
-                        'COURTS': { colorClass: 'erablue', bgColor: '#f0f0f5', chartColor: 'var(--color-comp-3)' } 
-                    }
-                }
+            const competitors = ['Courts', 'Harvey Norman', 'Gain City'];
+            const competitorConfig = { 
+                'Courts': { colorClass: 'courts', bgColor: '#fdf6f1', chartColor: 'var(--color-comp-1)' }, 
+                'Harvey Norman': { colorClass: 'harvey-norman', bgColor: '#f3f2f7', chartColor: 'var(--color-comp-2)' }, 
+                'Gain City': { colorClass: 'gain-city', bgColor: '#f0f0f5', chartColor: 'var(--color-comp-3)' } 
             };
-
             const promoCategories = [ 'Promo Bank & Payment', 'Promo HP & Gadget', 'Promo Laptop & PC', 'Promo TV & Audio', 'Promo Home Appliances', 'Promo Back to School', 'Promo 17 Agustus', 'Other Promotions' ];
             const categoryColors = {
                 'Promo Bank & Payment': '#8B4513',    // Saddle Brown
@@ -208,6 +198,18 @@
                     if (!response.ok) { showNotification('❌ Error loading data from server.', 'bg-red-500'); return; }
                     const data = await response.json();
                     let loadedPromotions = data.record || [];
+                    // Standardize competitor names on load
+                    loadedPromotions = loadedPromotions.map(p => {
+                        const competitorName = p.competitor.toLowerCase();
+                        if (competitorName.includes('courts')) {
+                            p.competitor = 'Courts';
+                        } else if (competitorName.includes('harvey norman')) {
+                            p.competitor = 'Harvey Norman';
+                        } else if (competitorName.includes('gain city')) {
+                            p.competitor = 'Gain City';
+                        }
+                        return p;
+                    });
                     promotions = loadedPromotions.map((p, index) => {
                         const category = p.category || getPromoCategory(p);
                         return { ...p, tempId: index, category: category, iconHTML: getCategoryIcon(category) };
@@ -232,16 +234,7 @@
             const handleAddPromoForm = async (event) => {
                 event.preventDefault();
                 const form = event.target;
-                const newPromo = { 
-                    competitor: form.competitor.value, 
-                    title: form.title.value, 
-                    startDate: form.startDate.value, 
-                    endDate: form.endDate.value, 
-                    details: form.details.value, 
-                    url: form.promoUrl.value, 
-                    category: form.promoType.value,
-                    country: activeCountry 
-                };
+                const newPromo = { competitor: form.competitor.value, title: form.title.value, startDate: form.startDate.value, endDate: form.endDate.value, details: form.details.value, url: form.promoUrl.value, category: form.promoType.value };
                 const updatedPromotions = [...promotions, newPromo];
                 const success = await saveData(updatedPromotions);
                 if (success) { showNotification('✅ New promotion added!', 'bg-green-500'); form.reset(); document.getElementById('addPromoModal').classList.add('hidden'); await loadPromotions(); } else { showNotification('❌ Failed to add promotion.', 'bg-red-500'); }
@@ -251,7 +244,7 @@
                 event.preventDefault();
                 const form = event.target;
                 const promoId = parseInt(form.editPromoId.value);
-                const updatedPromotions = promotions.map(p => p.tempId === promoId ? { ...p, competitor: document.getElementById('editCompetitor').value, title: document.getElementById('editTitle').value, url: document.getElementById('editPromoUrl').value, startDate: document.getElementById('editStartDate').value, endDate: document.getElementById('editEndDate').value, details: document.getElementById('editDetails').value, category: document.getElementById('editPromoType').value, country: activeCountry } : p);
+                const updatedPromotions = promotions.map(p => p.tempId === promoId ? { tempId: p.tempId, competitor: document.getElementById('editCompetitor').value, title: document.getElementById('editTitle').value, url: document.getElementById('editPromoUrl').value, startDate: document.getElementById('editStartDate').value, endDate: document.getElementById('editEndDate').value, details: document.getElementById('editDetails').value, category: document.getElementById('editPromoType').value } : p);
                 const success = await saveData(updatedPromotions);
                 if (success) { showNotification('✏️ Promotion updated.', 'bg-green-500'); document.getElementById('editPromoModal').classList.add('hidden'); await loadPromotions(); } else { showNotification('❌ Failed to update.', 'bg-red-500'); }
             };
@@ -296,14 +289,18 @@
                 wrapper.appendChild(headerRow);
 
                 const groupedPromos = {};
-                promotions.filter(p => p.country === activeCountry).forEach(p => {
+                promotions.forEach(p => {
                     if (!groupedPromos[p.competitor]) groupedPromos[p.competitor] = {};
                     if (!groupedPromos[p.competitor][p.category]) groupedPromos[p.competitor][p.category] = [];
                     groupedPromos[p.competitor][p.category].push(p);
                 });
 
-                countryData[activeCountry].competitors.forEach(compName => {
-                    const config = countryData[activeCountry].config[compName];
+                competitors.forEach(compName => {
+                    const config = competitorConfig[compName];
+                     if (!config) { 
+                        console.warn(`No config found for competitor: ${compName}`);
+                        return;
+                    }
                     const competitorHeaderRow = document.createElement('div');
                     competitorHeaderRow.className = 'timeline-full-row timeline-competitor-header';
                     const competitorLabel = document.createElement('div');
@@ -350,6 +347,7 @@
 
             const generateCustomLegend = (chart, containerId) => {
                 const legendContainer = document.getElementById(containerId);
+                if (!legendContainer) return;
                 legendContainer.innerHTML = '';
                 legendContainer.className = 'flex flex-wrap justify-center gap-x-4 gap-y-2';
                 
@@ -379,19 +377,20 @@
                 Chart.defaults.font.family = "'Inter', sans-serif";
                 Chart.defaults.color = '#A67C5A'; // Use secondary text color for defaults
                 
-                const currentCompetitors = countryData[activeCountry].competitors;
-                const competitorConfig = countryData[activeCountry].config;
-
                 // Bar Chart - FIXED with direct hex colors
                 const barCtx = document.getElementById('bar-chart').getContext('2d');
                 charts.bar = new Chart(barCtx, { 
                     type: 'bar', 
                     data: {
-                        labels: currentCompetitors,
+                        labels: competitors,
                         datasets: [{
                             label: '# of Active Promotions',
-                            data: currentCompetitors.map(c => activePromos.filter(p => p.competitor === c).length),
-                            backgroundColor: currentCompetitors.map(c => competitorConfig[c].chartColor),
+                            data: competitors.map(c => activePromos.filter(p => p.competitor === c).length),
+                            backgroundColor: [
+                                '#D2691E', // Courts - Warm Chocolate
+                                '#CD853F', // Harvey Norman - Sandy Brown
+                                '#8B4513'  // Gain City - Saddle Brown
+                            ],
                             borderRadius: 4,
                         }]
                     },
@@ -425,22 +424,12 @@
                 });
 
                 // Doughnut Charts
-                const doughnutContainer = document.getElementById('doughnut-charts-container');
-                doughnutContainer.innerHTML = '';
-                currentCompetitors.forEach(c => {
-                    const chartCard = document.createElement('div');
-                    chartCard.className = 'paper-card p-6 flex flex-col';
-                    chartCard.innerHTML = `
-                        <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: ${c}</h3>
-                        <div class="relative w-40 h-40 md:w-48 md:h-48 mx-auto flex-shrink-0"><canvas id="pie-chart-${c.toLowerCase().replace(/\s/g, '-')}"></canvas></div>
-                        <div id="legend-${c.toLowerCase().replace(/\s/g, '-')}" class="mt-4"></div>
-                    `;
-                    doughnutContainer.appendChild(chartCard);
-
-                    const pieCtx = document.getElementById(`pie-chart-${c.toLowerCase().replace(/\s/g, '-')}`).getContext('2d');
+                competitors.forEach(c => {
+                    const slug = c.toLowerCase().replace(/\s+/g, '-');
+                    const pieCtx = document.getElementById(`pie-chart-${slug}`).getContext('2d');
                     const competitorPromos = activePromos.filter(p => p.competitor === c);
                     const categoryCounts = promoCategories.map(cat => competitorPromos.filter(p => p.category === cat).length);
-                    charts[`pie_${c}`] = new Chart(pieCtx, { 
+                    charts[`pie_${slug}`] = new Chart(pieCtx, { 
                         type: 'doughnut', 
                         data: {
                             labels: promoCategories,
@@ -469,7 +458,7 @@
                             } 
                         } 
                     });
-                    generateCustomLegend(charts[`pie_${c}`], `legend-${c.toLowerCase().replace(/\s/g, '-')}`);
+                    generateCustomLegend(charts[`pie_${slug}`], `legend-${slug}`);
                 });
             };
 
@@ -477,19 +466,20 @@
                 const container = document.getElementById('promo-cards-container');
                 if (!container) return;
                 container.innerHTML = '';
-                
-                const currentCompetitors = countryData[activeCountry].competitors;
-                const competitorConfig = countryData[activeCountry].config;
-
-                currentCompetitors.forEach(compName => {
+                competitors.forEach(compName => {
                     const compPromotions = activePromos.filter(p => p.competitor === compName);
                     if (compPromotions.length === 0) return;
+                    
+                    const config = competitorConfig[compName];
                     const card = document.createElement('div');
-                    card.className = 'promo-card';
-                    card.innerHTML = `<div class="promo-card-header ${competitorConfig[compName].colorClass}">${compName} Promotions</div><div class="promo-card-content" id="promo-content-${compName.replace(/\s/g, '')}"></div>`;
+                    card.className = `paper-card promo-card`; // Added paper-card for consistency
+                    
+                    const contentId = `promo-content-${compName.replace(/\s+/g, '')}`;
+                    card.innerHTML = `<div class="promo-card-header ${config.colorClass}">${compName} Promotions</div><div class="promo-card-content" id="${contentId}"></div>`;
                     container.appendChild(card);
-                    const contentDiv = document.getElementById(`promo-content-${compName.replace(/\s/g, '')}`);
-                    compPromotions.forEach((promo, index) => {
+                    
+                    const contentDiv = document.getElementById(contentId);
+                    compPromotions.sort((a,b) => new Date(a.startDate) - new Date(b.startDate)).forEach((promo, index) => {
                         const promoItem = document.createElement('div');
                         promoItem.className = 'promo-item';
                         promoItem.style.animationDelay = `${index * 50}ms`;
@@ -507,7 +497,7 @@
                 const activePromosThisMonth = promotions.filter(p => {
                     const promoStart = new Date(p.startDate + 'T00:00:00Z');
                     const promoEnd = new Date(p.endDate + 'T00:00:00Z');
-                    return promoStart <= monthEnd && promoEnd >= monthStart && p.country === activeCountry;
+                    return promoStart <= monthEnd && promoEnd >= monthStart;
                 });
                 
                 createTimeline();
@@ -520,40 +510,35 @@
             const showPromoDetailsModal = (promoId) => { const promo = promotions.find(p => p.tempId === promoId); if (!promo) return; const modal = document.getElementById('promoModal'); document.getElementById('modal-content').textContent = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`; const modalActions = document.getElementById('modal-actions'); modalActions.innerHTML = ''; const deleteButton = document.createElement('button'); deleteButton.className = 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700'; deleteButton.textContent = 'Delete'; deleteButton.onclick = () => showDeleteConfirmModal(promo.tempId); const closeButton = document.createElement('button'); closeButton.className = 'px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500'; closeButton.textContent = 'Close'; closeButton.onclick = () => document.getElementById('promoModal').classList.add('hidden'); modalActions.appendChild(deleteButton); modalActions.appendChild(closeButton); modal.classList.remove('hidden'); };
             const showDeleteConfirmModal = (promoId) => { const confirmModal = document.getElementById('deleteConfirmModal'); document.getElementById('confirmDeleteBtn').dataset.promoId = promoId; confirmModal.classList.remove('hidden'); };
             const showEditPromoModal = (promoId) => { const promo = promotions.find(p => p.tempId === promoId); if (!promo) return; const modal = document.getElementById('editPromoModal'); document.getElementById('editPromoId').value = promo.tempId; document.getElementById('editCompetitor').value = promo.competitor; document.getElementById('editPromoType').value = promo.category; document.getElementById('editTitle').value = promo.title; document.getElementById('editPromoUrl').value = promo.url || ''; document.getElementById('editStartDate').value = promo.startDate; document.getElementById('editEndDate').value = promo.endDate; document.getElementById('editDetails').value = promo.details; modal.classList.remove('hidden'); };
-            const populatePromoTypeDropdowns = () => { const selects = [document.getElementById('promoType'), document.getElementById('editPromoType'), document.getElementById('competitor'), document.getElementById('editCompetitor')]; selects.forEach(select => { if (!select) return; select.innerHTML = '<option value="">Select...</option>'; (select.name.toLowerCase().includes('competitor') ? countryData[activeCountry].competitors : promoCategories).forEach(item => { const option = document.createElement('option'); option.value = item; option.textContent = item; select.appendChild(option); }); }); };
+            const populateDropdowns = () => { 
+                const competitorSelects = [document.getElementById('competitor'), document.getElementById('editCompetitor')];
+                competitorSelects.forEach(select => {
+                    if (!select) return;
+                    select.innerHTML = '<option value="">Select a Competitor</option>';
+                    competitors.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item;
+                        option.textContent = item;
+                        select.appendChild(option);
+                    });
+                });
+                const promoTypeSelects = [document.getElementById('promoType'), document.getElementById('editPromoType')];
+                promoTypeSelects.forEach(select => {
+                    if (!select) return;
+                    select.innerHTML = '<option value="">Select a Category</option>';
+                    promoCategories.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item;
+                        option.textContent = item;
+                        select.appendChild(option);
+                    });
+                });
+            };
             const showNotification = (message, colorClass = 'bg-green-500') => { const notification = document.getElementById('notification'); const notificationText = document.getElementById('notification-text'); notificationText.textContent = message; notification.className = `text-white px-4 py-2 rounded-lg shadow-lg notification ${colorClass}`; notification.classList.add('show'); setTimeout(() => notification.classList.remove('show'), 3000); };
             const updateLastUpdatedText = () => { const lastUpdatedElement = document.getElementById('last-updated-text'); const now = new Date(); const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }; lastUpdatedElement.textContent = `Last updated: ${now.toLocaleDateString('en-US', options)}`; };
             
-            const setupTabs = () => {
-                const tabsContainer = document.getElementById('country-tabs');
-                tabsContainer.innerHTML = ''; // Clear existing tabs to prevent duplication
-                Object.keys(countryData).forEach(country => {
-                    const tab = document.createElement('a');
-                    tab.href = '#';
-                    tab.textContent = country;
-                    tab.className = `whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`;
-                    if (country === activeCountry) {
-                        tab.style.borderColor = 'var(--color-accent)';
-                        tab.style.color = 'var(--color-accent)';
-                        tab.setAttribute('aria-current', 'page');
-                    } else {
-                        tab.style.borderColor = 'transparent';
-                        tab.style.color = 'var(--text-secondary)';
-                    }
-                    tab.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        activeCountry = country;
-                        setupTabs();
-                        populatePromoTypeDropdowns();
-                        rerenderAll();
-                    });
-                    tabsContainer.appendChild(tab);
-                });
-            };
-
             // --- INITIALIZATION AND EVENT LISTENERS ---
-            setupTabs();
-            populatePromoTypeDropdowns();
+            populateDropdowns();
             document.getElementById('openAddPromoModalBtn').addEventListener('click', () => { document.getElementById('addPromoModal').classList.remove('hidden'); });
             document.getElementById('addPromoForm').addEventListener('submit', handleAddPromoForm);
             document.getElementById('editPromoForm').addEventListener('submit', handleEditPromoForm);
@@ -568,3 +553,4 @@
     </script>
 </body>
 </html>
+```
