@@ -81,7 +81,7 @@
 <body class="text-gray-800">
     <div id="notification" class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg notification"><span id="notification-text"></span></div>
     <div class="flex flex-col min-h-screen p-4 md:p-8"> <header class="paper-card flex flex-col md:flex-row items-center justify-between p-4 w-full mb-6"> <div class="flex items-center mb-4 md:mb-0"> <svg class="h-8 w-8 mr-2" viewBox="0 0 240 208" xmlns="http://www.w3.org/2000/svg"><path fill="#A1112C" d="M148.2,148.1c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1c1,16.6-7.2,32.1-21.7,40.4C167.8,124.5,160.5,138.8,148.2,148.1z"/><path fill="#D61A3B" d="M211.2,124.5c-9.3,12.4-26.2,18.6-43.1,18.6c-12.4,0-24.8-4.1-34.2-12.4c-13.4-11.4-20.7-28.8-18.6-46.3c-14.5-7.2-22.8-22.8-20.7-39.4c2.1-16.6,15.5-29.8,32.1-32.9c5.2-20.7,23.8-35.2,45.5-35.2c24.8,0,45.5,18.6,48.6,43.1c16.6,3.1,28.8,16.5,29.8,33.1C251.2,125.4,225.7,117.2,211.2,124.5z"/></svg> <h2 class="text-xl font-bold text-gray-900 font-scribble">あれなんだっけ</h2> </div> <nav class="flex flex-col md:flex-row items-center gap-2 md:gap-4"> <a href="https://dante19dsc.github.io/analystdante/" target="_blank" rel="noopener noreferrer" class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto text-center">Marketing Information</a> <button class="px-3 py-2 text-sm font-medium rounded-lg text-gray-500 hover:bg-gray-100 w-full md:w-auto">Store Development Map</button> <button class="px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 text-gray-900 w-full md:w-auto">Promotion Tracker</button> </nav> </header> <main class="flex-1"> <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"> <div> <h1 class="text-3xl font-bold text-gray-900">Competitor Promotion Tracker</h1> <p class="text-gray-600 mt-2">Monitor and analyze competitor promotional activities in real-time</p> <p id="last-updated-text" class="text-xs text-gray-500 mt-1"></p> </div> <div class="flex gap-2"> <button id="openAddPromoModalBtn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white" style="background-color: var(--color-purple);"><i class="fa-solid fa-plus mr-2"></i> Add Promotion </button> </div> </div>
-        <div class="paper-card p-6 mb-8 min-w-0">
+        <div class="paper-card p-6 mb-8 grid grid-cols-1">
             <div class="flex justify-between items-center mb-4">
                 <h3 id="timeline-title" class="text-lg font-semibold text-gray-900"></h3>
                 <div class="flex items-center gap-2">
@@ -89,30 +89,32 @@
                     <button id="next-month-btn" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Next &gt;</button>
                 </div>
             </div>
-            <div id="timeline-wrapper" class="border border-gray-200 rounded-lg overflow-x-auto">
-                <!-- JS populates this -->
+            <div class="min-w-0">
+                <div id="timeline-wrapper" class="border border-gray-200 rounded-lg overflow-x-auto">
+                    <!-- JS populates this -->
+                </div>
             </div>
         </div>
         <div class="mb-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Dashboard & Reporting</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-3 paper-card p-6">
+                <div class="lg:col-span-3 paper-card p-6 flex flex-col">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Active Promotions per Competitor (Current Month)</h3>
-                    <div class="relative h-64"><canvas id="bar-chart"></canvas></div>
+                    <div class="relative flex-1 min-h-0"><canvas id="bar-chart"></canvas></div>
                 </div>
-                <div class="paper-card p-6">
+                <div class="paper-card p-6 flex flex-col">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Promotion Types: Hartono</h3>
-                    <div class="relative h-48 w-48 mx-auto"><canvas id="pie-chart-hartono"></canvas></div>
+                    <div class="relative flex-1 min-h-0"><canvas id="pie-chart-hartono"></canvas></div>
                     <div id="legend-hartono" class="mt-4"></div>
                 </div>
-                <div class="paper-card p-6">
+                <div class="paper-card p-6 flex flex-col">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Promotion Types: Electronic City</h3>
-                    <div class="relative h-48 w-48 mx-auto"><canvas id="pie-chart-electronic-city"></canvas></div>
+                    <div class="relative flex-1 min-h-0"><canvas id="pie-chart-electronic-city"></canvas></div>
                     <div id="legend-electronic-city" class="mt-4"></div>
                 </div>
-                <div class="paper-card p-6">
+                <div class="paper-card p-6 flex flex-col">
                      <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Promotion Types: Erablue</h3>
-                     <div class="relative h-48 w-48 mx-auto"><canvas id="pie-chart-erablue"></canvas></div>
+                     <div class="relative flex-1 min-h-0"><canvas id="pie-chart-erablue"></canvas></div>
                      <div id="legend-erablue" class="mt-4"></div>
                 </div>
             </div>
