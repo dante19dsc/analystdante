@@ -23,9 +23,9 @@
             --color-accent-secondary: #F39C12; /* Golden Honey */
 
             /* Data Palette */
-            --color-comp-1: #D2691E; /* Senheng - Warm Chocolate */
-            --color-comp-2: #CD853F; /* Harvey Norman - Sandy Brown */
-            --color-comp-3: #8B4513; /* Courts Malaysia - Saddle Brown */
+            --color-comp-1: #D2691E; /* SENHENG - Warm Chocolate */
+            --color-comp-2: #CD853F; /* HARVEY NORMAN - Sandy Brown */
+            --color-comp-3: #8B4513; /* COURTS MALAYSIA - Saddle Brown */
         }
         body { 
             font-family: 'Inter', sans-serif; 
@@ -155,17 +155,17 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="paper-card p-6 flex flex-col">
-                        <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: Senheng</h3>
+                        <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: SENHENG</h3>
                         <div class="relative w-40 h-40 md:w-48 md:h-48 mx-auto flex-shrink-0"><canvas id="pie-chart-senheng"></canvas></div>
                         <div id="legend-senheng" class="mt-4"></div>
                     </div>
                     <div class="paper-card p-6 flex flex-col">
-                        <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: Harvey Norman</h3>
+                        <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: HARVEY NORMAN</h3>
                         <div class="relative w-40 h-40 md:w-48 md:h-48 mx-auto flex-shrink-0"><canvas id="pie-chart-harvey-norman"></canvas></div>
                         <div id="legend-harvey-norman" class="mt-4"></div>
                     </div>
                     <div class="paper-card p-6 flex flex-col">
-                         <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: Courts Malaysia</h3>
+                         <h3 class="text-lg font-semibold mb-4 text-center" style="color: var(--color-header);">Promotion Types: COURTS MALAYSIA</h3>
                          <div class="relative w-40 h-40 md:w-48 md:h-48 mx-auto flex-shrink-0"><canvas id="pie-chart-courts-malaysia"></canvas></div>
                          <div id="legend-courts-malaysia" class="mt-4"></div>
                     </div>
@@ -189,11 +189,11 @@
             let charts = {}; // To hold chart instances for destruction
 
             // --- CONFIGURATION DATA ---
-            const competitors = ['Senheng', 'Harvey Norman', 'Courts Malaysia'];
+            const competitors = ['SENHENG', 'HARVEY NORMAN', 'COURTS MALAYSIA'];
             const competitorConfig = { 
-                'Senheng': { colorClass: 'senheng', bgColor: '#fdf6f1', chartColor: 'var(--color-comp-1)' }, 
-                'Harvey Norman': { colorClass: 'harvey-norman', bgColor: '#f3f2f7', chartColor: 'var(--color-comp-2)' }, 
-                'Courts Malaysia': { colorClass: 'courts-malaysia', bgColor: '#f0f0f5', chartColor: 'var(--color-comp-3)' } 
+                'SENHENG': { colorClass: 'senheng', bgColor: '#fdf6f1', chartColor: 'var(--color-comp-1)' }, 
+                'HARVEY NORMAN': { colorClass: 'harvey-norman', bgColor: '#f3f2f7', chartColor: 'var(--color-comp-2)' }, 
+                'COURTS MALAYSIA': { colorClass: 'courts-malaysia', bgColor: '#f0f0f5', chartColor: 'var(--color-comp-3)' }
             };
             const promoCategories = [ 'Promo Bank & Payment', 'Promo HP & Gadget', 'Promo Laptop & PC', 'Promo TV & Audio', 'Promo Home Appliances', 'Promo Back to School', 'Promo 17 Agustus', 'Other Promotions' ];
             const categoryColors = {
@@ -227,7 +227,16 @@
             async function loadPromotions() {
                 try {
                     const response = await fetch(`${JSONBIN_URL}/latest`, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
-                    if (!response.ok) { showNotification('❌ Error loading data from server.', 'bg-red-500'); return; }
+                    if (!response.ok) { 
+                        showNotification('❌ Error loading data from server. Please check API key and Bin ID.', 'bg-red-500'); 
+                        // Load hardcoded data as a fallback
+                        promotions = getHardcodedPromotions().map((p, index) => {
+                            const category = p.category || getPromoCategory(p);
+                            return { ...p, tempId: `fallback-${index}`, category: category, iconHTML: getCategoryIcon(category) };
+                        });
+                        rerenderAll();
+                        return; 
+                    }
                     const data = await response.json();
                     let loadedPromotions = data.record || [];
                     promotions = loadedPromotions.map((p, index) => {
@@ -235,7 +244,16 @@
                         return { ...p, tempId: index, category: category, iconHTML: getCategoryIcon(category) };
                     });
                     rerenderAll();
-                } catch (error) { console.error("Failed to load promotions:", error); showNotification('❌ Network error. Could not load data.', 'bg-red-500'); }
+                } catch (error) { 
+                    console.error("Failed to load promotions:", error); 
+                    showNotification('❌ Network error. Loading fallback data.', 'bg-yellow-500');
+                    // Load hardcoded data as a fallback
+                    promotions = getHardcodedPromotions().map((p, index) => {
+                        const category = p.category || getPromoCategory(p);
+                        return { ...p, tempId: `fallback-${index}`, category: category, iconHTML: getCategoryIcon(category) };
+                    });
+                    rerenderAll();
+                }
             }
 
             async function saveData(updatedPromotions) {
@@ -248,6 +266,27 @@
                     });
                     return response.ok;
                 } catch (error) { console.error("Failed to save data:", error); showNotification('❌ Network error. Could not save data.', 'bg-red-500'); return false; }
+            }
+
+            function getHardcodedPromotions() {
+                return [
+                    { "competitor": "SENHENG", "title": "Samsung TV Deals - 50% S-Coin Cashback", "startDate": "2025-08-01", "endDate": "2025-08-31", "details": "50% S-Coin cashback on selected Samsung TVs, free warranty, trade-in options, 0% instalment plans up to 60 months", "url": "https://www.everydayonsales.com/860360/1-31-august-2025-senheng-malaysia-samsung-tv-deals-50-s-coin-cashback-free-warranty-more/", "category": "Promo TV & Audio" },
+                    { "competitor": "SENHENG", "title": "Merdeka Special - Celebrate Smart and Enjoy Twice the Savings", "startDate": "2025-08-01", "endDate": "2025-08-31", "details": "Merdeka special promotion with double savings on various home appliances and electronics. Celebrating Malaysia's 68th Merdeka", "url": "https://discover.senheng.com.my/merdeka-special", "category": "Other Promotions" },
+                    { "competitor": "SENHENG", "title": "Trade-In Device Program", "startDate": "2025-08-01", "endDate": "2025-08-31", "details": "Best trade-in prices for 1000+ models including smartphones, tablets, smartwatches, MacBooks. Extra 1-year warranty for PlusOne members", "url": "https://discover.senheng.com.my/trade-in-device", "category": "Promo HP & Gadget" },
+                    { "competitor": "SENHENG", "title": "Merdeka Getaway Lucky Draw", "startDate": "2025-08-04", "endDate": "2025-08-31", "details": "Lucky draw for Case Valker Luggage worth RM400+ when redeeming with S-Coin", "url": "https://www.instagram.com/senhengapp/", "category": "Other Promotions" },
+                    { "competitor": "COURTS MALAYSIA", "title": "Trade-In Rebate for Refrigerator & Washing Machine", "startDate": "2025-08-05", "endDate": "2025-08-31", "details": "Trade-in rebate up to RM750 for old refrigerator or washing machine during Merdeka Sale promotion", "url": "https://www.everydayonsales.com/?p=860719", "category": "Promo Home Appliances" },
+                    { "competitor": "COURTS MALAYSIA", "title": "LivInTech Expo RM1 Deals & Lucky Draw", "startDate": "2025-08-01", "endDate": "2025-08-03", "details": "RM1 deals, lucky draw prizes, and early bird giveaways at LivInTech Expo", "url": "https://www.everydayonsales.com/?p=855204", "category": "Other Promotions" },
+                    { "competitor": "COURTS MALAYSIA", "title": "SONY SPECTACULAR at LivINtech Expo KL", "startDate": "2025-08-01", "endDate": "2025-08-03", "details": "Sony TV sale promotion at Pavilion Bukit Jalil Exhibition Centre with huge savings on BRAVIA and XR series", "url": "https://www.everydayonsales.com/856796/1-3-august-2025-courts-malaysia-sony-spectacular-at-livintech-expo-kl-tv-sale-promotion-at-pavilion-bukit-jalil/", "category": "Promo TV & Audio" },
+                    { "competitor": "COURTS MALAYSIA", "title": "Samsung Galaxy Z Fold 7 Pre-order", "startDate": "2025-07-09", "endDate": "2025-07-31", "details": "Pre-order Samsung Galaxy Z Fold 7 with exclusive deals, up to RM400 CIMB rebate, 0% installment up to 36 months", "url": "https://www.instagram.com/p/DMWwKqWvXCG/", "category": "Promo HP & Gadget" },
+                    { "competitor": "COURTS MALAYSIA", "title": "Samsung Galaxy S25 Series Promotion", "startDate": "2025-07-31", "endDate": "2025-09-24", "details": "6.7-inch Super AMOLED display with 120Hz refresh rate for ultra-smooth viewing on Samsung Galaxy S25 series", "url": "https://www.instagram.com/courtsmsia/", "category": "Promo HP & Gadget" },
+                    { "competitor": "COURTS MALAYSIA", "title": "38th Anniversary Celebration", "startDate": "2025-08-01", "endDate": "2025-08-31", "details": "Awesome rewards celebrating COURTS 38th anniversary with special deals and promotions", "url": "https://www.instagram.com/reel/DKHn4tXzVZo/", "category": "Other Promotions" },
+                    { "competitor": "HARVEY NORMAN", "title": "Kitchen Appliances Sale - Up to 50% Off", "startDate": "2025-07-31", "endDate": "2025-08-27", "details": "Up to 50% off on kitchen appliances including hoods, hobs, and ovens. Available nationwide in stores and online", "url": "https://www.everydayonsales.com/859728/31-july-27-august-2025-harvey-norman-malaysia-kitchen-appliances-up-to-50-off-sale/", "category": "Promo Home Appliances" },
+                    { "competitor": "HARVEY NORMAN", "title": "Biggest Ever Brands Warehouse Sale", "startDate": "2025-07-31", "endDate": "2025-08-03", "details": "Up to 82% off on tech, appliances, furniture and more at Citta Mall PJ, Ampang Point KL, Paradigm Mall JB", "url": "https://www.everydayonsales.com/859279/31-july-3-august-2025-harvey-norman-malaysia-up-to-82-off-tech-appliances-furniture-and-more/", "category": "Other Promotions" },
+                    { "competitor": "HARVEY NORMAN", "title": "Big Bargains Across Appliances & Gadgets - Up to 70% Off", "startDate": "2025-07-31", "endDate": "2025-08-03", "details": "Up to 70% off at Johor locations including Paradigm Mall JB, Toppen Shopping Centre, Mid Valley Southkey, Batu Pahat", "url": "https://www.everydayonsales.com/859344/31-july-3-august-2025-harvey-norman-malaysia-up-to-70-off-big-bargains-across-appliances-gadgets-more/", "category": "Promo Home Appliances" },
+                    { "competitor": "HARVEY NORMAN", "title": "Mattresses & Bedding Warehouse Sale", "startDate": "2025-08-02", "endDate": "2025-08-03", "details": "Up to 80% + additional 20% off mattresses, bed frames, pillows, linens from Sealy, Serta, Napure, Hiker at One World Hotel Level 2M", "url": "https://www.everydayonsales.com/860451/2-3-august-2025-harvey-norman-malaysia-up-to-80-20-off-mattresses-bedding-brands/", "category": "Other Promotions" },
+                    { "competitor": "HARVEY NORMAN", "title": "Sharp Reckon The Impossible Deals", "startDate": "2025-05-15", "endDate": "2025-08-14", "details": "Sharp products with best prices, no gimmick, in-store free delivery", "url": "https://www.harveynorman.com.my/promotions/sharp-reckon-the-impossible-deals.html", "category": "Promo TV & Audio" },
+                    { "competitor": "HARVEY NORMAN", "title": "Family Dining Bundle Promotion", "startDate": "2025-07-31", "endDate": "2025-08-13", "details": "50% off dining sets plus extra 15% off on family dining bundles", "url": "https://www.syioknya.com/promotions/harvey-norman", "category": "Other Promotions" }
+                ];
             }
 
             // --- FORM HANDLERS ---
@@ -309,7 +348,7 @@
                 wrapper.appendChild(headerRow);
 
                 const groupedPromos = {};
-                promotions.forEach(p => {
+                promotions.filter(p => competitors.includes(p.competitor)).forEach(p => {
                     if (!groupedPromos[p.competitor]) groupedPromos[p.competitor] = {};
                     if (!groupedPromos[p.competitor][p.category]) groupedPromos[p.competitor][p.category] = [];
                     groupedPromos[p.competitor][p.category].push(p);
@@ -317,6 +356,7 @@
 
                 competitors.forEach(compName => {
                     const config = competitorConfig[compName];
+                    if(!config) return;
                     const competitorHeaderRow = document.createElement('div');
                     competitorHeaderRow.className = 'timeline-full-row timeline-competitor-header';
                     const competitorLabel = document.createElement('div');
@@ -363,6 +403,7 @@
 
             const generateCustomLegend = (chart, containerId) => {
                 const legendContainer = document.getElementById(containerId);
+                if (!legendContainer) return;
                 legendContainer.innerHTML = '';
                 legendContainer.className = 'flex flex-wrap justify-center gap-x-4 gap-y-2';
                 
@@ -392,7 +433,9 @@
                 Chart.defaults.font.family = "'Inter', sans-serif";
                 Chart.defaults.color = '#A67C5A'; // Use secondary text color for defaults
                 
-                // Bar Chart - FIXED with direct hex colors
+                const competitorPromos = activePromos.filter(p => competitors.includes(p.competitor));
+
+                // Bar Chart
                 const barCtx = document.getElementById('bar-chart').getContext('2d');
                 charts.bar = new Chart(barCtx, { 
                     type: 'bar', 
@@ -400,12 +443,8 @@
                         labels: competitors,
                         datasets: [{
                             label: '# of Active Promotions',
-                            data: competitors.map(c => activePromos.filter(p => p.competitor === c).length),
-                            backgroundColor: [
-                                '#D2691E', // Senheng - Warm Chocolate
-                                '#CD853F', // Harvey Norman - Sandy Brown
-                                '#8B4513'  // Courts Malaysia - Saddle Brown
-                            ],
+                            data: competitors.map(c => competitorPromos.filter(p => p.competitor === c).length),
+                            backgroundColor: competitors.map(c => competitorConfig[c].chartColor),
                             borderRadius: 4,
                         }]
                     },
@@ -427,12 +466,12 @@
                         },
                         scales: {
                             x: { 
-                                grid: { color: 'rgba(107, 78, 61, 0.1)' }, // Mocha tinted grid lines
-                                ticks: { color: '#A67C5A' } // Caramel text
+                                grid: { color: 'rgba(107, 78, 61, 0.1)' },
+                                ticks: { color: '#A67C5A', stepSize: 1 } 
                             },
                             y: { 
                                 grid: { display: false },
-                                ticks: { color: '#A67C5A' } // Caramel text
+                                ticks: { color: '#A67C5A' }
                             }
                         }
                     } 
@@ -442,8 +481,8 @@
                 competitors.forEach(c => {
                     const competitorId = c.toLowerCase().replace(/\s+/g, '-');
                     const pieCtx = document.getElementById(`pie-chart-${competitorId}`).getContext('2d');
-                    const competitorPromos = activePromos.filter(p => p.competitor === c);
-                    const categoryCounts = promoCategories.map(cat => competitorPromos.filter(p => p.category === cat).length);
+                    const promosForCompetitor = competitorPromos.filter(p => p.competitor === c);
+                    const categoryCounts = promoCategories.map(cat => promosForCompetitor.filter(p => p.category === cat).length);
                     charts[`pie_${c}`] = new Chart(pieCtx, { 
                         type: 'doughnut', 
                         data: {
@@ -484,10 +523,14 @@
                 competitors.forEach(compName => {
                     const compPromotions = activePromos.filter(p => p.competitor === compName);
                     if (compPromotions.length === 0) return;
+                    
+                    const config = competitorConfig[compName];
+                    if(!config) return;
+
                     const card = document.createElement('div');
-                    const competitorId = compName.replace(/\s+/g, '');
-                    card.className = 'promo-card';
-                    card.innerHTML = `<div class="promo-card-header ${competitorConfig[compName].colorClass}">${compName} Promotions</div><div class="promo-card-content" id="promo-content-${competitorId}"></div>`;
+                    const competitorId = compName.toLowerCase().replace(/\s+/g, '-');
+                    card.className = 'paper-card flex flex-col';
+                    card.innerHTML = `<div class="promo-card-header ${config.colorClass}">${compName} Promotions</div><div class="promo-card-content" id="promo-content-${competitorId}"></div>`;
                     container.appendChild(card);
                     const contentDiv = document.getElementById(`promo-content-${competitorId}`);
                     compPromotions.forEach((promo, index) => {
@@ -498,8 +541,8 @@
                         contentDiv.appendChild(promoItem);
                     });
                 });
-                document.querySelectorAll('.edit-promo-btn').forEach(button => button.addEventListener('click', (e) => showEditPromoModal(parseInt(e.currentTarget.dataset.promoId))));
-                document.querySelectorAll('.delete-promo-btn').forEach(button => button.addEventListener('click', (e) => showDeleteConfirmModal(parseInt(e.currentTarget.dataset.promoId))));
+                document.querySelectorAll('.edit-promo-btn').forEach(button => button.addEventListener('click', (e) => showEditPromoModal(e.currentTarget.dataset.promoId)));
+                document.querySelectorAll('.delete-promo-btn').forEach(button => button.addEventListener('click', (e) => showDeleteConfirmModal(e.currentTarget.dataset.promoId)));
             };
 
             const rerenderAll = () => {
@@ -518,10 +561,10 @@
             };
 
             // --- MODAL & NOTIFICATION FUNCTIONS ---
-            const showPromoDetailsModal = (promoId) => { const promo = promotions.find(p => p.tempId === promoId); if (!promo) return; const modal = document.getElementById('promoModal'); document.getElementById('modal-content').textContent = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`; const modalActions = document.getElementById('modal-actions'); modalActions.innerHTML = ''; const deleteButton = document.createElement('button'); deleteButton.className = 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700'; deleteButton.textContent = 'Delete'; deleteButton.onclick = () => showDeleteConfirmModal(promo.tempId); const closeButton = document.createElement('button'); closeButton.className = 'px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500'; closeButton.textContent = 'Close'; closeButton.onclick = () => document.getElementById('promoModal').classList.add('hidden'); modalActions.appendChild(deleteButton); modalActions.appendChild(closeButton); modal.classList.remove('hidden'); };
+            const showPromoDetailsModal = (promoId) => { const promo = promotions.find(p => p.tempId.toString() === promoId.toString()); if (!promo) return; const modal = document.getElementById('promoModal'); document.getElementById('modal-content').textContent = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`; const modalActions = document.getElementById('modal-actions'); modalActions.innerHTML = ''; const deleteButton = document.createElement('button'); deleteButton.className = 'px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700'; deleteButton.textContent = 'Delete'; deleteButton.onclick = () => showDeleteConfirmModal(promo.tempId); const closeButton = document.createElement('button'); closeButton.className = 'px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500'; closeButton.textContent = 'Close'; closeButton.onclick = () => document.getElementById('promoModal').classList.add('hidden'); modalActions.appendChild(deleteButton); modalActions.appendChild(closeButton); modal.classList.remove('hidden'); };
             const showDeleteConfirmModal = (promoId) => { const confirmModal = document.getElementById('deleteConfirmModal'); document.getElementById('confirmDeleteBtn').dataset.promoId = promoId; confirmModal.classList.remove('hidden'); };
-            const showEditPromoModal = (promoId) => { const promo = promotions.find(p => p.tempId === promoId); if (!promo) return; const modal = document.getElementById('editPromoModal'); document.getElementById('editPromoId').value = promo.tempId; document.getElementById('editCompetitor').value = promo.competitor; document.getElementById('editPromoType').value = promo.category; document.getElementById('editTitle').value = promo.title; document.getElementById('editPromoUrl').value = promo.url || ''; document.getElementById('editStartDate').value = promo.startDate; document.getElementById('editEndDate').value = promo.endDate; document.getElementById('editDetails').value = promo.details; modal.classList.remove('hidden'); };
-            const populatePromoTypeDropdowns = () => { const selects = [document.getElementById('promoType'), document.getElementById('editPromoType'), document.getElementById('competitor'), document.getElementById('editCompetitor')]; selects.forEach(select => { if (!select) return; select.innerHTML = ''; const isCompetitor = select.id.includes('Competitor'); const items = isCompetitor ? competitors : promoCategories; const placeholder = isCompetitor ? 'Select a Competitor' : 'Select a Category'; select.innerHTML = `<option value="">${placeholder}</option>`; items.forEach(item => { const option = document.createElement('option'); option.value = item; option.textContent = item; select.appendChild(option); }); }); };
+            const showEditPromoModal = (promoId) => { const promo = promotions.find(p => p.tempId.toString() === promoId.toString()); if (!promo) return; const modal = document.getElementById('editPromoModal'); document.getElementById('editPromoId').value = promo.tempId; document.getElementById('editCompetitor').value = promo.competitor; document.getElementById('editPromoType').value = promo.category; document.getElementById('editTitle').value = promo.title; document.getElementById('editPromoUrl').value = promo.url || ''; document.getElementById('editStartDate').value = promo.startDate; document.getElementById('editEndDate').value = promo.endDate; document.getElementById('editDetails').value = promo.details; modal.classList.remove('hidden'); };
+            const populatePromoTypeDropdowns = () => { const selects = [document.getElementById('promoType'), document.getElementById('editPromoType'), document.getElementById('competitor'), document.getElementById('editCompetitor')]; selects.forEach(select => { if (!select) return; select.innerHTML = ''; const isCompetitor = select.id.toLowerCase().includes('competitor'); const items = isCompetitor ? competitors : promoCategories; const placeholder = isCompetitor ? 'Select a Competitor' : 'Select a Category'; select.innerHTML = `<option value="">${placeholder}</option>`; items.forEach(item => { const option = document.createElement('option'); option.value = item; option.textContent = item; select.appendChild(option); }); }); };
             const showNotification = (message, colorClass = 'bg-green-500') => { const notification = document.getElementById('notification'); const notificationText = document.getElementById('notification-text'); notificationText.textContent = message; notification.className = `text-white px-4 py-2 rounded-lg shadow-lg notification ${colorClass}`; notification.classList.add('show'); setTimeout(() => notification.classList.remove('show'), 3000); };
             const updateLastUpdatedText = () => { const lastUpdatedElement = document.getElementById('last-updated-text'); const now = new Date(); const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }; lastUpdatedElement.textContent = `Last updated: ${now.toLocaleDateString('en-US', options)}`; };
             
@@ -531,7 +574,7 @@
             document.getElementById('addPromoForm').addEventListener('submit', handleAddPromoForm);
             document.getElementById('editPromoForm').addEventListener('submit', handleEditPromoForm);
             document.getElementById('cancelDeleteBtn').addEventListener('click', () => { document.getElementById('deleteConfirmModal').classList.add('hidden'); });
-            document.getElementById('confirmDeleteBtn').addEventListener('click', (e) => { const promoId = parseInt(e.currentTarget.dataset.promoId); deletePromotion(promoId); });
+            document.getElementById('confirmDeleteBtn').addEventListener('click', (e) => { const promoId = e.currentTarget.dataset.promoId; deletePromotion(promoId); });
             document.getElementById('prev-month-btn').addEventListener('click', () => { currentDate.setUTCMonth(currentDate.getUTCMonth() - 1, 1); rerenderAll(); });
             document.getElementById('next-month-btn').addEventListener('click', () => { currentDate.setUTCMonth(currentDate.getUTCMonth() + 1, 1); rerenderAll(); });
 
