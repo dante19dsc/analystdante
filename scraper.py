@@ -91,7 +91,6 @@ def scrape_electronic_city():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    # --- PERBAIKAN: Menghapus argumen 'service' yang tidak perlu dan salah ---
     driver = uc.Chrome(options=options)
     
     url = "https://www.eci.id/promo"
@@ -128,6 +127,57 @@ def scrape_electronic_city():
     return promotions
 
 # ==============================================================================
+# SCRAPER ERABLUE (VERSI FINAL)
+# ==============================================================================
+def scrape_erablue():
+    print("\n--- Memulai Scrape Erablue ---")
+    options = uc.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    driver = uc.Chrome(options=options)
+    
+    url = "https://www.erablue.id/promosi"
+    print(f"Mengunjungi URL: {url}...")
+    promotions = []
+    try:
+        driver.get(url)
+        print("Menunggu konten promosi dimuat...")
+        wait = WebDriverWait(driver, 30)
+        # Menunggu hingga elemen <li> dengan kelas 'item' terlihat
+        wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "li.item")))
+        print("Konten promosi ditemukan!")
+        time.sleep(3)
+        html_content = driver.page_source
+        
+        soup = BeautifulSoup(html_content, 'html.parser')
+        # Selector diperbarui sesuai screenshot Anda
+        promo_cards = soup.find_all('li', class_='itemhv')
+        print(f"SUKSES! Menemukan {len(promo_cards)} promosi Erablue.")
+        
+        for card in promo_cards:
+            try:
+                title_element = card.find('h3')
+                details_element = card.find('p')
+                link_element = card.find('a')
+
+                title = title_element.get_text(strip=True) if title_element else "No Title"
+                details = details_element.get_text(strip=True) if details_element else "No Details"
+                promo_url = link_element['href'] if link_element and 'href' in link_element.attrs else "#"
+                
+                # Erablue tidak menyediakan tanggal di halaman utama
+                promo_data = {"competitor": "Erablue", "title": title, "startDate": "", "endDate": "", "details": details, "url": promo_url}
+                promotions.append(promo_data)
+            except Exception: continue
+            
+    except Exception as e:
+        print(f"Error saat navigasi atau mem-parsing Erablue: {e}")
+    finally:
+        driver.quit()
+        
+    return promotions
+
+# ==============================================================================
 # EKSEKUSI UTAMA
 # ==============================================================================
 if __name__ == "__main__":
@@ -138,6 +188,9 @@ if __name__ == "__main__":
 
     electronic_city_promos = scrape_electronic_city()
     all_promotions.extend(electronic_city_promos)
+
+    erablue_promos = scrape_erablue()
+    all_promotions.extend(erablue_promos)
 
     output_file = 'promotions.json'
     with open(output_file, 'w') as f:
