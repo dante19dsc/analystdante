@@ -44,7 +44,6 @@ def parse_promo_date(date_text):
 # ==============================================================================
 def scrape_hartono():
     print("\n--- Memulai Scrape Hartono ---")
-    # --- MODIFIKASI: Biarkan Selenium menemukan chromedriver secara otomatis ---
     service = Service() 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
@@ -92,12 +91,11 @@ def scrape_electronic_city():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    # --- MODIFIKASI: Biarkan undetected_chromedriver menemukan driver-nya sendiri ---
+    # --- PERBAIKAN: Menghapus argumen 'service' yang tidak perlu ---
     driver = uc.Chrome(options=options)
     
     url = "https://www.eci.id/promo"
     print(f"Mengunjungi URL: {url}...")
-    
     promotions = []
     try:
         driver.get(url)
@@ -123,12 +121,10 @@ def scrape_electronic_city():
                 promo_data = {"competitor": "Electronic City", "title": title, "startDate": "", "endDate": "", "details": details, "url": promo_url}
                 promotions.append(promo_data)
             except Exception: continue
-            
     except Exception as e:
         print(f"Error saat navigasi atau mem-parsing Electronic City: {e}")
     finally:
         driver.quit()
-        
     return promotions
 
 # ==============================================================================
