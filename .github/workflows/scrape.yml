@@ -27,13 +27,7 @@ jobs:
           pip install beautifulsoup4 selenium undetected-chromedriver setuptools
 
       - name: Run Scraper
-        run: |
-          # Modifikasi skrip untuk menggunakan driver yang disediakan oleh robot GitHub
-          sed -i "s/service = Service(executable_path='chromedriver.exe')/service = webdriver.chrome.service.Service()/g" scraper.py
-          sed -i "s/service = webdriver.chrome.service.Service()/import undetected_chromedriver as uc\n    service = webdriver.chrome.service.Service()/g" scraper.py
-          sed -i "s/driver = uc.Chrome(options=options)/driver = uc.Chrome(options=options, service=service)/g" scraper.py
-          sed -i "s/options = uc.ChromeOptions()/options = uc.ChromeOptions()\n    options.add_argument('--no-sandbox')\n    options.add_argument('--disable-dev-shm-usage')/g" scraper.py
-          python scraper.py
+        run: python scraper.py
 
       - name: Commit and push if changed
         run: |
