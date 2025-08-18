@@ -1,5 +1,5 @@
 from selenium import webdriver
-# --- MODIFIKASI PENTING: Gunakan driver anti-deteksi ---
+from selenium.webdriver.chrome.service import Service
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,7 +10,7 @@ import time
 from datetime import datetime, timedelta
 
 # ==============================================================================
-# FUNGSI PARSING TANGGAL (TETAP SAMA)
+# FUNGSI PARSING TANGGAL
 # ==============================================================================
 def parse_promo_date(date_text):
     try:
@@ -40,13 +40,16 @@ def parse_promo_date(date_text):
         return "", ""
 
 # ==============================================================================
-# SCRAPER HARTONO (TETAP SAMA, MENGGUNAKAN SELENIUM STANDAR)
+# SCRAPER HARTONO
 # ==============================================================================
 def scrape_hartono():
     print("\n--- Memulai Scrape Hartono ---")
-    service = webdriver.chrome.service.Service(executable_path='chromedriver.exe')
+    # --- MODIFIKASI: Biarkan Selenium menemukan chromedriver secara otomatis ---
+    service = Service() 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--log-level=3")
     driver = webdriver.Chrome(service=service, options=chrome_options)
     url = "https://myhartono.com/en/promo-pilihan"
@@ -81,29 +84,28 @@ def scrape_hartono():
     return promotions
 
 # ==============================================================================
-# SCRAPER ELECTRONIC CITY (DENGAN DRIVER ANTI-DETEKSI)
+# SCRAPER ELECTRONIC CITY
 # ==============================================================================
 def scrape_electronic_city():
-    print("\n--- Memulai Scrape Electronic City (Dengan Driver Anti-Deteksi) ---")
-    
-    # --- MENGGUNAKAN UNDETECTED CHROME DRIVER ---
+    print("\n--- Memulai Scrape Electronic City ---")
     options = uc.ChromeOptions()
-    # Dijalankan dalam mode terlihat untuk tes ini
-    # options.add_argument('--headless') 
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    # --- MODIFIKASI: Biarkan undetected_chromedriver menemukan driver-nya sendiri ---
     driver = uc.Chrome(options=options)
     
     url = "https://www.eci.id/promo"
-    print(f"Mengunjungi URL: {url}... PERHATIKAN JENDELA BROWSER.")
+    print(f"Mengunjungi URL: {url}...")
     
     promotions = []
     try:
         driver.get(url)
-        print("Menunggu halaman memuat sepenuhnya (hingga 30 detik)...")
-        # Tunggu hingga 30 detik sampai elemen terlihat
+        print("Menunggu konten promosi dimuat...")
         wait = WebDriverWait(driver, 30)
         wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "card-promo")))
         print("Konten promosi ditemukan!")
-        time.sleep(3) # Waktu tambahan agar semua gambar dimuat
+        time.sleep(3)
         html_content = driver.page_source
         
         soup = BeautifulSoup(html_content, 'html.parser')
@@ -113,11 +115,11 @@ def scrape_electronic_city():
         for card in promo_cards:
             try:
                 title_element = card.find('div', class_='ft-sz-13')
-                date_element = card.find('div', class_='ft-sz-12')
+                date_element = card.find('div', 'ft-sz-12')
                 link_element = card.find('a')
                 title = title_element.get_text(strip=True) if title_element else "No Title"
                 details = date_element.get_text(strip=True) if date_element else "No Details"
-                promo_url = link_element['href'] if link_element and 'href' in link_element.attrs else "#"
+                promo_url = "https://eci.id" + link_element['href'] if link_element and 'href' in link_element.attrs else "#"
                 promo_data = {"competitor": "Electronic City", "title": title, "startDate": "", "endDate": "", "details": details, "url": promo_url}
                 promotions.append(promo_data)
             except Exception: continue
