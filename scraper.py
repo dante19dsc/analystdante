@@ -91,7 +91,7 @@ def scrape_electronic_city():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    # --- PERBAIKAN: Menghapus argumen 'service' yang tidak perlu ---
+    # --- PERBAIKAN: Menghapus argumen 'service' yang tidak perlu dan salah ---
     driver = uc.Chrome(options=options)
     
     url = "https://www.eci.id/promo"
