@@ -1,0 +1,41 @@
+name: Scrape Competitor Promotions
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium beautifulsoup4
+
+      - name: Run Scraper
+        run: |
+          # The chromedriver on the GitHub robot is in the system PATH, so we don't need the local .exe
+          # We will modify the scraper to remove the executable_path argument
+          sed -i "s/service = Service(executable_path='chromedriver.exe')/service = Service()/g" scraper.py
+          python scraper.py
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add promotions.json
+          git diff --staged --quiet || (git commit -m "Update promotions data" && git push)
