@@ -414,6 +414,7 @@ function loadDashboard() {
         const promo = promotions.find(p=>p.tempId === promoId);
         if(!promo) return;
         document.getElementById('modal-content').textContent = `[${promo.category}] ${promo.title}\n\nDetails: ${promo.details}\nDuration: ${promo.startDate} to ${promo.endDate}`;
+        document.getElementById('modal-actions').innerHTML = `<button class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300" onclick="document.getElementById('promoModal').classList.add('hidden')">Close</button>`;
         document.getElementById('promoModal').classList.remove('hidden');
     };
     const showDeleteConfirmModal = (promoId) => {
