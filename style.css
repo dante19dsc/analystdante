@@ -1,1 +1,123 @@
-
+:root {
+    --color-bg: #FDF8F3; 
+    --color-surface: #FFFBF7; 
+    --color-header: #6B4E3D;
+    --color-text-primary: #6B4E3D; 
+    --color-text-secondary: #8C5A3A; 
+    --color-border: #E8D5C4; 
+    --color-accent: #E67E22; 
+    --color-holiday: #A1112C;
+    --color-today-highlight: #FFF2E0; 
+    --color-comp-1: #D2691E; 
+    --color-comp-2: #CD853F; 
+    --color-comp-3: #8B4513;
+}
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--color-bg); 
+    color: var(--color-text-primary); 
+}
+.paper-card { 
+    background-color: var(--color-surface); 
+    border-radius: 16px; 
+    border: 1px solid var(--color-border); 
+    padding: 24px; 
+    animation: fadeIn 0.5s ease-out forwards; 
+    opacity: 0; 
+    box-shadow: 0 8px 32px rgba(107, 78, 61, 0.1); 
+}
+.timeline-full-row { 
+    display: flex; 
+    align-items: stretch; 
+    border-bottom: 1px solid var(--color-border); 
+    min-height: 44px; 
+}
+.timeline-full-row:last-child { 
+    border-bottom: none; 
+}
+.timeline-sticky-label { 
+    flex: 0 0 200px; 
+    padding: 8px 12px; 
+    font-size: 13px; 
+    font-weight: 500; 
+    background-color: #fcfaf8; 
+    border-right: 1px solid var(--color-border); 
+    position: sticky; 
+    left: 0; 
+    z-index: 10; 
+    display: flex; 
+    align-items: center; 
+}
+.timeline-cells-container { 
+    flex-grow: 1; 
+    position: relative; 
+    display: grid; 
+}
+.timeline-day-cell { 
+    border-right: 1px solid var(--color-border); 
+}
+.timeline-day-cell.today-highlight { 
+    background-color: var(--color-today-highlight); 
+}
+.timeline-header-row { 
+    position: sticky; 
+    top: 0; 
+    z-index: 20; 
+    background-color: var(--color-header); 
+    color: white; 
+}
+.timeline-header-row .timeline-sticky-label { 
+    font-weight: 700; 
+    background-color: var(--color-header); 
+    color: white; 
+}
+.timeline-header-day { 
+    text-align: center; 
+    font-size: 11px; 
+    font-weight: 600; 
+    padding: 8px 4px; 
+}
+.timeline-header-day.today { 
+    background-color: var(--color-accent); 
+    animation: pulse 2s infinite; 
+}
+.timeline-header-day.weekend { 
+    background-color: #806251; 
+}
+.timeline-header-day.holiday { 
+    background-color: var(--color-holiday); 
+    font-weight: 700; 
+    position: relative; 
+}
+.timeline-bar { 
+    position: absolute; 
+    height: 28px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    border-radius: 4px; 
+    display: flex; 
+    align-items: center; 
+    font-size: 11px; 
+    font-weight: 600; 
+    color: white; 
+    cursor: pointer; 
+    padding: 0 8px; 
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+}
+.timeline-bar.hartono { background-color: var(--color-comp-1); }
+.promo-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+.promo-item { display: flex; align-items: flex-start; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--color-border); }
+.promo-item:last-child { border-bottom: none; }
+.promo-item-icon-container { width: 80px; height: 80px; border-radius: 0.5rem; margin-right: 1rem; flex-shrink: 0; padding: 12px; border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; }
+.promo-item-title { font-weight: 600; margin-bottom: 0.25rem; color: var(--color-text-primary); }
+.promo-item-category { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem; padding: 0.25rem 0.5rem; background-color: #f7f7f9; border-radius: 0.25rem; display: inline-block; }
+.promo-item-description { font-size: 0.875rem; color: var(--text-secondary); }
+.timeline-category-label { cursor: pointer; }
+.timeline-category-label:hover { background-color: #f5f1ed; }
+.timeline-category-label .icon { transition: transform 0.2s; }
+.category-group.collapsed .icon { transform: rotate(-90deg); }
+.category-group.collapsed .timeline-promo-row { display: none; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
