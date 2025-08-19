@@ -24,7 +24,6 @@
         body { font-family: 'Inter', sans-serif; background-color: var(--color-bg); color: var(--color-text-primary); }
         .paper-card { background-color: var(--color-surface); border-radius: 16px; border: 1px solid var(--color-border); padding: 24px; animation: fadeIn 0.5s ease-out forwards; opacity: 0; box-shadow: 0 8px 32px rgba(107, 78, 61, 0.1); }
         .timeline-full-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--color-border); min-height: 44px; }
-        .timeline-full-row:last-child { border-bottom: none; }
         .timeline-sticky-label { flex: 0 0 200px; padding: 8px 12px; font-size: 13px; font-weight: 500; background-color: #fcfaf8; border-right: 1px solid var(--color-border); position: sticky; left: 0; z-index: 10; display: flex; align-items: center; }
         .timeline-cells-container { flex-grow: 1; position: relative; display: grid; }
         .timeline-day-cell { border-right: 1px solid var(--color-border); }
@@ -211,7 +210,7 @@
             let currentDate = new Date(); 
             let charts = {};
             const competitors = ['Hartono', 'Electronic City', 'Erablue'];
-            const competitorConfig = { 'Hartono': { colorClass: 'hartono', bgColor: '#fdf6f1', chartColor: 'var(--color-comp-1)' }, 'Electronic City': { colorClass: 'electronic-city', bgColor: '#f3f2f7', chartColor: 'var(--color-comp-2)' }, 'Erablue': { colorClass: 'erablue', bgColor: '#f0f0f5', chartColor: 'var(--color-comp-3)' } };
+            const competitorConfig = { 'Hartono': { colorClass: 'hartono', bgColor: '#fdf6f1' }, 'Electronic City': { colorClass: 'electronic-city', bgColor: '#f3f2f7' }, 'Erablue': { colorClass: 'erablue', bgColor: '#f0f0f5' } };
             const promoCategories = [ 'Promo HP & Gadget', 'Promo Laptop & PC', 'Promo TV & Audio', 'Promo Home Appliances', 'Promo Back to School', 'Promo Hari Libur Besar', 'Storewide', 'Other Promotions' ];
             const categoryColors = { 'Promo HP & Gadget': '#D2691E', 'Promo Laptop & PC': '#CD853F', 'Promo TV & Audio': '#A0522D', 'Promo Home Appliances': '#B8860B', 'Promo Back to School': '#DAA520', 'Promo Hari Libur Besar': '#E67E22', 'Storewide': '#7f8c8d', 'Other Promotions': '#F39C12' };
             const categoryIcons = { 'Promo HP & Gadget': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="35" y="15" width="50" height="70" rx="8" fill="#7BB8F2"/><rect x="15" y="25" width="40" height="60" rx="8" fill="#005A9C"/><rect x="20" y="32" width="30" height="46" rx="3" fill="#F5A623"/></svg>`, 'Promo Laptop & PC': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g><path d="M 5 70 L 95 70 L 85 78 L 15 78 Z" fill="#005A9C"/><rect x="18" y="22" width="74" height="48" rx="5" fill="#7BB8F2" transform="skewX(-10)"/><rect x="25" y="28" width="60" height="36" rx="2" fill="#005A9C" transform="skewX(-10)"/></g></svg>`, 'Promo TV & Audio': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="20" width="84" height="50" rx="4" fill="#005A9C"/><rect x="13" y="25" width="74" height="40" fill="#7BB8F2"/><path d="M 45 70 L 55 70 L 65 80 L 35 80 Z" fill="#005A9C"/><rect x="20" y="85" width="60" height="5" rx="2.5" fill="#F5A623"/></svg>`, 'Promo Home Appliances': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="translate(50 35) scale(0.8)"><path d="M 0 -15 L 0 15 M -13 0 L 13 0 M -9 -9 L 9 9 M -9 9 L 9 -9" stroke="#005A9C" stroke-width="4" stroke-linecap="round"/></g><path d="M 25 60 C 25 50, 50 50, 50 75 S 75 90, 75 80 C 75 70, 60 70, 50 85 Z" fill="#7BB8F2" transform="translate(-15 0)"/><g transform="translate(70 70) scale(0.6)"><circle cx="0" cy="0" r="12" fill="none" stroke="#F5A623" stroke-width="4"/><path d="M 0 0 L 10 5" stroke="#F5A623" stroke-width="4" stroke-linecap="round"/><path d="M 0 0 L -10 5" stroke="#F5A623" stroke-width="4" stroke-linecap="round"/><path d="M 0 0 L 0 -12" stroke="#F5A623" stroke-width="4" stroke-linecap="round"/></g></svg>`, 'Promo Back to School': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 15 80 Q 50 90 85 80 L 85 20 Q 50 10 15 20 Z" fill="#005A9C"/><path d="M 50 22 V 82" stroke="#7BB8F2" stroke-width="4"/><circle cx="50" cy="50" r="12" fill="#F5A623"/><path d="M 50 38 Q 55 35 52 30" stroke="#005A9C" stroke-width="3" fill="none"/></svg>`, 'Promo Hari Libur Besar': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="10" width="6" height="80" rx="3" fill="#005A9C"/><path d="M 21 25 C 40 15, 60 35, 80 25 V 45 C 60 55, 40 35, 21 45 Z" fill="#F5A623"/><path d="M 21 45 C 40 35, 60 55, 80 45 V 65 C 60 75, 40 55, 21 65 Z" fill="#7BB8F2"/></svg>`, 'Storewide': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M85,30H15a5,5,0,0,0-5,5V75a5,5,0,0,0,5,5H85a5,5,0,0,0,5-5V35A5,5,0,0,0,85,30ZM50,65a15,15,0,1,1,15-15A15,15,0,0,1,50,65Z" fill="#005A9C"/><path d="M50,40a10,10,0,1,0,10,10A10,10,0,0,0,50,40Z" fill="#7BB8F2"/><circle cx="80" cy="40" r="5" fill="#F5A623"/></svg>`, 'Other Promotions': `<svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="40" width="60" height="45" rx="5" fill="#005A9C"/><rect x="15" y="25" width="70" height="15" rx="5" fill="#7BB8F2"/><rect x="45" y="25" width="10" height="60" fill="#F5A623"/><path d="M 45 25 C 35 15, 25 15, 25 25" stroke="#F5A623" stroke-width="8" fill="none"/><path d="M 55 25 C 65 15, 75 15, 75 25" stroke="#F5A623" stroke-width="8" fill="none"/></svg>` };
@@ -270,7 +269,18 @@
                 } catch (error) { console.error("JSONBIN Load Error:", error); showNotification('❌ Network error loading manual data.', 'bg-red-500'); }
                 try {
                     const response = await fetch('promotions.json');
-                    if(response.ok) { scrapedPromos = await response.json(); }
+                    if(response.ok) { 
+                        scrapedPromos = await response.json(); 
+                        scrapedPromos.forEach(p => {
+                            if (!p.startDate || !p.endDate) {
+                                const today = new Date();
+                                p.startDate = today.toISOString().split('T')[0];
+                                const futureDate = new Date();
+                                futureDate.setDate(today.getDate() + 14);
+                                p.endDate = futureDate.toISOString().split('T')[0];
+                            }
+                        });
+                    }
                 } catch (error) { console.error("Local promotions.json Load Error:", error); }
                 const combinedPromos = [...serverPromos, ...scrapedPromos];
                 const uniquePromos = [];
@@ -470,12 +480,12 @@
                     charts.bar = new Chart(barCtx.getContext('2d'), { type: 'bar', data: { labels: competitors, datasets: [{ label: '# of Active Promotions', data: competitors.map(c => activePromos.filter(p => p.competitor === c).length), backgroundColor: ['#D2691E', '#CD853F', '#8B4513'], borderRadius: 4 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#6B4E3D', titleColor: '#FFFBF7', bodyColor: '#FFFBF7' } }, scales: { x: { grid: { color: 'rgba(107, 78, 61, 0.1)' }, ticks: { color: '#A67C5A' } }, y: { grid: { display: false }, ticks: { color: '#A67C5A' } } } } });
                 }
                 competitors.forEach(c => {
-                    const pieCtx = document.getElementById(`pie-chart-${c.toLowerCase().replace(' ', '-')}`);
+                    const pieCtx = document.getElementById(`pie-chart-${c.toLowerCase().replace(/ /g, '-')}`);
                     if (!pieCtx) return;
                     const competitorPromos = activePromos.filter(p => p.competitor === c);
                     const categoryCounts = promoCategories.map(cat => competitorPromos.filter(p => p.category === cat).length);
                     charts[`pie_${c}`] = new Chart(pieCtx.getContext('2d'), { type: 'doughnut', data: { labels: promoCategories, datasets: [{ data: categoryCounts, backgroundColor: promoCategories.map(cat => categoryColors[cat]), borderColor: 'var(--color-surface)', borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false }, tooltip: { backgroundColor: '#6B4E3D', titleColor: '#FFFBF7', bodyColor: '#FFFBF7' } } } });
-                    generateCustomLegend(charts[`pie_${c}`], `legend-${c.toLowerCase().replace(' ', '-')}`);
+                    generateCustomLegend(charts[`pie_${c}`], `legend-${c.toLowerCase().replace(/ /g, '-')}`);
                 });
             };
             const renderPromotionCards = (activePromos) => {
@@ -487,7 +497,8 @@
                     if (compPromotions.length === 0) return;
                     const card = document.createElement('div');
                     card.className = 'paper-card';
-                    card.innerHTML = `<div class="promo-card-header ${competitorConfig[compName].colorClass}" style="background-color: var(--color-comp-${competitors.indexOf(compName)+1})">${compName} Promotions</div><div class="promo-card-content"></div>`;
+                    const config = competitorConfig[compName] || {};
+                    card.innerHTML = `<div class="promo-card-header ${config.colorClass}" style="background-color: var(--color-comp-${competitors.indexOf(compName)+1})">${compName} Promotions</div><div class="promo-card-content"></div>`;
                     const contentDiv = card.querySelector('.promo-card-content');
                     compPromotions.forEach((promo) => {
                         const promoItem = document.createElement('div');
@@ -505,7 +516,7 @@
             const showNotification = (message, colorClass = 'bg-green-500') => {
                 const notification = document.getElementById('notification');
                 if(!notification) return;
-                const notificationText = document.getElementById('notification-text');
+                const notificationText = notification.querySelector('span');
                 notificationText.textContent = message;
                 notification.className = `text-white px-4 py-2 rounded-lg shadow-lg notification ${colorClass}`;
                 notification.classList.add('show');
@@ -550,10 +561,9 @@
             document.getElementById('confirmDeleteBtn').addEventListener('click', (e) => deletePromotion(parseInt(e.currentTarget.dataset.promoId)));
             document.getElementById('prev-month-btn').addEventListener('click', () => { currentDate.setUTCMonth(currentDate.getUTCMonth() - 1, 1); rerenderAll(); });
             document.getElementById('next-month-btn').addEventListener('click', () => { currentDate.setUTCMonth(currentDate.getUTCMonth() + 1, 1); rerenderAll(); });
-            
-            // PANGGIL FUNGSI INISIALISASI DI SINI
+
             populatePromoTypeDropdowns();
-            loadPromotions();
+            // loadPromotions() is now called by the auth listener after a successful login
         }
     </script>
 </body>
