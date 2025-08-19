@@ -1,4 +1,3 @@
-// Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAzOy1xoUnVjTPZq7J3nQZ_UAwGP3CKosA",
     authDomain: "webtestproject-18b06.firebaseapp.com",
@@ -118,7 +117,6 @@ function loadDashboard() {
             const response = await fetch('promotions.json');
             if(response.ok) { 
                 scrapedPromos = await response.json(); 
-                // PERBAIKAN: Menambahkan tanggal placeholder untuk promosi yang tidak memiliki tanggal
                 scrapedPromos.forEach(p => {
                     if (!p.startDate || p.startDate === "") {
                         const today = new Date();
