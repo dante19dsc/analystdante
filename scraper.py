@@ -42,8 +42,16 @@ def parse_promo_date(date_text, competitor):
             parts = cleaned_text.split(' ')
             start_day = parts[0]
             end_day = parts[2]
-            month_en = parts[3]
+            month_id = parts[3]
             year_str = parts[4]
+            # Konversi bulan dari Bahasa Indonesia ke Bahasa Inggris jika perlu
+            month_map_id_to_en = {
+                'januari': 'January', 'februari': 'February', 'maret': 'March', 'april': 'April', 
+                'mei': 'May', 'juni': 'June', 'juli': 'July', 'agustus': 'August', 
+                'september': 'September', 'oktober': 'October', 'november': 'November', 'desember': 'December'
+            }
+            month_en = month_map_id_to_en.get(month_id.lower(), month_id)
+
             start_date_obj = datetime.strptime(f"{start_day} {month_en} {year_str}", "%d %B %Y")
             end_date_obj = datetime.strptime(f"{end_day} {month_en} {year_str}", "%d %B %Y")
             return start_date_obj.strftime("%Y-%m-%d"), end_date_obj.strftime("%Y-%m-%d")
@@ -118,12 +126,9 @@ def scrape_electronic_city():
         print(f"SUKSES! Menemukan {len(promo_cards)} promosi Electronic City.")
         for card in promo_cards:
             try:
-                title_element = card.find('div', class_='ft-sz-13')
-                date_element = card.find('div', class_='ft-sz-12')
-                link_element = card.find('a')
-                title = title_element.get_text(strip=True)
-                details = date_element.get_text(strip=True)
-                promo_url = "https://eci.id" + link_element['href']
+                title = card.find('div', class_='ft-sz-13').get_text(strip=True)
+                details = card.find('div', class_='ft-sz-12').get_text(strip=True)
+                promo_url = "https://eci.id" + card.find('a')['href']
                 start_date, end_date = parse_promo_date(details, "Electronic City")
                 promo_data = {"competitor": "Electronic City", "title": title, "startDate": start_date, "endDate": end_date, "details": details, "url": promo_url}
                 promotions.append(promo_data)
@@ -161,6 +166,7 @@ def scrape_erablue():
                 title = card.find('h3').get_text(strip=True)
                 details = card.find('p').get_text(strip=True)
                 promo_url = card.find('a')['href']
+                # Erablue tidak memiliki tanggal di halaman utama, biarkan kosong
                 promo_data = {"competitor": "Erablue", "title": title, "startDate": "", "endDate": "", "details": details, "url": promo_url}
                 promotions.append(promo_data)
             except Exception: continue
@@ -175,14 +181,19 @@ def scrape_erablue():
 # ==============================================================================
 if __name__ == "__main__":
     all_promotions = []
+    
     hartono_promos = scrape_hartono()
     all_promotions.extend(hartono_promos)
+
     electronic_city_promos = scrape_electronic_city()
     all_promotions.extend(electronic_city_promos)
+
     erablue_promos = scrape_erablue()
     all_promotions.extend(erablue_promos)
+
     output_file = 'promotions.json'
     with open(output_file, 'w') as f:
         json.dump(all_promotions, f, indent=4)
+        
     print(f"\nScraping Selesai. Data disimpan ke {output_file}")
     print(f"Total promosi yang berhasil di-parse: {len(all_promotions)}")
