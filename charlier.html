@@ -17,9 +17,11 @@
     <style>
         :root {
             --color-bg: #FDF8F3; --color-surface: #FFFBF7; --color-header: #6B4E3D;
-            --color-text-primary: #6B4E3D; --color-text-secondary: #A67C5A; --color-border: #E8D5C4;
-            --color-accent: #E67E22; --color-holiday: #A1112C; --color-today-highlight: #FFF2E0;
-            --color-comp-1: #D2691E; --color-comp-2: #CD853F; --color-comp-3: #8B4513;
+            --color-text-primary: #6B4E3D; 
+            /* WARNA DIPERBAIKI: Lebih gelap untuk kontras yang lebih baik */
+            --color-text-secondary: #8C5A3A; 
+            --color-border: #E8D5C4; --color-accent: #E67E22; --color-holiday: #A1112C;
+            --color-today-highlight: #FFF2E0; --color-comp-1: #D2691E; --color-comp-2: #CD853F; --color-comp-3: #8B4513;
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--color-bg); color: var(--color-text-primary); }
         .paper-card { background-color: var(--color-surface); border-radius: 16px; border: 1px solid var(--color-border); padding: 24px; animation: fadeIn 0.5s ease-out forwards; opacity: 0; box-shadow: 0 8px 32px rgba(107, 78, 61, 0.1); }
@@ -94,8 +96,8 @@
                         <p style="color: var(--text-secondary);" class="mt-2">Monitor and analyze competitor promotional activities in real-time</p>
                         <p id="last-updated-text" class="text-xs text-gray-500 mt-1"></p>
                         <div class="flex gap-2 mt-4">
-                            <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm hover:bg-gray-50" style="color: var(--color-text-secondary);">Singapore</a>
-                            <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm hover:bg-gray-50" style="color: var(--color-text-secondary);">Malaysia</a>
+                            <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm hover:bg-gray-50" style="color: var(--text-secondary);">Singapore</a>
+                            <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm hover:bg-gray-50" style="color: var(--text-secondary);">Malaysia</a>
                             <a href="#" class="active-country-btn inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white" style="background-color: var(--color-accent);"><i class="fa-solid fa-location-dot mr-2"></i>Indonesia</a>
                         </div>
                     </div>
@@ -254,7 +256,6 @@
                     const response = await fetch('promotions.json');
                     if(response.ok) { 
                         scrapedPromos = await response.json(); 
-                        // PERBAIKAN: Menambahkan tanggal placeholder untuk promosi yang tidak memiliki tanggal
                         scrapedPromos.forEach(p => {
                             if (!p.startDate || !p.endDate) {
                                 const today = new Date();
