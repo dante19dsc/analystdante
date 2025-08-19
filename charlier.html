@@ -24,6 +24,7 @@
         body { font-family: 'Inter', sans-serif; background-color: var(--color-bg); color: var(--color-text-primary); }
         .paper-card { background-color: var(--color-surface); border-radius: 16px; border: 1px solid var(--color-border); padding: 24px; animation: fadeIn 0.5s ease-out forwards; opacity: 0; box-shadow: 0 8px 32px rgba(107, 78, 61, 0.1); }
         .timeline-full-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--color-border); min-height: 44px; }
+        .timeline-full-row:last-child { border-bottom: none; }
         .timeline-sticky-label { flex: 0 0 200px; padding: 8px 12px; font-size: 13px; font-weight: 500; background-color: #fcfaf8; border-right: 1px solid var(--color-border); position: sticky; left: 0; z-index: 10; display: flex; align-items: center; }
         .timeline-cells-container { flex-grow: 1; position: relative; display: grid; }
         .timeline-day-cell { border-right: 1px solid var(--color-border); }
@@ -225,7 +226,8 @@
             };
             const getPromoCategory = (promo) => {
                 const text = (promo.title + ' ' + (promo.details || '')).toLowerCase();
-                for (const category in categoryKeywords) {
+                const categoryOrder = ['Promo TV & Audio', 'Promo HP & Gadget', 'Promo Home Appliances', 'Promo Laptop & PC', 'Promo Back to School', 'Promo Hari Libur Besar', 'Storewide'];
+                for (const category of categoryOrder) {
                     for (const keyword of categoryKeywords[category]) {
                         if (new RegExp(`\\b${keyword.replace(/ /g, '\\s')}\\b`, 'i').test(text)) { return category; }
                     }
@@ -289,7 +291,7 @@
                 await rerenderAll();
             }
             const saveData = async (updatedPromotions) => {
-                 const dataToSave = updatedPromotions.map(({ tempId, iconHTML, ...rest }) => rest);
+                 const dataToSave = updatedPromos.map(({ tempId, iconHTML, ...rest }) => rest);
                  try {
                      const response = await fetch(JSONBIN_URL, {
                          method: 'PUT',
@@ -480,7 +482,21 @@
                 const container = document.getElementById('promo-cards-container');
                 if (!container) return;
                 container.innerHTML = '';
-                // The rest of this function's code was omitted in the prompt, so it's left as is.
+                competitors.forEach(compName => {
+                    const compPromotions = activePromos.filter(p => p.competitor === compName);
+                    if (compPromotions.length === 0) return;
+                    const card = document.createElement('div');
+                    card.className = 'paper-card';
+                    card.innerHTML = `<div class="promo-card-header ${competitorConfig[compName].colorClass}" style="background-color: var(--color-comp-${competitors.indexOf(compName)+1})">${compName} Promotions</div><div class="promo-card-content"></div>`;
+                    const contentDiv = card.querySelector('.promo-card-content');
+                    compPromotions.forEach((promo) => {
+                        const promoItem = document.createElement('div');
+                        promoItem.className = 'promo-item';
+                        promoItem.innerHTML = `<a href="${promo.url || '#'}" target="_blank" rel="noopener noreferrer"><div class="promo-item-icon-container">${promo.iconHTML}</div></a><div class="promo-item-details"><div class="promo-item-title">${promo.title}</div><div class="promo-item-category">${promo.category}</div><p class="promo-item-description">${promo.details || ''}</p></div>`;
+                        contentDiv.appendChild(promoItem);
+                    });
+                    container.appendChild(card);
+                });
             };
             const updateLastUpdatedText = () => {
                 const el = document.getElementById('last-updated-text');
@@ -495,7 +511,6 @@
                 notification.classList.add('show');
                 setTimeout(() => { notification.classList.remove('show'); }, 3000);
             };
-
             const rerenderAll = async () => {
                 const activePromosThisMonth = promotions.filter(p => {
                     if (!p.startDate || !p.endDate) return false;
@@ -510,10 +525,24 @@
                 renderPromotionCards(activePromosThisMonth); 
                 updateLastUpdatedText();
             };
+            const populatePromoTypeDropdowns = () => {
+                 const selects = [document.getElementById('promoType'), document.getElementById('editPromoType'), document.getElementById('editCompetitor'), document.getElementById('competitor')]; 
+                 selects.forEach(select => { 
+                    if (!select) return; 
+                    select.innerHTML = ''; 
+                    const items = select.id.includes('Competitor') ? competitors : promoCategories;
+                    items.forEach(item => { 
+                        const option = document.createElement('option'); 
+                        option.value = item; 
+                        option.textContent = item; 
+                        select.appendChild(option); 
+                    }); 
+                });
+            };
+            const showPromoDetailsModal = (promoId) => { /* ... */ };
+            const showDeleteConfirmModal = (promoId) => { /* ... */ };
+            const showEditPromoModal = (promoId) => { /* ... */ };
             
-            // Other helper functions would be here.
-
-            populatePromoTypeDropdowns();
             document.getElementById('openAddPromoModalBtn').addEventListener('click', () => document.getElementById('addPromoModal').classList.remove('hidden'));
             document.getElementById('addPromoForm').addEventListener('submit', handleAddPromoForm);
             document.getElementById('editPromoForm').addEventListener('submit', handleEditPromoForm);
@@ -521,7 +550,9 @@
             document.getElementById('confirmDeleteBtn').addEventListener('click', (e) => deletePromotion(parseInt(e.currentTarget.dataset.promoId)));
             document.getElementById('prev-month-btn').addEventListener('click', () => { currentDate.setUTCMonth(currentDate.getUTCMonth() - 1, 1); rerenderAll(); });
             document.getElementById('next-month-btn').addEventListener('click', () => { currentDate.setUTCMonth(currentDate.getUTCMonth() + 1, 1); rerenderAll(); });
-
+            
+            // PANGGIL FUNGSI INISIALISASI DI SINI
+            populatePromoTypeDropdowns();
             loadPromotions();
         }
     </script>
