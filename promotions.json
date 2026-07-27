@@ -73,14 +73,6 @@
     },
     {
         "competitor": "Hartono",
-        "title": "Hanya hari ini!! Electrolux PAY DAY FEST Diskon up to 20%",
-        "startDate": "2026-07-25",
-        "endDate": "2026-07-25",
-        "details": "Periode Promo: Jul 25, 2026 - Jul 25, 2026",
-        "url": "https://myhartono.com/?dispatch=categories.view&category_id=11750"
-    },
-    {
-        "competitor": "Hartono",
         "title": "Beli Pompa Air Sanyo Dapat Rice Cooker/Setrika Gratis!!",
         "startDate": "2026-07-10",
         "endDate": "2026-08-04",
@@ -102,6 +94,14 @@
         "endDate": "2026-07-31",
         "details": "Periode Promo: Jun 24, 2026 - Jul 31, 2026",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=12276"
+    },
+    {
+        "competitor": "Hartono",
+        "title": "Electrolux Flash Sale: Kulkas & Mesin Cuci",
+        "startDate": "2026-07-26",
+        "endDate": "2026-07-31",
+        "details": "Periode Promo: Jul 26, 2026 - Jul 31, 2026",
+        "url": "https://myhartono.com/?dispatch=categories.view&category_id=10840"
     },
     {
         "competitor": "Hartono",
@@ -241,35 +241,51 @@
     },
     {
         "competitor": "Hartono",
-        "title": "Indodana PayLater",
-        "startDate": "2026-07-25",
+        "title": "DBS",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
-        "url": "https://myhartono.com/?dispatch=categories.view&category_id=8167"
-    },
-    {
-        "competitor": "Hartono",
-        "title": "MANDIRI",
-        "startDate": "2026-07-25",
-        "endDate": "2026-07-31",
-        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
-        "url": "https://myhartono.com/?dispatch=categories.view&category_id=8172"
+        "url": "https://myhartono.com/?dispatch=categories.view&category_id=8273"
     },
     {
         "competitor": "Hartono",
         "title": "UOB",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=10144"
     },
     {
         "competitor": "Hartono",
-        "title": "CIMB",
-        "startDate": "",
-        "endDate": "",
-        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari Jumat, Sabtu & Minggu",
-        "url": "https://myhartono.com/?dispatch=categories.view&category_id=7811"
+        "title": "Kredivo",
+        "startDate": "2026-07-27",
+        "endDate": "2026-07-31",
+        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
+        "url": "https://myhartono.com/?dispatch=categories.view&category_id=9797"
+    },
+    {
+        "competitor": "Hartono",
+        "title": "Maybank",
+        "startDate": "2026-07-27",
+        "endDate": "2026-07-31",
+        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
+        "url": "https://myhartono.com/?dispatch=categories.view&category_id=10824"
+    },
+    {
+        "competitor": "Hartono",
+        "title": "MANDIRI",
+        "startDate": "2026-07-27",
+        "endDate": "2026-07-31",
+        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
+        "url": "https://myhartono.com/?dispatch=categories.view&category_id=8172"
+    },
+    {
+        "competitor": "Hartono",
+        "title": "Indodana PayLater",
+        "startDate": "2026-07-27",
+        "endDate": "2026-07-31",
+        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
+        "url": "https://myhartono.com/?dispatch=categories.view&category_id=8167"
     },
     {
         "competitor": "Hartono",
@@ -281,32 +297,16 @@
     },
     {
         "competitor": "Hartono",
-        "title": "DBS",
-        "startDate": "2026-07-25",
-        "endDate": "2026-07-31",
-        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
-        "url": "https://myhartono.com/?dispatch=categories.view&category_id=8273"
-    },
-    {
-        "competitor": "Hartono",
-        "title": "Kredivo",
-        "startDate": "2026-07-25",
-        "endDate": "2026-07-31",
-        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
-        "url": "https://myhartono.com/?dispatch=categories.view&category_id=9797"
-    },
-    {
-        "competitor": "Hartono",
-        "title": "Maybank",
-        "startDate": "2026-07-25",
-        "endDate": "2026-07-31",
-        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
-        "url": "https://myhartono.com/?dispatch=categories.view&category_id=10824"
+        "title": "CIMB",
+        "startDate": "",
+        "endDate": "",
+        "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari Jumat, Sabtu & Minggu",
+        "url": "https://myhartono.com/?dispatch=categories.view&category_id=7811"
     },
     {
         "competitor": "Hartono",
         "title": "PaninBank",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=10468"
@@ -314,7 +314,7 @@
     {
         "competitor": "Hartono",
         "title": "MAYAPADA",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=10561"
@@ -322,7 +322,7 @@
     {
         "competitor": "Hartono",
         "title": "Jenius Credit Card",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=9554"
@@ -330,7 +330,7 @@
     {
         "competitor": "Hartono",
         "title": "BNI",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=7860"
@@ -338,7 +338,7 @@
     {
         "competitor": "Hartono",
         "title": "BCA",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=9601"
@@ -346,7 +346,7 @@
     {
         "competitor": "Hartono",
         "title": "Danamon",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=10513"
@@ -354,7 +354,7 @@
     {
         "competitor": "Hartono",
         "title": "OCBC",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=10146"
@@ -362,7 +362,7 @@
     {
         "competitor": "Hartono",
         "title": "BRI",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=9756"
@@ -370,7 +370,7 @@
     {
         "competitor": "Hartono",
         "title": "HSBC",
-        "startDate": "2026-07-25",
+        "startDate": "2026-07-27",
         "endDate": "2026-07-31",
         "details": "Periode Promo: Hingga Juli 2026Berlaku Setiap Hari",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=7810"
@@ -406,14 +406,6 @@
         "endDate": "2026-08-03",
         "details": "Periode Promo: Jul 1, 2026 - Aug 3, 2026",
         "url": "https://myhartono.com/?dispatch=categories.view&category_id=10744"
-    },
-    {
-        "competitor": "Hartono",
-        "title": "Hanya hari ini!! Electrolux PAY DAY FEST Diskon up to 20%",
-        "startDate": "2026-07-25",
-        "endDate": "2026-07-25",
-        "details": "Periode Promo: Jul 25, 2026 - Jul 25, 2026",
-        "url": "https://myhartono.com/?dispatch=categories.view&category_id=11750"
     },
     {
         "competitor": "Hartono",
